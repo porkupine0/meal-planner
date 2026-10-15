@@ -1456,6 +1456,13 @@ function viewSettings(){
            <div class="addrow" style="margin:0"><input type="password" id="ai-key" placeholder="sk-ant-…" autocomplete="off" aria-label="Anthropic API key"><button class="btn primary" data-act="savekey">Save</button></div>
            <p class="muted" style="margin:8px 0 0;font-size:12.5px">The key stays in this browser and is sent only to Anthropic. Anyone using this device and browser could use it.</p>`}
     </div>
+    <div class="panel"><h3>Move or back up your data</h3>
+      <p style="margin:0 0 10px;font-size:14px">Copies your settings, weeks, leftovers, Walmart links and recipe edits as one block of text. Send it to yourself, then paste it into the other version of the board.</p>
+      <button class="btn" data-act="exportdata">${I.share}Copy my data</button>
+      <textarea id="import-in" placeholder="Paste copied data here" aria-label="Paste copied data" style="margin-top:12px;min-height:80px;width:100%"></textarea>
+      <div class="row" style="margin-top:8px"><button class="btn" data-act="importdata">Load pasted data</button></div>
+      <p class="muted" style="margin:8px 0 0;font-size:12.5px">Loading replaces the settings, Walmart links and leftovers here and adds the weeks and recipe edits.</p>
+    </div>
     <div class="panel"><h3>About this board</h3>
       <p style="margin:0 0 8px;font-size:14px">${S.mode==='db'?'Plans, lists and recipe edits save to this page and sync anywhere you open it. If you share the page with your partner as an editor, you both see the same plan.':'Saving in this browser only. Open the page while signed in to claude.ai to sync across devices.'}</p>
       <p class="muted" style="margin:0;font-size:13.5px">"Quick & Easy" means 20 minutes or less of hands-on time and 30 minutes or less in total. Times for recipes that didn't have one are estimates. Open any recipe to change its time, categories or rating.</p></div>
@@ -1786,6 +1793,22 @@ document.addEventListener('click', async e => {
     case 'aisaveplan': { const m = S.modal; const dayId = m.day || $('#ai-day')?.value; if (!dayId) { toast('Pick a night first'); $('#ai-day')?.focus(); return; } m.day = dayId;
       if (isDraft(curStart()) && !m.side) { const id = saveAiRecipe(m); const d = getWeek(curStart()).days[dayId]; d.rid = id; d.locked = true; if (!d.cat || NOCOOK.some(n=>n[0]===d.cat)) d.cat = 'any'; closeModal(); render(); toast(`Saved for ${DOWL[parseISO(dayId).getDay()]}. Make my plan will build the rest of the week.`); return; }
       const id = saveAiRecipe(m); editWeek(w => { const d = w.days[m.day]; if (m.side) { d.side = id; d.sideText = null; rememberSide(d.rid, 'r:' + id); } else { d.rid = id; d.locked = true; if (!d.cat || NOCOOK.some(n=>n[0]===d.cat)) d.cat = 'any'; } }); closeModal(); toast(m.side ? 'Side saved and added' : 'Saved and planned'); return; }
+    case 'exportdata': {
+      const data = {supperBoard: 1, settings: S.settings, fridge: S.fridge, walmart: S.walmart, overrides: S.overrides, custom: S.custom, weeks: S.weeks};
+      return shareText(JSON.stringify(data), 'Supper Board data', 'Data');
+    }
+    case 'importdata': {
+      let d; try { d = JSON.parse(($('#import-in')?.value || '').trim()); } catch { d = null; }
+      if (!d || d.supperBoard !== 1) { toast("That isn't copied Supper Board data."); return; }
+      if (!confirm('Replace the settings, Walmart links and leftovers here with the pasted data?')) return;
+      if (d.settings) { S.settings = {...structuredClone(DEFAULT_SETTINGS), ...d.settings}; upgradeSettings(); saveSettings(); }
+      if (d.fridge) { S.fridge = d.fridge; persist('app/fridge', S.fridge); }
+      if (d.walmart && d.walmart.map) { S.walmart = d.walmart; saveWalmart(); }
+      for (const [id, o] of Object.entries(d.overrides || {})) { S.overrides[id] = o; persist('overrides/' + id, o); }
+      for (const [id, r] of Object.entries(d.custom || {})) { S.custom[id] = r; persist('custom/' + id, r); }
+      for (const [id, w] of Object.entries(d.weeks || {})) { if (w && w.start) { S.weeks[id] = w; persist('weeks/' + id, w); } }
+      S.drafts = {}; rebuildRecipes(); render(); toast('Data loaded'); return;
+    }
     case 'savekey': { const v = ($('#ai-key')?.value || '').trim(); if (!/^sk-ant-/.test(v)) { toast('That doesn\'t look like an Anthropic API key (it starts with sk-ant-).'); return; } try { localStorage.setItem('sb.anthropicKey', v); } catch {} render(); toast('API key saved on this device'); return; }
     case 'rmkey': try { localStorage.removeItem('sb.anthropicKey'); } catch {} render(); toast('API key removed'); return;
     case 'usedfridge': S.fridge.items = (S.fridge.items||[]).filter(x => x.id !== t.dataset.id); saveFridge(); return render();
