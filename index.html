@@ -215,6 +215,7 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,va
 .ai-all{justify-content:center;border-color:var(--accent);color:var(--accent);background:var(--surface)}
 .cover{background:var(--sun-soft);border-radius:10px;padding:9px 12px;font-size:14px}
 .cover.ok{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.chip-x.claimed{background:var(--accent-soft);color:var(--accent)}
 /* cook mode */
 .cook{display:flex;flex-direction:column;gap:12px;font-size:17px}
 .cook h3{font-size:19px;margin-top:4px}
@@ -587,6 +588,17 @@ function fridgeMatches(r){
   const text = ' ' + ingOf(r).map(x => x.name).join(' | ') + ' ' + r.n.toLowerCase() + ' ';
   return items.filter(f => { const re = fridgeRegex(f.name); return re && re.test(text); }).map(f => f.name);
 }
+// Each leftover is used by one meal: the earliest night in the week whose dinner uses it.
+function leftoverClaims(w){
+  const claims = {}, taken = new Set();
+  for (const k of Object.keys(w.days).sort()) {
+    const d = w.days[k]; const r = d.rid && !NOCOOK.some(n => n[0] === d.cat) && S.byId[d.rid];
+    if (!r) continue;
+    const mine = fridgeMatches(r).filter(n => !taken.has(n));
+    mine.forEach(n => taken.add(n)); if (mine.length) claims[k] = mine;
+  }
+  return claims;
+}
 // Leftovers not already used by another night of the week.
 function uncoveredLeftovers(w, exceptDay){
   const covered = new Set();
@@ -607,6 +619,7 @@ function badges(r, opts={}){
   if (r.nw && !r.r) b.push(`<span class="chip new">New</span>`);
   if (r.red && S.settings.redMode !== 'off') b.push(`<span class="chip red">Red sauce · swap</span>`);
   if (r.kr) b.push(kidChip(r));
+  if (opts.useUp && opts.useUp.length) b.push(`<span class="chip fridge">Uses up ${esc(opts.useUp.slice(0,3).join(', '))}</span>`);
   if (opts.fridge) { const m = fridgeMatches(r); if (m.length) b.push(`<span class="chip fridge">Uses ${esc(m.slice(0,3).join(', '))}</span>`); }
   if (opts.reminder) { const rm = reminder(r); if (rm) b.push(`<span class="chip warn">${esc(rm)}</span>`); }
   return b.join('');
@@ -760,8 +773,9 @@ function pick(cat, w, dateISO, rand=Math.random, exclude=null){
   const weights = pool.map(r => {
     let wt = r.r >= 5 ? 4 : r.r >= 4 ? 2.6 : r.r >= 3 ? 1.3 : 1;
     if (r.kr === 1) wt *= 2; else if (r.kr === -1) wt *= 0.15;
-    const fm = fridgeMatches(r).length;
+    const fmAll = fridgeMatches(r); const fm = fmAll.filter(n => want.includes(n)).length;
     if (fm) wt *= 1 + fm * (dayIdx >= 0 && dayIdx < 3 ? 3 : 1.2);
+    else if (fmAll.length) wt *= 0.35;
     return wt;
   });
   const total = weights.reduce((a,b)=>a+b,0);
@@ -884,6 +898,7 @@ function recentFresh(){
 function useUpPanel(){
   const fr = S.fridge.items || [];
   const start = curStart(); const dates = weekDates(start);
+  const useClaims = isDraft(start) ? {} : leftoverClaims(getWeek(start));
   const dayOpts = dates.map(d => `<option value="${iso(d)}">${fmtD(d)}</option>`).join('');
   const sugg = fr.length ? S.recipes.filter(r => r.k === 'main' && !r.hide && !isSeafood(r) && !/^how to /i.test(r.n)).map(r => ({r, m: fridgeMatches(r)})).filter(x => x.m.length)
     .sort((a,b) => b.m.length - a.m.length || (b.r.r||0) - (a.r.r||0) || (a.r.t||99) - (b.r.t||99)).slice(0, 5) : [];
@@ -892,7 +907,7 @@ function useUpPanel(){
     <div class="useup-b">
       ${overrideBox()}
       <div class="addrow" style="margin:0"><input type="text" id="fridge-in" placeholder="Add a leftover, e.g. sour cream" aria-label="Add a leftover ingredient" value="${esc(S.fridgeDraft)}"><button class="btn" data-act="addfridge">${I.plus}Add</button></div>
-      ${fr.length ? `<div class="chips">${fr.map(f => `<span class="chip fridge chip-x">${esc(f.name)}<button class="btn ghost sm icon" data-act="usedfridge" data-id="${f.id}" aria-label="Used up ${esc(f.name)}">${I.x}</button></span>`).join('')}</div>` : ''}
+      ${fr.length ? `<div class="chips">${fr.map(f => { const night = Object.entries(useClaims).find(([, ns]) => ns.includes(f.name)); return `<span class="chip fridge chip-x ${night ? 'claimed' : ''}">${esc(f.name)}${night ? ` · ${DOW[parseISO(night[0]).getDay()]}` : ''}<button class="btn ghost sm icon" data-act="usedfridge" data-id="${f.id}" aria-label="Used up ${esc(f.name)}">${I.x}</button></span>`; }).join('')}</div>${Object.keys(useClaims).length ? `<p class="muted" style="margin:0;font-size:12.5px">The day shows which night uses it up. Other recipes with the same ingredient get it from the grocery list.</p>` : ''}` : ''}
       ${fr.length ? `<button class="btn ai-all" data-act="aiopen" data-all="1">${I.wand}Ask Claude for one meal that uses ${fr.length > 1 ? `all ${fr.length}` : 'it'}</button>` : ''}
       ${sugg.length ? `<div class="label">Recipes that use them</div><div class="sugg">${sugg.map(({r,m}) => `<div class="srow">${thumbHTML(r)}<div class="grow"><button class="meal-name" data-open="${r.id}">${esc(r.n)}</button><div class="meal-meta"><span class="chip fridge">${esc(m.join(', '))}</span>${r.t?`<span class="chip">${fmtMin(r.t)}</span>`:''}</div></div><select data-plan="${r.id}" aria-label="Plan ${esc(r.n)}"><option value="">Plan…</option>${dayOpts}</select></div>`).join('')}</div>` : ''}
     </div></details>`;
@@ -929,6 +944,7 @@ function viewPlan(){
   if (isDraft(start)) return viewSetup(start, w, weekLabel(), dates);
   const today = iso(new Date());
   const openDays = Object.values(w.days).some(d => d.cat && !d.rid && !NOCOOK.some(n => n[0] === d.cat));
+  const claims = leftoverClaims(w);
   const days = dates.map(d => {
     const id = iso(d); const day = w.days[id] || {cat:'',rid:null};
     const r = day.rid && S.byId[day.rid];
@@ -936,7 +952,7 @@ function viewPlan(){
     const past = id < today;
     let body;
     if (nocook) body = `<div class="nocook">${day.cat==='OUT'?I.out:day.cat==='LO'?I.box:I.sun}<div><b style="color:var(--ink)">${esc(nocook[1])}</b><br>${day.cat==='LO'?'Nothing to cook. Use up what\'s in the fridge.':day.cat==='OUT'?'Nothing to buy for tonight.':'Leave this night open.'}</div></div>`;
-    else if (r) body = `<div class="meal">${thumbHTML(r)}<div class="meal-b"><button class="meal-name" data-open="${r.id}">${esc(r.n)}</button><div class="meal-meta">${badges(r,{fridge:!past,reminder:!past})}</div></div></div>
+    else if (r) body = `<div class="meal">${thumbHTML(r)}<div class="meal-b"><button class="meal-name" data-open="${r.id}">${esc(r.n)}</button><div class="meal-meta">${badges(r,{useUp: past ? null : (claims[id] || []), reminder:!past})}</div></div></div>
       ${r.red && S.settings.redMode==='swap' && !past ? `<div class="tip"><b>White-sauce swap:</b> ${esc(SWAP[r.red]||SWAP.other)}</div>`:''}
       ${sideLine(id, day, past)}`;
     else body = `<div class="nocook" style="padding-top:2px">${day.cat ? `<div>No match for this category. Try <b>Reroll</b> or pick a recipe.</div>` : `<div>Choose a category above, or pick a recipe.</div>`}</div>`;
@@ -989,12 +1005,18 @@ function groceryModel(){
     const g = groups[k] || (groups[k] = {k, aisle, name: it.name, core: gkey, parts: [], recipes: new Set()});
     g.parts.push(it); g.recipes.add(rname);
   };
-  for (const [, day] of Object.entries(w.days)) {
+  const claims = leftoverClaims(w); const fromFridge = [];
+  for (const [dk, day] of Object.entries(w.days)) {
+    const mine = (claims[dk] || []).map(n => [n, fridgeRegex(n)]).filter(([, re]) => re);
     for (const rid of [day.rid, day.side]) {
       const r = rid && S.byId[rid]; if (!r) continue;
       if (NOCOOK.some(n=>n[0]===day.cat) && rid === day.rid) continue;
       const sc = day.scale || 1;
-      ingOf(r).forEach(it => add(sc !== 1 && it.qty != null ? {...it, qty: it.qty * sc} : it, r.n));
+      ingOf(r).forEach(it => {
+        const hit = rid === day.rid && mine.find(([, re]) => re.test(' ' + it.name + ' '));
+        if (hit) { fromFridge.push({leftover: hit[0], name: it.name, recipe: r.n, day: dk}); return; }
+        add(sc !== 1 && it.qty != null ? {...it, qty: it.qty * sc} : it, r.n);
+      });
     }
   }
   for (const [dk, day] of Object.entries(w.days)) {
@@ -1011,13 +1033,13 @@ function groceryModel(){
     for (const p of g.parts) { if (p.qty == null) { loose++; continue; } const u = p.unit || ''; byUnit[u] = (byUnit[u]||0) + p.qty; }
     const q = Object.entries(byUnit).map(([u,v]) => `${fmtQty(v)}${u ? ' ' + (v > 1 && /^(cup|can|jar|package|packet|bag|clove|slice|head|stalk|stick|link|sleeve)$/.test(u) ? u + 's' : v > 1 && /^(box|bunch)$/.test(u) ? u + 'es' : u) : ''}`);
     g.qty = q.join(' + ');
-    g.fridge = fridgeNames.some(f => f && new RegExp('\\b' + f.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + '(e?s)?\\b').test(g.name));
+    g.fridge = false;
   }
   const staples = (S.settings.staples||[]).filter(s => s.on && !(w.staplesOff||[]).includes(s.name));
   const extras = w.extras || [];
   const all = [...Object.values(groups).map(g=>g.k), ...staples.map(s=>'staple|'+s.name), ...extras.map(e=>'extra|'+e.id)];
   const remaining = all.filter(k => !(w.checked||{})[k]).length;
-  return {w, groups, pantryHits, staples, extras, remaining, total: all.length};
+  return {fromFridge, w, groups, pantryHits, staples, extras, remaining, total: all.length};
 }
 const WM_CART = 'https://affil.walmart.com/cart/addToCart?items=';
 const wmSearch = name => 'https://www.walmart.com/search?q=' + encodeURIComponent(name);
@@ -1069,6 +1091,9 @@ function viewGrocery(){
     ${staplesHTML}${aisles}${extrasHTML}
     <div class="addrow"><input type="text" id="extra-in" placeholder="Add something else (paper towels, snacks…)" aria-label="Add grocery item"><button class="btn" data-act="addextra">${I.plus}Add</button></div>
     ${done.length ? `<details class="aisle donebox" style="margin-top:18px"><summary><h3>Checked off <span class="muted">${done.length}</span></h3><button class="btn ghost sm" data-act="uncheck">Uncheck all</button></summary><ul class="items">${done.join('')}</ul></details>` : ''}
+    ${m.fromFridge.length ? `<details class="aisle donebox"><summary><h3>Using from the fridge <span class="muted">${m.fromFridge.length}</span></h3></summary>
+      <p class="muted" style="font-size:13.5px;margin:0 0 8px">These leftovers are planned for one meal each, so they aren't on the list for that meal.</p>
+      <div class="mini-list">${m.fromFridge.map(x => `<div class="mini"><span class="grow">${esc(x.name)} <span class="muted" style="font-size:12.5px">· ${esc(DOW[parseISO(x.day).getDay()])}: ${esc(x.recipe)}</span></span></div>`).join('')}</div></details>` : ''}
     ${pantryList.length ? `<details class="aisle donebox"><summary><h3>Left off: in your pantry <span class="muted">${pantryList.length}</span></h3></summary>
       <p class="muted" style="font-size:13.5px;margin:0 0 8px">These are pantry staples, so they aren't on the list. Tap <b>Need it</b> if you're running low.</p>
       <div class="mini-list">${pantryList.map(([k,rs]) => `<div class="mini"><span class="grow">${esc(k)}</span><button class="btn sm" data-act="need" data-key="${esc(k)}">Need it</button></div>`).join('')}</div>
