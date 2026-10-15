@@ -395,7 +395,7 @@ const DEFAULT_PANTRY = [
  ['baking powder',1],['baking soda',1],['vanilla extract',1],['cornstarch',1],['soy sauce',1],['worcestershire sauce',1],['honey',1],['maple syrup',1],
  ['dijon mustard',1],['yellow mustard',1],['ketchup',1],['mayonnaise',1],['apple cider vinegar',1],['white vinegar',1],['red wine vinegar',1],['rice vinegar',1],
  ['balsamic vinegar',1],['sesame oil',1],['sesame seeds',1],['poppy seeds',1],['hot sauce',1],['sriracha',1],['water',1],['ice',1],['dried minced onion',1],
- ['butter',0],['garlic',0],['eggs',0],['milk',0],['grated parmesan cheese',0],['chicken broth',0],['beef broth',0],['long grain white rice',0],['taco seasoning',0],['ranch seasoning',0],
+ ['butter',0],['garlic',1],['eggs',0],['milk',0],['grated parmesan cheese',0],['chicken broth',0],['beef broth',0],['long grain white rice',0],['taco seasoning',0],['ranch seasoning',0],
 ];
 const DEFAULT_STAPLES = [['Milk',1],['Eggs',1],['Sandwich bread',1],['Bananas',1],['Apples',1],['Yogurt',1],['Shredded cheese',0],['Coffee',0]];
 const DEFAULT_SETTINGS = {
@@ -684,7 +684,7 @@ function removeDoc(path){
 function loadLocal(){
   try {
     const g = k => { const v = localStorage.getItem('sb.' + k); return v ? JSON.parse(v) : null; };
-    const st = g('app/settings'); if (st) S.settings = {...structuredClone(DEFAULT_SETTINGS), ...st};
+    const st = g('app/settings'); if (st) { S.settings = {...structuredClone(DEFAULT_SETTINGS), ...st}; upgradeSettings(); }
     const fr = g('app/fridge'); if (fr) S.fridge = fr;
     const wm = g('app/walmart'); if (wm && wm.map) S.walmart = wm;
     for (let i = 0; i < localStorage.length; i++) {
@@ -712,7 +712,7 @@ async function initDb(){
   if (!d) { S.mode = 'local'; loadLocal(); setStatus(); rebuildRecipes(); render(); return; }
   db = d; S.mode = 'db'; setStatus();
   const onErr = () => {};
-  db.doc('app/settings').onSnapshot(s => { if (s.exists) S.settings = {...structuredClone(DEFAULT_SETTINGS), ...structuredClone(s.data())}; S.drafts = {}; scheduleRender(); }, onErr);
+  db.doc('app/settings').onSnapshot(s => { if (s.exists) { S.settings = {...structuredClone(DEFAULT_SETTINGS), ...structuredClone(s.data())}; upgradeSettings(); } S.drafts = {}; scheduleRender(); }, onErr);
   db.doc('app/walmart').onSnapshot(s => { S.walmart = s.exists ? structuredClone(s.data()) : {map:{}}; if (!S.walmart.map) S.walmart.map = {}; scheduleRender(); }, onErr);
   db.doc('app/fridge').onSnapshot(s => { S.fridge = s.exists ? structuredClone(s.data()) : {items:[]}; scheduleRender(); }, onErr);
   db.collection('overrides').onSnapshot(q => { S.overrides = Object.fromEntries(q.docs.map(x => [x.id, structuredClone(x.data())])); rebuildRecipes(); scheduleRender(); }, onErr);
@@ -720,6 +720,13 @@ async function initDb(){
   db.collection('weeks').orderBy('start','desc').limit(40).onSnapshot(q => { S.weeks = Object.fromEntries(q.docs.map(x => [x.id, structuredClone(x.data())])); S.drafts = {}; scheduleRender(); }, onErr);
 }
 const saveSettings = () => persist('app/settings', S.settings);
+// One-time update for saved settings: garlic is always on hand, so keep it off the list.
+function upgradeSettings(){
+  if (S.settings.garlicPantry) return;
+  const p = S.settings.pantry || (S.settings.pantry = []); const g = p.find(x => x.name === 'garlic');
+  if (g) g.on = true; else p.push({name:'garlic', on:true});
+  S.settings.garlicPantry = true;
+}
 const saveFridge = () => persist('app/fridge', S.fridge);
 const saveWalmart = () => persist('app/walmart', S.walmart);
 function saveOverride(id, patch){
@@ -1144,6 +1151,14 @@ const WM_DEFAULTS = [
   [/(?<!pickled )jalape[nñ]o(?!.*(seasoning|pickled|onions))/i, "919484438", "Fresh Jalape\u00f1o Peppers, 8 oz"],
   [/tortilla chips|corn chips|tostadas? chips/i, "12335104", "Great Value Restaurant Style White Corn Tortilla Chips, 13 oz"],
   [/mushroom(?!.*(soup|cream of))/i, "10449184", "Freshness Guaranteed Sliced White Mushrooms, 8 oz"],
+  [/^(?!.*(green|red|powder|granulated|soup|fried|dried|minced|pearl|flake|salt|ring|dip|chive)).*\bonions?\b/i, "51259212", "Fresh Whole Yellow Onion, each"],
+  [/^(?!.*(pea|cake|frozen|shredded|juice|canned|crinkle)).*\bcarrots?\b/i, "10451315", "Fresh Baby Peeled Carrots, 1 lb bag"],
+  [/^(?!.*(flake|roasted|crushed|jar|chili|cayenne)).*(\bred bell peppers?\b|sweet red peppers?)/i, "44391581", "Fresh Red Bell Pepper, each"],
+  [/^(?!.*(red|yellow|orange|roasted|jalape|flake|black|cayenne|poblano|banana|pepperoncini|jack|corn|mini|sweet)).*(\bbell peppers?\b|\bgreen (bell )?peppers?\b)/i, "44390945", "Fresh Green Bell Pepper, each"],
+  [/cilantro(?!.*(crema|dressing|sauce|rice|paste))/i, "160597260", "Fresh Cilantro, 1 bunch"],
+  [/ground turkey/i, "2943413192", "Shady Brook Farms 93/7 Ground Turkey, 1 lb tray"],
+  [/egg noodles?/i, "1429730287", "Great Value Wide Egg Noodles, 16 oz"],
+  [/greek yogurt(?!.*(ranch|mashed|dressing|sauce))/i, "26559565", "Great Value Plain Nonfat Greek Yogurt, 32 oz"],
 ].map(([re, id, label]) => ({re, id, label}));
 const wmDefault = name => { const n = String(name || '').toLowerCase(); const d = n && WM_DEFAULTS.find(x => x.re.test(n)); return d ? {id: d.id, qty: 1, label: d.label, auto: true} : null; };
 // The product used for an item: your own pick, else the default (unless you turned it off).
