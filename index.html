@@ -244,6 +244,7 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,va
 .ai-wait{display:flex;flex-direction:column;align-items:center;gap:10px;padding:30px 0;color:var(--muted);text-align:center}
 .spin{width:34px;height:34px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--accent);animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
+.linkbtn{background:none;border:0;padding:0;font:inherit;color:var(--accent,inherit);text-decoration:underline;cursor:pointer}
 .wm-btn{border:1px dashed var(--line);background:transparent;color:var(--muted);border-radius:99px;padding:3px 9px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}
 .wm-btn:hover{border-color:var(--sky);color:var(--sky)}
 .wm-btn.on{border-style:solid;border-color:transparent;background:var(--sky-soft);color:var(--sky)}
@@ -1059,6 +1060,94 @@ function wmItemId(text){
   m = t.match(/^(\d{5,})$/); if (m) return m[1];
   return null;
 }
+// Great Value / store-brand picks found on walmart.com, used until you choose your own product.
+const WM_DEFAULTS = [
+  [/^(?!.*(ricotta|mozzarella|cheese|yogurt|cottage|powder|chocolate|half)).*(?<!(coconut|almond|oat|evaporated|condensed|soy|with) )\bmilk\b/i, "10450114", "Great Value Whole Vitamin D Milk, 1 gal"],
+  [/\beggs?\b(?!.*(noodle|roll|plant))/i, "145051970", "Great Value Large White Eggs, 12 ct"],
+  [/(?<!(peanut|apple|almond|cocoa|nut|&|and) )\bbutter\b(?!.*(milk|lettuce|beans|cracker|cookie|scotch|oil|pickle))/i, "26954458", "Great Value Salted Butter, 16 oz (4 sticks)"],
+  [/heavy (whipping )?cream|whipping cream/i, "10450339", "Great Value Heavy Whipping Cream, 16 oz"],
+  [/sour cream/i, "12335111", "Great Value Sour Cream, 16 oz"],
+  [/cream cheese/i, "10452429", "Great Value Cream Cheese Brick, 8 oz"],
+  [/cheddar/i, "10452431", "Great Value Finely Shredded Sharp Cheddar, 8 oz"],
+  [/mexican (blend|style)|fiesta blend|taco cheese|mexican cheese/i, "10452562", "Great Value Fiesta Blend Shredded Cheese, 8 oz"],
+  [/parmesan/i, "10315402", "Great Value Grated Parmesan, 8 oz"],
+  [/ricotta/i, "10315688", "Great Value Whole Milk Ricotta, 15 oz"],
+  [/mozzarella(?!.*(pearl|fresh|ball|stick|slice))/i, "10452421", "Great Value Shredded Mozzarella, 16 oz"],
+  [/monterey jack|pepper jack|colby jack/i, "106764433", "Great Value Shredded Monterey Jack, 8 oz"],
+  [/cottage cheese/i, "10315022", "Great Value Small Curd Cottage Cheese 4%, 24 oz"],
+  [/provolone/i, "10451510", "Great Value Sliced Provolone, 8 oz"],
+  [/\bswiss\b/i, "614681693", "Great Value Thin Sliced Swiss, 8 oz"],
+  [/american cheese|cheese singles/i, "10452422", "Great Value American Singles, 16 slices"],
+  [/half and half|half & half/i, "10450338", "Great Value Half & Half, 32 oz"],
+  [/\bbiscuits?\b/i, "10533861", "Great Value Flaky Jumbo Buttermilk Biscuits, 8 ct"],
+  [/crescent/i, "10532750", "Great Value Original Crescent Rolls, 8 ct"],
+  [/alfredo/i, "13033144", "Great Value Alfredo Pasta Sauce, 16 oz"],
+  [/french bread/i, "46491756", "Freshness Guaranteed French Bread Loaf, 14 oz"],
+  [/panko|bread ?crumbs/i, "21656980", "Great Value Plain Panko Bread Crumbs, 8 oz"],
+  [/^(?!.*(crumb|french|naan|pita|flat|garlic|corn|sourdough|rye|texas|stuffing|flour|pickle|ciabatta|pullman|day-old|loaf|banana|zucchini|pudding)).*\bbread\b/i, "10315752", "Great Value White Sandwich Bread, 20 oz"],
+  [/hoagie|sub rolls?/i, "10321776", "Martin's Hoagie Rolls, 6 ct"],
+  [/hamburger buns?|burger buns?|sandwich buns?|(?<!(pretzel|pretzle|hoagie|hot dog|slider) )\bbuns?\b/i, "12444464", "Great Value Hamburger Buns, 8 ct"],
+  [/corn tortillas?/i, "624686238", "Great Value White Corn Tortillas, 30 ct"],
+  [/flour tortillas?|(?<!corn )\btortillas?\b(?!.*(chip|strip))/i, "953466267", "Great Value Soft Taco Flour Tortillas, 10 ct"],
+  [/hawaiian (sweet )?rolls?|sweet rolls?|slider buns?/i, "10421729", "King's Hawaiian Original Sweet Rolls, 12 ct"],
+  [/rotisserie chicken|shredded chicken|^cooked chicken/i, "682789099", "Freshness Guaranteed Rotisserie Chicken (chilled)"],
+  [/chicken breasts?|chicken tenderloins?/i, "36179444", "Great Value Boneless Skinless Chicken Breasts, 5 lb (frozen)"],
+  [/chicken thighs?/i, "778091348", "Freshness Guaranteed Boneless Skinless Chicken Thighs (tray)"],
+  [/ground beef|ground chuck|hamburger meat/i, "15136791", "80/20 Ground Beef Chuck, 1 lb roll"],
+  [/^(?!.*ravioli).*(italian sausage|ground sausage)/i, "40711369", "Marketside Mild Ground Italian Sausage, 1 lb"],
+  [/(?<!(turkey|canadian) )\bbacon\b(?!.*bits)/i, "10293911", "Great Value Hickory Smoked Bacon, 16 oz"],
+  [/smoked sausage|kielbasa/i, "5440505153", "Great Value Chicken Smoked Sausage, 14 oz"],
+  [/\bham\b/i, "47394318", "Great Value Thin Sliced Honey Ham, 16 oz"],
+  [/deli turkey|turkey breast lunch|sliced turkey|turkey deli/i, "47394316", "Great Value Oven Roasted Turkey Breast Lunchmeat, 16 oz"],
+  [/pepperoni/i, "40495518", "Great Value Pepperoni Slices, 6 oz"],
+  [/meatballs?/i, "14336389", "Great Value Homestyle Meatballs, 32 oz (frozen)"],
+  [/chicken (tenders|strips|nuggets)|breaded chicken/i, "11027865", "Great Value Fully Cooked Breaded Chicken Strips, 25 oz"],
+  [/peas and carrots|peas & carrots/i, "994038828", "Great Value Frozen Peas & Carrots, 12 oz"],
+  [/\bcorn\b(?!.*(tortilla|chip|starch|meal|flake|syrup|chex|bread|dog|salsa|tostada))/i, "659879040", "Great Value Frozen Whole Kernel Corn, 12 oz"],
+  [/(?<!(snap|snow) )\bpeas\b/i, "443429457", "Great Value Frozen Sweet Peas, 12 oz"],
+  [/mixed vegetables/i, "817042496", "Great Value Frozen Mixed Vegetables, 12 oz"],
+  [/tater tots|\btots\b/i, "10534213", "Great Value Seasoned Shredded Potatoes (Taters), 32 oz"],
+  [/hash browns?/i, "10534284", "Great Value Shredded Hash Browns, 26 oz"],
+  [/chicken (broth|stock)/i, "44391066", "Great Value Chicken Broth, 32 oz"],
+  [/beef (broth|stock)/i, "10899014", "Great Value Beef Broth, 32 oz"],
+  [/cream of chicken/i, "10315223", "Great Value Cream of Chicken Soup, 10.5 oz"],
+  [/cream of mushroom/i, "10314960", "Great Value Cream of Mushroom Soup, 10.5 oz"],
+  [/black beans/i, "39778876", "Great Value Black Beans, 15 oz can"],
+  [/pinto beans|chili beans/i, "10534043", "Great Value Pinto Beans, 15.5 oz can"],
+  [/great northern|cannellini|white beans/i, "10534042", "Great Value Great Northern Beans, 15.5 oz can"],
+  [/refried beans/i, "10534037", "Great Value Traditional Refried Beans, 16 oz"],
+  [/green chiles|green chilies|green chilis/i, "10415222", "Great Value Diced Green Chiles, 4 oz"],
+  [/salsa verde/i, "2922389780", "Great Value Salsa Verde, 16 oz"],
+  [/jasmine rice/i, "36874820", "Great Value Jasmine Rice, 2 lb"],
+  [/(?<!(cauliflower|right|brown|arborio|mexican|precooked) )\brice\b(?!.*(vinegar|noodle|krispie|chex|cake|cauliflower))/i, "10315394", "Great Value Long Grain White Rice, 2 lb"],
+  [/penne|ziti|rigatoni/i, "10534084", "Great Value Penne Pasta, 16 oz"],
+  [/spaghetti|linguine|angel hair/i, "10534115", "Great Value Spaghetti, 16 oz"],
+  [/elbow|macaroni(?!.*salad)/i, "10534107", "Great Value Elbow Macaroni, 16 oz"],
+  [/rotini|cavatappi|farfalle|bowtie/i, "10534080", "Great Value Rotini, 16 oz"],
+  [/lasagna/i, "10534110", "Great Value Lasagna Noodles, 16 oz"],
+  [/fettuccine/i, "12329728", "Great Value Fettuccine, 16 oz"],
+  [/\borzo\b/i, "5144705713", "Great Value Orzo, 16 oz"],
+  [/taco seasoning/i, "379517847", "Great Value Original Taco Seasoning, 1 oz"],
+  [/bbq sauce|barbecue sauce/i, "593927194", "Great Value Original BBQ Sauce, 18 oz"],
+  [/ranch dressing(?!.*(mix|packet))|\branch\b(?!.*(seasoning|packet|mix|jar|dressing))/i, "16618888", "Great Value Classic Ranch Dressing, 16 oz"],
+  [/green onions?|scallions?/i, "51259361", "Fresh Green Onions, 1 bunch"],
+  [/celery/i, "51259411", "Fresh Celery, 1 stalk"],
+  [/russet potato|baking potato/i, "10447839", "Fresh Idaho Russet Potatoes, 5 lb bag"],
+  [/^(?!.*(sweet|mashed|chip|flake|tot|hash|soup|starch|flesh|pierog|russet)).*(yukon gold|gold potato|yellow potato|baby potato|red potato|new potato|\bpotato(es)?\b)/i, "42700530", "Fresh Yellow Potatoes, 3 lb bag"],
+  [/broccoli(?!.*(frozen|slaw))/i, "51259378", "Fresh Broccoli Crowns, each"],
+  [/spinach(?!.*frozen)/i, "13893738", "Marketside Fresh Spinach, 10 oz"],
+  [/romaine/i, "10532755", "Fresh Romaine Hearts, 3 ct"],
+  [/shredded (iceberg )?lettuce|iceberg/i, "13893731", "Marketside Shredded Iceberg Lettuce, 8 oz"],
+  [/grape tomato|cherry tomato/i, "10451313", "Fresh Grape Tomatoes, 10 oz"],
+  [/avocado(?!.*(oil|crema|ghee))/i, "44390949", "Fresh Hass Avocado, each"],
+  [/lemon(?![-\w]*\s*(curd|schmear|pepper|vinegar))(?!.*(curd|schmear|vinegar))/i, "41752773", "Fresh Lemon, each"],
+  [/(?<!pickled )jalape[nñ]o(?!.*(seasoning|pickled|onions))/i, "919484438", "Fresh Jalape\u00f1o Peppers, 8 oz"],
+  [/tortilla chips|corn chips|tostadas? chips/i, "12335104", "Great Value Restaurant Style White Corn Tortilla Chips, 13 oz"],
+  [/mushroom(?!.*(soup|cream of))/i, "10449184", "Freshness Guaranteed Sliced White Mushrooms, 8 oz"],
+].map(([re, id, label]) => ({re, id, label}));
+const wmDefault = name => { const n = String(name || '').toLowerCase(); const d = n && WM_DEFAULTS.find(x => x.re.test(n)); return d ? {id: d.id, qty: 1, label: d.label, auto: true} : null; };
+// The product used for an item: your own pick, else the default (unless you turned it off).
+const wmPick = (key, name) => { const p = (S.walmart.map || {})[key]; if (p && p.off) return null; if (p && p.id) return p; return wmDefault(name); };
 // Where each grocery item is bought, remembered per item (same keys as Walmart products).
 const STORES = [['walmart','Walmart'],['sams',"Sam's Club"]];
 const storeOf = key => (S.walmart.stores || {})[key] || 'walmart';
@@ -1071,18 +1160,18 @@ function groceryEntries(m){
   ].map(e => ({...e, store: storeOf(e.key), checked: !!ch[e.k]}));
 }
 function walmartModel(m){
-  const ch = m.w.checked || {}; const map = S.walmart.map || {};
+  const ch = m.w.checked || {};
   const rows = [
     ...Object.values(m.groups).filter(g => !ch[g.k]).map(g => ({key:'i:' + g.core, name:g.name})),
     ...m.staples.filter(s => !ch['staple|' + s.name]).map(s => ({key:'s:' + s.name.toLowerCase(), name:s.name})),
     ...m.extras.filter(e => !ch['extra|' + e.id]).map(e => ({key:'x:' + e.name.toLowerCase(), name:e.name})),
   ].filter(r => storeOf(r.key) === 'walmart');
   const seen = new Set(); const mapped = []; const missing = [];
-  for (const r of rows) { const p = map[r.key]; if (p && p.id) { if (!seen.has(p.id)) { seen.add(p.id); mapped.push({...r, p}); } } else missing.push(r); }
+  for (const r of rows) { const p = wmPick(r.key, r.name); if (p && p.id) { if (!seen.has(p.id)) { seen.add(p.id); mapped.push({...r, p}); } } else missing.push(r); }
   const url = mapped.length ? WM_CART + mapped.map(x => `${x.p.id}|${Math.max(1, +x.p.qty || 1)}`).join(',') : '';
   return {mapped, missing, url};
 }
-const wmBtn = (key, name) => { const on = !!(S.walmart.map || {})[key]; return `<button class="wm-btn ${on?'on':''}" data-act="wmset" data-key="${esc(key)}" data-name="${esc(name)}" title="${on?'Change the Walmart product':'Choose the Walmart product'}">${on?'Walmart ✓':'+ Walmart'}</button>`; };
+const wmBtn = (key, name) => { const p = wmPick(key, name); const on = !!p; return `<button class="wm-btn ${on?'on':''}" data-act="wmset" data-key="${esc(key)}" data-name="${esc(name)}" title="${on ? esc(p.label || 'Change the Walmart product') : 'Choose the Walmart product'}">${on ? (p.auto ? (/^Great Value/.test(p.label) ? 'Great Value ✓' : 'Default ✓') : 'Walmart ✓') : '+ Walmart'}</button>`; };
 function viewGrocery(){
   const m = groceryModel(); const w = m.w; const ch = w.checked || {};
   const start = curStart(); const dates = weekDates(start);
@@ -1108,8 +1197,8 @@ function viewGrocery(){
     <div class="row">${m.total ? `<span class="muted">${left ? `${left} to get` : 'All done'}</span>` : ''}<button class="btn primary" data-act="copylist" ${m.total?'':'disabled'}>${I.share}Send list</button></div></div>
     ${m.total ? `<div class="progress" aria-hidden="true"><span style="width:${Math.round(100 * (m.total - left) / m.total)}%"></span></div>` : ''}
     <div class="wm-bar ${edit ? 'editing' : ''}">
-      ${edit ? `<div class="grow"><b>Linking Walmart products</b><div class="muted" style="font-size:13px">Tap <b>+ Walmart</b> next to an item and paste the product link. You only do this once per item.</div></div><button class="btn primary" data-act="wmedit">Done</button>`
-        : `<div class="grow"><b>Walmart pickup</b><div class="muted" style="font-size:13px">${n ? `${n} of ${n + wm.missing.length} items are linked to a Walmart product.` : 'Link items to Walmart products once, then add them all to your cart in one tap.'}</div></div>
+      ${edit ? `<div class="grow"><b>Linking Walmart products</b><div class="muted" style="font-size:13px">Common items already use a Great Value product. Tap a button next to an item to change it, or <b>+ Walmart</b> to link one that has no default. You only do this once per item.</div></div><button class="btn primary" data-act="wmedit">Done</button>`
+        : `<div class="grow"><b>Walmart pickup</b><div class="muted" style="font-size:13px">${n ? `${n} of ${n + wm.missing.length} items are linked to a Walmart product.` : 'Link items to Walmart products once, then add them all to your cart in one tap.'} ${n ? 'Common items use Great Value by default.' : ''}</div></div>
            <button class="btn ${n ? '' : 'primary'}" data-act="wmedit">${n ? 'Link more' : 'Set up'}</button>${n ? `<a class="btn primary" href="${esc(wm.url)}" target="_blank" rel="noopener">${I.cart}Add ${n} to cart</a>` : ''}`}
     </div>
     ${(() => { const ents = groceryEntries(m).filter(e => !e.checked); const nS = ents.filter(e => e.store === 'sams').length, nW = ents.length - nS;
@@ -1376,7 +1465,7 @@ function renderModal(){
       <div><label class="label" for="nf-u">Link (optional)</label><input type="text" id="nf-u" style="margin-top:6px" placeholder="https://"></div>
       <div class="row" style="justify-content:flex-end"><button type="button" class="btn" data-act="close">Cancel</button><button type="submit" class="btn primary">Save recipe</button></div></form>`;
   } else if (m.type === 'wm') {
-    const cur = (S.walmart.map || {})[m.key];
+    const own = (S.walmart.map || {})[m.key]; const cur = own && own.id ? own : null; const def = wmDefault(m.name);
     title = 'Walmart product';
     body = `<p style="margin:0">Choose the exact Walmart product you buy for <b>${esc(m.name)}</b>. It's saved for every week.</p>
       <ol style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;font-size:14.5px">
@@ -1387,7 +1476,8 @@ function renderModal(){
       <div class="formgrid"><div><label class="label" for="wm-qty">How many to buy</label><input type="number" id="wm-qty" min="1" style="margin-top:6px" value="${cur ? (cur.qty || 1) : 1}"></div><div><label class="label" for="wm-label">Product name (optional)</label><input type="text" id="wm-label" style="margin-top:6px" placeholder="Great Value sour cream 16 oz" value="${esc(cur?.label || '')}"></div></div>
       <p id="wm-err" style="margin:0;color:var(--tomato);font-size:14px">${esc(m.err || '')}</p>
       ${cur ? `<p class="muted" style="margin:0;font-size:13px">Saved item #${esc(cur.id)}. <a href="https://www.walmart.com/ip/${esc(cur.id)}" target="_blank" rel="noopener">View on Walmart</a></p>` : ''}
-      <div class="row" style="justify-content:flex-end">${cur ? `<button class="btn" data-act="wmremove">${I.trash}Remove</button>` : ''}<button class="btn" data-act="close">Cancel</button><button class="btn primary" data-act="wmsave">Save</button></div>`;
+      ${def ? `<p class="wm-def" style="margin:0;font-size:13.5px">${cur ? 'Default' : own && own.off ? 'Default (turned off)' : 'Using the default'}: <a href="https://www.walmart.com/ip/${esc(def.id)}" target="_blank" rel="noopener">${esc(def.label)}</a>${cur || (own && own.off) ? ` · <button class="linkbtn" data-act="wmdefault">Use this</button>` : ''}</p>` : ''}
+      <div class="row" style="justify-content:flex-end">${cur || (def && !(own && own.off)) ? `<button class="btn" data-act="wmremove">${I.trash}${def && !cur ? "Don't add from Walmart" : 'Remove'}</button>` : ''}<button class="btn" data-act="close">Cancel</button><button class="btn primary" data-act="wmsave">Save</button></div>`;
   } else if (m.type === 'ai') {
     const w = getWeek(curStart()); const day = m.day && w.days[m.day]; const entree = day && day.rid && S.byId[day.rid];
     title = m.side ? 'A side from Claude' : m.allLeftovers ? 'One meal from your leftovers' : 'New recipe from Claude';
@@ -1529,7 +1619,11 @@ document.addEventListener('click', async e => {
       S.walmart.map = {...(S.walmart.map || {}), [m.key]: {id, url: /^https?:/.test(raw.trim()) ? raw.trim().split('#')[0] : '', qty: Math.max(1, +$('#wm-qty').value || 1), label: $('#wm-label').value.trim(), name: m.name}};
       saveWalmart(); closeModal(); render(); toast('Walmart product saved'); return;
     }
-    case 'wmremove': { const m = S.modal; const map = {...(S.walmart.map || {})}; delete map[m.key]; S.walmart.map = map; saveWalmart(); closeModal(); render(); return; }
+    case 'wmremove': { const m = S.modal; const map = {...(S.walmart.map || {})}; const cur = map[m.key]; delete map[m.key];
+      // Removing your own pick falls back to the default; removing the default turns it off for this item.
+      if (!(cur && cur.id) && wmDefault(m.name)) map[m.key] = {off: true, name: m.name};
+      S.walmart.map = map; saveWalmart(); closeModal(); render(); return; }
+    case 'wmdefault': { const m = S.modal; const map = {...(S.walmart.map || {})}; delete map[m.key]; S.walmart.map = map; saveWalmart(); closeModal(); render(); toast('Using the Great Value default'); return; }
     case 'aiopen': if (t.dataset.all) { const m = {type:'ai', day:null, side:false, mood:'', fit:false, useFridge:false, allLeftovers:true, quick:false, state:'form'}; openModal(m); if (aiMode()) runAi(m); return; }
     { const d = t.dataset.day || null; const w = d && getWeek(curStart()); const dc = d && w.days[d]?.cat; return openModal({type:'ai', day:d, side:!!t.dataset.side, mood:'', fit:!!dc, useFridge:(S.fridge.items||[]).length > 0 && !t.dataset.side, quick:dc === 'quick', state:'form', focus:'ai-mood'}); }
     case 'aitoggle': { const m = S.modal; m.mood = $('#ai-mood')?.value ?? m.mood; m[t.dataset.k] = !m[t.dataset.k]; return renderModal(); }

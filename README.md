@@ -53,3 +53,5 @@ Each item on the grocery list has a store menu (Walmart or Sam's Club). The choi
 ### Walmart pickup
 
 On the grocery list, tap **+ Walmart** next to an item and paste the link of the exact Walmart product you buy (or its item number). It's remembered for every week. **Add to Walmart cart** then opens Walmart with every saved product still on your list in the cart, so you can choose a pickup time and check out. Check off anything you already have first so it isn't added.
+
+About 85 common items (milk, eggs, butter, cheeses, bread, tortillas, chicken, ground beef, broth, canned beans, pasta, rice and common produce) already link to a Great Value product (or Walmart's own produce) found on walmart.com, so they go in the cart without any setup. Tap the **Great Value ✓** / **Default ✓** button to pick a different product, or choose **Don't add from Walmart** to leave that item out. **Use this** brings the default back.
