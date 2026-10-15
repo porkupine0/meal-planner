@@ -9,7 +9,13 @@ A weekly family meal planner. It runs entirely in the browser: open `index.html`
 - **Week setup:** each new week starts with a short setup: list what needs to be used up, confirm each night's category, then make the plan. The first meals of the week are chosen to clear out those leftovers.
 - **Sides:** pick a side recipe or just type one, like "fruit" or "chips", and it goes on the grocery list.
 - **Create with Claude:** describe what you're in the mood for, match a night's category, or ask for something new, and Claude writes a recipe that follows the family rules (no seafood, no red sauce). On this GitHub site it needs an Anthropic API key, which you add in Settings and which is stored only in your browser.
-- **Fridge:** track leftover ingredients. The planner favors recipes that use them early in the next week.
+- **Use up first:** track leftover ingredients from the Plan page. The planner favors recipes that use them early in the week.
+- **Busy nights:** mark nights as busy (in Settings for every week, or per week) and they get a quick or slow cooker meal.
+- **Ratings:** rate past nights with stars and a separate "the kids loved it / not a hit." Both steer future plans.
+- **Batch size:** make a half, 1½ or double batch on any night; the recipe and grocery amounts adjust.
+- **Tonight and tomorrow:** the Plan page shows tonight's dinner with a Cook button, plus reminders for tomorrow (thaw the meat, start the slow cooker).
+- **Usual sides:** sides you've paired with a meal before are suggested first.
+- **Send:** share the grocery list or the week's menu by text.
 - **Recipes:** 493 recipes (no seafood) with ratings, times and categories, all editable, plus a way to add your own.
 - **Settings:** week start day (default Friday), your usual week, red-sauce handling, the no-repeat window and pantry staples.
 
