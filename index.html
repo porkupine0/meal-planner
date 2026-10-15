@@ -243,6 +243,7 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,va
 .ai-wait{display:flex;flex-direction:column;align-items:center;gap:10px;padding:30px 0;color:var(--muted);text-align:center}
 .spin{width:34px;height:34px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--accent);animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
+.chip.buyn{background:var(--sun-soft);color:var(--ink);font-weight:700}
 .linkbtn{background:none;border:0;padding:0;font:inherit;color:var(--accent,inherit);text-decoration:underline;cursor:pointer}
 .wm-btn{border:1px dashed var(--line);background:transparent;color:var(--muted);border-radius:99px;padding:3px 9px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}
 .wm-btn:hover{border-color:var(--sky);color:var(--sky)}
@@ -1251,7 +1252,7 @@ function groceryEntries(m){
   const ch = m.w.checked || {};
   return [
     ...m.staples.map(s => ({k:'staple|' + s.name, key:'s:' + s.name.toLowerCase(), name:s.name, qty:'', aisle:'Weekly staples'})),
-    ...Object.values(m.groups).map(g => ({k:g.k, key:'i:' + g.core, name:g.name, qty:g.qty, aisle:g.aisle})),
+    ...Object.values(m.groups).map(g => ({k:g.k, key:'i:' + g.core, name:g.name, qty:g.qty, aisle:g.aisle, packs: packsFor(g.parts, wmPick('i:' + g.core, g.name))})),
     ...m.extras.map(e => ({k:'extra|' + e.id, key:'x:' + e.name.toLowerCase(), name:e.name, qty:'', aisle:'Other'})),
   ].map(e => ({...e, store: storeOf(e.key), checked: !!ch[e.k]}));
 }
@@ -1266,16 +1267,61 @@ function grocerySwap(it, r){
   }
   return it;
 }
+// How many packages to buy: add up what the week's recipes need and divide by the package size in the product name.
+const PKG_UNITS = /^(can|jar|package|packet|bag|box|container|bottle|tub|head|bunch|sleeve|loaf|roll|tray|carton|pint)$/;
+const PACK_RULES = {'682789099': {cupsPer: 3, perLoose: 1}}; // a rotisserie chicken gives about 3 cups of meat
+function packSize(label){
+  const l = String(label || '').toLowerCase(); let m; const o = {};
+  if ((m = l.match(/(\d+(?:\.\d+)?)(?:\s*-\s*\d+(?:\.\d+)?)?\s*lbs?\b/))) o.oz = +m[1] * 16;
+  else if ((m = l.match(/(\d+(?:\.\d+)?)\s*(?:fl\.?\s*)?oz\b/))) o.oz = +m[1];
+  if ((m = l.match(/(\d+)\s*(?:ct|count)\b/))) o.ct = +m[1];
+  if (/\beach\b/.test(l)) o.each = true;
+  o.cupOz = /shredded|grated|crumbled|cheese|bacon pieces/.test(l) ? 4 : 8;
+  return o;
+}
+function packNeed(parts, need = {oz:0, pkg:0, count:0, cups:0, loose:0}, cupOz = 8){
+  for (const it of parts) {
+    if (it.qty == null) { need.loose++; continue; }
+    const u = it.unit || '', q = it.qty;
+    if (!u) need.count += q;
+    else if (u === 'lb') need.oz += q * 16;
+    else if (u === 'oz') need.oz += q;
+    else if (u === 'g' || u === 'gm') need.oz += q / 28.35;
+    else if (u === 'kg') need.oz += q * 35.27;
+    else if (u === 'stick') need.oz += q * 4;
+    else if (u === 'cup') { need.cups += q; need.oz += q * cupOz; }
+    else if (u === 'tbsp') { need.cups += q / 16; need.oz += q * cupOz / 16; }
+    else if (u === 'tsp') { need.cups += q / 48; need.oz += q * cupOz / 48; }
+    else if (PKG_UNITS.test(u)) need.pkg += q;
+  }
+  return need;
+}
+function packsFrom(need, p){
+  const rule = PACK_RULES[p.id];
+  let n;
+  if (rule) n = Math.ceil(need.cups / rule.cupsPer - 0.05) + need.count + need.pkg + need.loose * rule.perLoose;
+  else {
+    const sz = packSize(p.label);
+    n = need.pkg;
+    if (sz.oz) n += Math.ceil(need.oz / sz.oz - 0.1);
+    if (sz.each) n += Math.ceil(need.count - 0.05);
+    else if (sz.ct) n += Math.ceil(need.count / sz.ct - 0.05);
+  }
+  return Math.min(24, Math.max(1, n, p.auto ? 1 : (+p.qty || 1)));
+}
+const packsFor = (parts, p) => p ? packsFrom(packNeed(parts, undefined, packSize(p.label).cupOz), p) : 1;
 function walmartModel(m){
   const ch = m.w.checked || {};
   const rows = [
-    ...Object.values(m.groups).filter(g => !ch[g.k]).map(g => ({key:'i:' + g.core, name:g.name})),
+    ...Object.values(m.groups).filter(g => !ch[g.k]).map(g => ({key:'i:' + g.core, name:g.name, parts:g.parts})),
     ...m.staples.filter(s => !ch['staple|' + s.name]).map(s => ({key:'s:' + s.name.toLowerCase(), name:s.name})),
     ...m.extras.filter(e => !ch['extra|' + e.id]).map(e => ({key:'x:' + e.name.toLowerCase(), name:e.name})),
   ].filter(r => storeOf(r.key) === 'walmart');
-  const seen = new Set(); const mapped = []; const missing = [];
-  for (const r of rows) { const p = wmPick(r.key, r.name); if (p && p.id) { if (!seen.has(p.id)) { seen.add(p.id); mapped.push({...r, p}); } } else missing.push(r); }
-  const url = mapped.length ? WM_CART + mapped.map(x => `${x.p.id}|${Math.max(1, +x.p.qty || 1)}`).join(',') : '';
+  const byId = new Map(); const missing = [];
+  for (const r of rows) { const p = wmPick(r.key, r.name); if (!(p && p.id)) { missing.push(r); continue; }
+    const x = byId.get(p.id) || {...r, p, need: undefined}; x.need = packNeed(r.parts || [], x.need, packSize(p.label).cupOz); byId.set(p.id, x); }
+  const mapped = [...byId.values()].map(x => ({...x, n: packsFrom(x.need, x.p)}));
+  const url = mapped.length ? WM_CART + mapped.map(x => `${x.p.id}|${x.n}`).join(',') : '';
   return {mapped, missing, url};
 }
 const wmBtn = (key, name) => { const p = wmPick(key, name); const on = !!p; return `<button class="wm-btn ${on?'on':''}" data-act="wmset" data-key="${esc(key)}" data-name="${esc(name)}" title="${on ? esc(p.label || 'Change the Walmart product') : 'Choose the Walmart product'}">${on ? (p.auto ? (/^Great Value/.test(p.label) ? 'Great Value ✓' : 'Default ✓') : 'Walmart ✓') : '+ Walmart'}</button>`; };
@@ -1294,7 +1340,7 @@ function viewGrocery(){
   const staplesHTML = section('Weekly staples', m.staples.map(s => row('staple|'+s.name, s.name, '', '', `<button class="btn ghost sm" data-act="stapleoff" data-name="${esc(s.name)}" title="Skip this week">Skip</button>`, 's:' + s.name.toLowerCase())));
   const byAisle = {}; for (const g of Object.values(m.groups)) (byAisle[g.aisle] ||= []).push(g);
   const aisles = AISLE_ORDER.filter(a => byAisle[a]).map(a => section(a, byAisle[a].sort((x,y) => x.name.localeCompare(y.name)).map(g =>
-    row(g.k, g.name, g.qty, esc([...g.recipes].join(' · ')) + (g.fridge ? ` <span class="chip fridge">In the fridge?</span>` : ''), '', 'i:' + g.core)))).join('');
+    row(g.k, g.name, g.qty, (() => { const n = packsFor(g.parts, wmPick('i:' + g.core, g.name)); return (n > 1 ? `<span class="chip buyn">Buy ${n}</span> ` : ''); })() + esc([...g.recipes].join(' · ')) + (g.fridge ? ` <span class="chip fridge">In the fridge?</span>` : ''), '', 'i:' + g.core)))).join('');
   const extrasHTML = section('Added this week', m.extras.map(e => row('extra|'+e.id, e.name, '', '', `<button class="btn ghost sm icon" data-act="rmextra" data-id="${e.id}" aria-label="Remove">${I.x}</button>`, 'x:' + e.name.toLowerCase())));
   const pantryList = [...m.pantryHits.entries()].sort((a,b)=>a[0].localeCompare(b[0]));
   const planned = Object.values(w.days).filter(d => d.rid && !NOCOOK.some(n=>n[0]===d.cat)).length;
@@ -1341,7 +1387,7 @@ function groceryText(only){
   const m = groceryModel();
   const start = curStart(); const dates = weekDates(start);
   const ents = groceryEntries(m).filter(e => !e.checked);
-  const line = e => `☐ ${e.name}${e.qty ? ` (${e.qty})` : ''}`;
+  const line = e => `☐ ${e.name}${e.qty ? ` (${e.qty})` : ''}${e.packs > 1 ? ` — buy ${e.packs}` : ''}`;
   const range = `${MON[dates[0].getMonth()]} ${dates[0].getDate()}–${MON[dates[6].getMonth()]} ${dates[6].getDate()}`;
   const sams = ents.filter(e => e.store === 'sams');
   if (only === 'sams') return [`Sam's Club list ${range}`, '', ...sams.map(line)].join('\n');
