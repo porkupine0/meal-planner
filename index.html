@@ -212,6 +212,9 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,va
 .override{align-items:flex-start;background:var(--surface);border-radius:10px;padding:9px 10px;font-size:13.5px;line-height:1.35;margin:4px 0}
 .override b{font-weight:700}
 .override .muted{font-size:12.5px}
+.ai-all{justify-content:center;border-color:var(--accent);color:var(--accent);background:var(--surface)}
+.cover{background:var(--sun-soft);border-radius:10px;padding:9px 12px;font-size:14px}
+.cover.ok{background:var(--accent-soft);color:var(--accent);font-weight:600}
 /* cook mode */
 .cook{display:flex;flex-direction:column;gap:12px;font-size:17px}
 .cook h3{font-size:19px;margin-top:4px}
@@ -855,6 +858,7 @@ function viewSetup(start, w, label, dates){
         <div class="addrow"><input type="text" id="fridge-in" placeholder="e.g. spinach, sour cream, ham" aria-label="Ingredient to use up" value="${esc(S.fridgeDraft)}"><button class="btn" data-act="addfridge">${I.plus}Add</button></div>
         ${overrideBox()}
         <div class="chips" style="margin-top:10px">${fr.length ? fr.map(f => `<span class="chip fridge" style="font-size:13px;padding:4px 6px 4px 10px">${esc(f.name)}<button class="btn ghost sm icon" style="padding:2px" data-act="usedfridge" data-id="${f.id}" aria-label="Remove ${esc(f.name)}">${I.x}</button></span>`).join('') : '<span class="muted" style="font-size:14px">Nothing yet. Skip this step if the fridge is clear.</span>'}</div>
+        ${fr.length ? `<button class="btn ai-all" style="margin-top:10px" data-act="aiopen" data-all="1">${I.wand}Ask Claude for one meal that uses ${fr.length > 1 ? `all ${fr.length}` : 'it'}</button>` : ''}
         ${(() => { const q = recentFresh(); return q.length ? `<div class="label" style="margin:14px 0 6px">Left from last week's meals? Tap to add</div><div class="chips">${q.map(k => `<button class="chipbtn" data-act="quickfridge" data-name="${esc(k)}">+ ${esc(k)}</button>`).join('')}</div>` : ''; })()}</section>
       <section class="panel"><div class="label">Step 2</div><h3>What kind of night is each day?</h3>
         <p class="muted" style="margin:0 0 10px;font-size:14px">Filled in from your usual week. Change any of them for this week.</p>
@@ -889,6 +893,7 @@ function useUpPanel(){
       ${overrideBox()}
       <div class="addrow" style="margin:0"><input type="text" id="fridge-in" placeholder="Add a leftover, e.g. sour cream" aria-label="Add a leftover ingredient" value="${esc(S.fridgeDraft)}"><button class="btn" data-act="addfridge">${I.plus}Add</button></div>
       ${fr.length ? `<div class="chips">${fr.map(f => `<span class="chip fridge chip-x">${esc(f.name)}<button class="btn ghost sm icon" data-act="usedfridge" data-id="${f.id}" aria-label="Used up ${esc(f.name)}">${I.x}</button></span>`).join('')}</div>` : ''}
+      ${fr.length ? `<button class="btn ai-all" data-act="aiopen" data-all="1">${I.wand}Ask Claude for one meal that uses ${fr.length > 1 ? `all ${fr.length}` : 'it'}</button>` : ''}
       ${sugg.length ? `<div class="label">Recipes that use them</div><div class="sugg">${sugg.map(({r,m}) => `<div class="srow">${thumbHTML(r)}<div class="grow"><button class="meal-name" data-open="${r.id}">${esc(r.n)}</button><div class="meal-meta"><span class="chip fridge">${esc(m.join(', '))}</span>${r.t?`<span class="chip">${fmtMin(r.t)}</span>`:''}</div></div><select data-plan="${r.id}" aria-label="Plan ${esc(r.n)}"><option value="">Plan…</option>${dayOpts}</select></div>`).join('')}</div>` : ''}
     </div></details>`;
 }
@@ -1173,7 +1178,8 @@ function aiPrompt(m){
   if (!m.side && m.fit && day && day.cat && CATNAME[day.cat] && !['any','new','fav'].includes(day.cat)) lines.push(`It should fit this category: ${CATNAME[day.cat]}.`);
   if (m.mood.trim()) lines.push(`What they're in the mood for: ${m.mood.trim()}`);
   if (m.quick) lines.push('It must take 30 minutes or less in total, with 20 minutes or less of hands-on work.');
-  if (m.useFridge && (S.fridge.items || []).length) lines.push(`Use up as many of these leftover ingredients as makes sense: ${S.fridge.items.map(f => f.name).join(', ')}.`);
+  if (m.allLeftovers && (S.fridge.items || []).length) lines.push(`Make one delicious dinner that uses ALL of these leftover ingredients from the fridge: ${S.fridge.items.map(f => f.name).join(', ')}. Every one of them must appear in the ingredient list. Choose a dish where they genuinely taste good together (not just thrown in), and add other common ingredients as needed.`);
+  else if (m.useFridge && (S.fridge.items || []).length) lines.push(`Use up as many of these leftover ingredients as makes sense: ${S.fridge.items.map(f => f.name).join(', ')}.`);
   const existing = S.recipes.filter(r => !m.side ? r.k === 'main' : r.k !== 'main').map(r => r.n);
   return `You are writing one new recipe for a family's weekly meal planner.
 
@@ -1327,27 +1333,36 @@ function renderModal(){
       <div class="row" style="justify-content:flex-end">${cur ? `<button class="btn" data-act="wmremove">${I.trash}Remove</button>` : ''}<button class="btn" data-act="close">Cancel</button><button class="btn primary" data-act="wmsave">Save</button></div>`;
   } else if (m.type === 'ai') {
     const w = getWeek(curStart()); const day = m.day && w.days[m.day]; const entree = day && day.rid && S.byId[day.rid];
-    title = m.side ? 'A side from Claude' : 'New recipe from Claude';
+    title = m.side ? 'A side from Claude' : m.allLeftovers ? 'One meal from your leftovers' : 'New recipe from Claude';
     const mode = aiMode(); const fr = S.fridge.items || [];
     if (!mode) {
       body = IN_CLAUDE ? `<p style="margin:0">Claude isn't available here. Open this page signed in to claude.ai to create recipes.</p>`
         : `<p style="margin:0">To create recipes with Claude on this site, add an Anthropic API key in Settings. It's kept only in this browser.</p><div class="row" style="justify-content:flex-end"><button class="btn primary" data-view="settings">Go to Settings</button></div>`;
     } else if (m.state === 'loading') {
-      body = `<div class="ai-wait"><div class="spin"></div><b style="color:var(--ink)">Claude is writing your recipe…</b><span>This usually takes 20 to 60 seconds.</span></div>`;
+      body = `<div class="ai-wait"><div class="spin"></div><b style="color:var(--ink)">${m.allLeftovers ? `Claude is building a meal around ${esc((S.fridge.items||[]).map(f => f.name).join(', '))}…` : 'Claude is writing your recipe…'}</b><span>This usually takes 20 to 60 seconds.</span></div>`;
     } else if (m.state === 'done') {
       const r = m.result;
-      body = `<div class="ai-out"><h3 style="font-size:22px">${esc(r.name)}</h3>${r.description ? `<p style="margin:0">${esc(r.description)}</p>` : ''}
+      const fr2 = S.fridge.items || [];
+      const usedL = fr2.length ? fridgeMatches({id:'ai-preview-' + r.name, n:r.name, i:r.ingredients}) : [];
+      const missL = fr2.map(f => f.name).filter(n => !usedL.includes(n));
+      const cover = !fr2.length || (!m.allLeftovers && !m.useFridge) ? '' : !missL.length
+        ? `<div class="cover ok">Uses all ${fr2.length} leftover${fr2.length>1?'s':''}: ${esc(usedL.join(', '))}</div>`
+        : `<div class="cover">Uses ${usedL.length ? esc(usedL.join(', ')) : 'none of your leftovers'}. Left out: <b>${esc(missL.join(', '))}</b>.${m.allLeftovers ? ' Tap <b>Try another</b> for a different idea.' : ''}</div>`;
+      const dates = weekDates(curStart());
+      const planPick = !m.day && !m.side ? `<select id="ai-day" style="width:auto" aria-label="Night to plan it for"><option value="">Plan for…</option>${dates.map(d => `<option value="${iso(d)}">${fmtD(d)}</option>`).join('')}</select><button class="btn primary" data-act="aisaveplan">Save and plan</button>` : '';
+      body = `<div class="ai-out">${cover}<h3 style="font-size:22px">${esc(r.name)}</h3>${r.description ? `<p style="margin:0">${esc(r.description)}</p>` : ''}
         <div class="meal-meta">${r.total ? `<span class="chip">${I.clock}${fmtMin(r.total)}</span>` : ''}${r.hands ? `<span class="chip">${r.hands} min hands-on</span>` : ''}${r.servings ? `<span class="chip">Serves ${esc(r.servings)}</span>` : ''}${r.categories.map(c => `<span class="chip">${esc(CATNAME[c] || c)}</span>`).join('')}</div>
         <div><h3 style="font-size:17px;margin-bottom:6px">Ingredients</h3><ul class="ing">${r.ingredients.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>
         <div class="dirs"><h3 style="font-size:17px;margin-bottom:6px">Directions</h3>${r.steps.map((x, n) => `<p><b>${n + 1}.</b> ${esc(x)}</p>`).join('')}</div>
-        <div class="row" style="justify-content:flex-end"><button class="btn" data-act="aiback">Change request</button><button class="btn" data-act="aigo">${I.reroll}Try another</button><button class="btn ${m.day ? '' : 'primary'}" data-act="aisave">Save to recipe box</button>${m.day ? `<button class="btn primary" data-act="aisaveplan">Save and plan for ${esc(DOW[parseISO(m.day).getDay()])}</button>` : ''}</div></div>`;
+        <div class="row" style="justify-content:flex-end"><button class="btn" data-act="aiback">Change request</button><button class="btn" data-act="aigo">${I.reroll}Try another</button><button class="btn ${m.day || planPick ? '' : 'primary'}" data-act="aisave">Save to recipe box</button>${m.day ? `<button class="btn primary" data-act="aisaveplan">Save and plan for ${esc(DOW[parseISO(m.day).getDay()])}</button>` : planPick}</div></div>`;
     } else {
       const canFit = !m.side && day && day.cat && CATNAME[day.cat] && !['any','new','fav'].includes(day.cat) && !NOCOOK.some(n => n[0] === day.cat);
       body = `${m.side && entree ? `<p style="margin:0">Claude will suggest a side to go with <b>${esc(entree.n)}</b>.</p>` : ''}
         <div><label class="label" for="ai-mood">${m.side ? 'Anything specific? (optional)' : 'What are you in the mood for?'}</label><textarea id="ai-mood" style="margin-top:6px;min-height:80px" placeholder="${m.side ? 'Something with green beans' : 'Something cozy with chicken and potatoes'}">${esc(m.mood)}</textarea></div>
         <div class="chips">
           ${canFit ? `<button class="chipbtn" data-act="aitoggle" data-k="fit" aria-pressed="${!!m.fit}">Fits ${esc(CATNAME[day.cat])}</button>` : ''}
-          ${fr.length ? `<button class="chipbtn" data-act="aitoggle" data-k="useFridge" aria-pressed="${!!m.useFridge}">Use up ${esc(fr.slice(0,3).map(f => f.name).join(', '))}${fr.length > 3 ? '…' : ''}</button>` : ''}
+          ${fr.length && !m.side ? `<button class="chipbtn" data-act="aitoggle" data-k="allLeftovers" aria-pressed="${!!m.allLeftovers}">Use ALL ${fr.length} leftovers in one meal</button>` : ''}
+          ${fr.length && !m.allLeftovers ? `<button class="chipbtn" data-act="aitoggle" data-k="useFridge" aria-pressed="${!!m.useFridge}">Use up ${esc(fr.slice(0,3).map(f => f.name).join(', '))}${fr.length > 3 ? '…' : ''}</button>` : ''}
           <button class="chipbtn" data-act="aitoggle" data-k="quick" aria-pressed="${!!m.quick}">Quick (30 min or less)</button>
         </div>
         ${m.err ? `<p style="margin:0;color:var(--tomato)">${esc(m.err)}</p>` : ''}
@@ -1403,7 +1418,7 @@ document.addEventListener('click', async e => {
     case 'close': return closeModal();
     case 'wk': S.weekOffset += +t.dataset.n; return render();
     case 'wk0': S.weekOffset = 0; return render();
-    case 'generate': { let res; editWeek(w => { res = generateWeek(w); }); window.scrollTo(0,0); if ((S.fridge.items||[]).length) useUpToast(res); else toast('Your week is planned'); return; }
+    case 'generate': { let res; editWeek(w => { res = generateWeek(w, {unlockedOnly: true}); }); window.scrollTo(0,0); if ((S.fridge.items||[]).length) useUpToast(res); else toast('Your week is planned'); return; }
     case 'planhand': editWeek(()=>{}); return;
     case 'replan': { if (!t.dataset.sure) { t.dataset.sure = 1; t.textContent = 'Tap again to clear this week'; return; } const id = iso(curStart()); const old = S.weeks[id]; delete S.weeks[id]; removeDoc('weeks/' + id); S.drafts[id] = buildDraft(curStart()); if (old) for (const [k,d] of Object.entries(old.days||{})) if (S.drafts[id].days[k]) S.drafts[id].days[k].cat = d.cat; render(); toast('Week cleared'); return; }
     case 'fill': editWeek(w => { for (const k of Object.keys(w.days).sort()) { const d = w.days[k]; if (d.cat && !d.rid && !NOCOOK.some(n=>n[0]===d.cat)) d.rid = pick(d.cat, w, k); } }); toast('Open days filled'); return;
@@ -1456,12 +1471,15 @@ document.addEventListener('click', async e => {
       saveWalmart(); closeModal(); render(); toast('Walmart product saved'); return;
     }
     case 'wmremove': { const m = S.modal; const map = {...(S.walmart.map || {})}; delete map[m.key]; S.walmart.map = map; saveWalmart(); closeModal(); render(); return; }
-    case 'aiopen': { const d = t.dataset.day || null; const w = d && getWeek(curStart()); const dc = d && w.days[d]?.cat; return openModal({type:'ai', day:d, side:!!t.dataset.side, mood:'', fit:!!dc, useFridge:(S.fridge.items||[]).length > 0 && !t.dataset.side, quick:dc === 'quick', state:'form', focus:'ai-mood'}); }
+    case 'aiopen': if (t.dataset.all) { const m = {type:'ai', day:null, side:false, mood:'', fit:false, useFridge:false, allLeftovers:true, quick:false, state:'form'}; openModal(m); if (aiMode()) runAi(m); return; }
+    { const d = t.dataset.day || null; const w = d && getWeek(curStart()); const dc = d && w.days[d]?.cat; return openModal({type:'ai', day:d, side:!!t.dataset.side, mood:'', fit:!!dc, useFridge:(S.fridge.items||[]).length > 0 && !t.dataset.side, quick:dc === 'quick', state:'form', focus:'ai-mood'}); }
     case 'aitoggle': { const m = S.modal; m.mood = $('#ai-mood')?.value ?? m.mood; m[t.dataset.k] = !m[t.dataset.k]; return renderModal(); }
     case 'aigo': case 'ainew': { const m = S.modal; m.mood = $('#ai-mood')?.value ?? m.mood; m.surprise = a === 'ainew' || (a === 'aigo' && m.surprise && m.state === 'done'); return runAi(m); }
     case 'aiback': { const m = S.modal; m.state = 'form'; m.surprise = false; return renderModal(); }
     case 'aisave': { const id = saveAiRecipe(S.modal); closeModal(); render(); openModal({type:'recipe', id}); toast('Saved to your recipe box'); return; }
-    case 'aisaveplan': { const m = S.modal; const id = saveAiRecipe(m); editWeek(w => { const d = w.days[m.day]; if (m.side) { d.side = id; d.sideText = null; rememberSide(d.rid, 'r:' + id); } else { d.rid = id; d.locked = true; if (!d.cat || NOCOOK.some(n=>n[0]===d.cat)) d.cat = 'any'; } }); closeModal(); toast(m.side ? 'Side saved and added' : 'Saved and planned'); return; }
+    case 'aisaveplan': { const m = S.modal; const dayId = m.day || $('#ai-day')?.value; if (!dayId) { toast('Pick a night first'); $('#ai-day')?.focus(); return; } m.day = dayId;
+      if (isDraft(curStart()) && !m.side) { const id = saveAiRecipe(m); const d = getWeek(curStart()).days[dayId]; d.rid = id; d.locked = true; if (!d.cat || NOCOOK.some(n=>n[0]===d.cat)) d.cat = 'any'; closeModal(); render(); toast(`Saved for ${DOWL[parseISO(dayId).getDay()]}. Make my plan will build the rest of the week.`); return; }
+      const id = saveAiRecipe(m); editWeek(w => { const d = w.days[m.day]; if (m.side) { d.side = id; d.sideText = null; rememberSide(d.rid, 'r:' + id); } else { d.rid = id; d.locked = true; if (!d.cat || NOCOOK.some(n=>n[0]===d.cat)) d.cat = 'any'; } }); closeModal(); toast(m.side ? 'Side saved and added' : 'Saved and planned'); return; }
     case 'savekey': { const v = ($('#ai-key')?.value || '').trim(); if (!/^sk-ant-/.test(v)) { toast('That doesn\'t look like an Anthropic API key (it starts with sk-ant-).'); return; } try { localStorage.setItem('sb.anthropicKey', v); } catch {} render(); toast('API key saved on this device'); return; }
     case 'rmkey': try { localStorage.removeItem('sb.anthropicKey'); } catch {} render(); toast('API key removed'); return;
     case 'usedfridge': S.fridge.items = (S.fridge.items||[]).filter(x => x.id !== t.dataset.id); saveFridge(); return render();
