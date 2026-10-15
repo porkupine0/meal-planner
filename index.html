@@ -244,6 +244,8 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,va
 .spin{width:34px;height:34px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--accent);animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .chip.buyn{background:var(--sun-soft);color:var(--ink);font-weight:700}
+.adjust{background:var(--accent-soft);border-radius:var(--r);padding:12px}
+.adjust .label svg{width:14px;height:14px;vertical-align:-2px}
 .linkbtn{background:none;border:0;padding:0;font:inherit;color:var(--accent,inherit);text-decoration:underline;cursor:pointer}
 .wm-btn{border:1px dashed var(--line);background:transparent;color:var(--muted);border-radius:99px;padding:3px 9px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}
 .wm-btn:hover{border-color:var(--sky);color:var(--sky)}
@@ -555,9 +557,10 @@ function aisleOf(it){
 const AISLE_ORDER = ['Produce','Meat & Deli','Dairy & Refrigerated','Bakery','Frozen','Pasta, Rice & Grains','Pantry & Canned','Sauces & Condiments','Spices & Baking','Snacks & Nuts'];
 const ingCache = new Map();
 function ingOf(r){
-  if (ingCache.has(r.id + '|' + r.i.length)) return ingCache.get(r.id + '|' + r.i.length);
+  const key = r.id + '|' + hashStr(r.i.join('\n'));
+  if (ingCache.has(key)) return ingCache.get(key);
   const out = r.i.flatMap(parseIngredient);
-  ingCache.set(r.id + '|' + r.i.length, out); return out;
+  ingCache.set(key, out); return out;
 }
 function fmtQty(q){
   if (q == null) return '';
@@ -1646,9 +1649,9 @@ function parseRecipeJSON(v){
   if (!r.name || r.ingredients.length < 2 || !r.steps.length) throw {code:'bad_output'};
   return r;
 }
-async function aiGenerate(m){
-  const prompt = aiPrompt(m);
-  if (aiMode() === 'sample') return parseRecipeJSON(await S.sample.json(prompt, {modelTier:'default', cache:false}));
+async function aiGenerate(m){ return parseRecipeJSON(await aiAsk(aiPrompt(m))); }
+async function aiAsk(prompt){
+  if (aiMode() === 'sample') return await S.sample.json(prompt, {modelTier:'default', cache:false});
   const key = getKey(); if (!key) throw {code:'no_key'};
   const mod = await import(SDK_URL); const Anthropic = mod.default || mod.Anthropic;
   const client = new Anthropic({apiKey: key, dangerouslyAllowBrowser: true});
@@ -1659,7 +1662,95 @@ async function aiGenerate(m){
     messages: [{role: 'user', content: prompt}],
   });
   if (resp.stop_reason === 'refusal') throw {code:'refusal'};
-  return parseRecipeJSON(resp.content.filter(b => b.type === 'text').map(b => b.text).join(''));
+  return resp.content.filter(b => b.type === 'text').map(b => b.text).join('');
+}
+// ---------- editing and adjusting a recipe ----------
+const RED_SAUCE = /marinara|tomato sauce|pizza sauce|pasta sauce|spaghetti sauce|red enchilada|crushed tomato|tomato puree|diced tomatoes|tomato paste|salsa roja/i;
+const ADJUST_IDEAS = ['White sauce instead of red', 'Make it healthier', 'Make it quicker', 'Make it mild for the kids', 'Make it in the slow cooker', 'Use what we have in the fridge'];
+function adjustPrompt(r, e, ask){
+  const fridge = /fridge/i.test(ask) && (S.fridge.items || []).length ? `\nLeftovers in the fridge to use: ${S.fridge.items.map(f => f.name).join(', ')}.` : '';
+  return `You are adjusting one recipe in a family's meal planner.
+
+Family rules:
+- No seafood or fish of any kind.
+- The kids don't like red sauce, so prefer creamy, cheesy, Alfredo, garlic butter, green chile, gravy or similar sauces.
+- Kid-friendly and mild. Any heat goes on the side.
+- Use ingredients from a regular US grocery store like Walmart.
+
+Current recipe:
+Name: ${e.n}
+Serves: ${e.s || 'not given'}
+Ingredients:
+${e.i}
+
+Directions:
+${e.d}
+
+Change they asked for: ${ask}${fridge}
+
+Make that change and keep everything else as close to the original as you can. Keep amounts in US units, one ingredient per line with its amount first. Rename the recipe only if the change makes the old name wrong.
+
+Reply with only a JSON object, no other text, in exactly this shape:
+{"name": "recipe name", "servings": "4 to 6", "summary": "one short sentence saying what you changed", "ingredients": ["one ingredient per string with its amount"], "steps": ["one step per string"]}`;
+}
+function parseAdjust(v){
+  let o = v;
+  if (typeof v === 'string') { const a = v.indexOf('{'), b = v.lastIndexOf('}'); if (a < 0 || b < a) throw {code:'bad_output'}; o = JSON.parse(v.slice(a, b + 1)); }
+  const strs = x => Array.isArray(x) ? x.map(y => String(y).trim()).filter(Boolean) : [];
+  const r = {n: String(o?.name || '').trim(), s: String(o?.servings || '').trim(), sum: String(o?.summary || '').trim(), i: strs(o?.ingredients), d: strs(o?.steps)};
+  if (!r.n || r.i.length < 2 || !r.d.length) throw {code:'bad_output'};
+  return r;
+}
+async function runAdjust(m){
+  const r = S.byId[m.id]; const e = m.edit; const ask = (e.ask || '').trim();
+  if (!ask) { e.err = 'Say what to change first.'; return renderModal(); }
+  e.state = 'loading'; e.err = ''; renderModal();
+  try {
+    const out = parseAdjust(await aiAsk(adjustPrompt(r, e, ask)));
+    if (S.modal !== m || m.edit !== e) return;
+    e.before = {n: e.n, s: e.s, i: e.i, d: e.d};
+    Object.assign(e, {n: out.n, s: out.s || e.s, i: out.i.join('\n'), d: out.d.join('\n\n'), note: out.sum || 'Claude adjusted the recipe.', state: ''});
+  } catch (err) { if (S.modal !== m || m.edit !== e) return; e.state = ''; e.err = aiErrorText(err); }
+  renderModal();
+}
+function startEdit(m){
+  const r = S.byId[m.id];
+  m.edit = {n: r.n, s: r.s || '', i: r.i.join('\n'), d: r.d || '', ask: '', state: '', err: '', note: ''};
+  renderModal();
+}
+function saveEdit(m){
+  const r = S.byId[m.id]; const e = m.edit;
+  const lines = e.i.split('\n').map(x => x.trim()).filter(Boolean);
+  if (!e.n.trim()) { e.err = 'Give the recipe a name.'; return renderModal(); }
+  if (!lines.length) { e.err = 'Add at least one ingredient.'; return renderModal(); }
+  const text = lines.join(' ') + ' ' + e.d;
+  saveOverride(r.id, {n: e.n.trim(), s: e.s.trim(), i: lines, d: e.d.trim(), ed: 1, red: RED_SAUCE.test(text) ? (r.red || 'other') : ''});
+  m.edit = null; render(); toast('Recipe saved');
+}
+function restoreRecipe(m){
+  if (!confirm('Put back the original ingredients and directions?')) return;
+  saveOverride(m.id, {n: undefined, s: undefined, i: undefined, d: undefined, ed: undefined, red: undefined});
+  m.edit = null; render(); toast('Original recipe restored');
+}
+function editBody(m){
+  const r = S.byId[m.id]; const e = m.edit; const busy = e.state === 'loading';
+  const ai = aiMode();
+  return `<div class="adjust">
+      <div class="label" style="margin-bottom:6px">${I.wand} Adjust with Claude</div>
+      ${ai ? `<div class="chips" style="margin-bottom:8px">${ADJUST_IDEAS.map(x => `<button class="chipbtn" data-act="adjidea" data-text="${esc(x)}">${esc(x)}</button>`).join('')}</div>
+        <div class="addrow" style="margin:0"><input type="text" id="re-ask" placeholder="What should change? e.g. swap the beans for corn" value="${esc(e.ask)}" aria-label="What should change" ${busy ? 'disabled' : ''}><button class="btn primary" data-act="adjust" ${busy ? 'disabled' : ''}>${busy ? 'Adjusting…' : 'Adjust'}</button></div>`
+        : `<p class="muted" style="margin:0;font-size:13.5px">${IN_CLAUDE ? 'Claude adjustments aren\'t available here.' : 'Add an Anthropic API key in Settings to have Claude adjust recipes. You can still edit by hand below.'}</p>`}
+      ${e.note ? `<div class="tip" style="margin:10px 0 0"><b>Claude:</b> ${esc(e.note)} Check it below, then tap Save.${e.before ? ` <button class="linkbtn" data-act="adjundo">Undo</button>` : ''}</div>` : ''}
+    </div>
+    ${e.err ? `<p style="margin:0;color:var(--tomato);font-size:14px">${esc(e.err)}</p>` : ''}
+    <div><label class="label" for="re-n">Name</label><input type="text" id="re-n" value="${esc(e.n)}" style="margin-top:6px"></div>
+    <div><label class="label" for="re-s">Serves</label><input type="text" id="re-s" value="${esc(e.s)}" placeholder="4" style="margin-top:6px"></div>
+    <div><label class="label" for="re-i">Ingredients (one per line)</label><textarea id="re-i" style="margin-top:6px;min-height:200px">${esc(e.i)}</textarea></div>
+    <div><label class="label" for="re-d">Directions</label><textarea id="re-d" style="margin-top:6px;min-height:180px">${esc(e.d)}</textarea></div>
+    <div class="row" style="justify-content:space-between">
+      <span>${r.ed && !r.custom ? `<button class="btn ghost" data-act="restorerec">Restore original</button>` : ''}</span>
+      <div class="row"><button class="btn" data-act="canceledit">Cancel</button><button class="btn primary" data-act="saveedit" ${busy ? 'disabled' : ''}>Save changes</button></div>
+    </div>`;
 }
 function aiErrorText(e){
   const c = e?.code, st = e?.status;
@@ -1699,7 +1790,9 @@ function closeModal(){ if (S.modal?.type === 'cook') keepAwake(false); S.modal =
 function renderModal(){
   const m = S.modal; if (!m) return;
   let title = '', body = '', head = '';
-  if (m.type === 'recipe') {
+  if (m.type === 'recipe' && m.edit && S.byId[m.id]) {
+    title = 'Edit ' + S.byId[m.id].n; body = editBody(m);
+  } else if (m.type === 'recipe') {
     const r = S.byId[m.id]; if (!r) return closeModal();
     m.scale ||= 1;
     title = r.n;
@@ -1724,8 +1817,8 @@ function renderModal(){
       ${r.nu ? `<p class="muted" style="margin:0;font-size:13px">${esc(r.nu)}</p>`:''}
       <div><label class="label" for="m-notes">Family notes</label><textarea id="m-notes" placeholder="Kids loved it. Use less cayenne. Double the sauce…" style="margin-top:6px">${esc(r.no || '')}</textarea></div>
       <div class="row" style="justify-content:space-between">
-        <span class="muted" style="font-size:13px">${r.fill?'The saved recipe was empty, so Claude wrote this version. ':''}${r.nw?'Added by Claude.':''}${r.u?`<a href="${esc(r.u)}" target="_blank" rel="noopener">Original recipe ↗</a>`: r.src && !r.nw ? esc(r.src):''}</span>
-        <div class="row"><button class="btn" data-act="hide" aria-pressed="${!!r.hide}">${r.hide?'Hidden from planner':'Never suggest'}</button>${r.custom?`<button class="btn" data-act="delrecipe">${I.trash}Delete</button>`:''}</div></div>`;
+        <span class="muted" style="font-size:13px">${r.ed && !r.custom ? 'You edited this recipe. ' : ''}${r.fill?'The saved recipe was empty, so Claude wrote this version. ':''}${r.nw?'Added by Claude.':''}${r.u?`<a href="${esc(r.u)}" target="_blank" rel="noopener">Original recipe ↗</a>`: r.src && !r.nw ? esc(r.src):''}</span>
+        <div class="row"><button class="btn" data-act="editrec">${I.wand}Edit or adjust</button><button class="btn" data-act="hide" aria-pressed="${!!r.hide}">${r.hide?'Hidden from planner':'Never suggest'}</button>${r.custom?`<button class="btn" data-act="delrecipe">${I.trash}Delete</button>`:''}</div></div>`;
   } else if (m.type === 'pick') {
     const w = getWeek(curStart()); const day = w.days[m.day] || {};
     const entree = day.rid && S.byId[day.rid];
@@ -1928,6 +2021,13 @@ document.addEventListener('click', async e => {
     case 'fbcreate': return fbSignIn('create');
     case 'fbsignout': if (fb && confirm('Sign out of family sync on this phone?')) fb.au.signOut(fb.auth); return;
     case 'fbmore': S.view = 'settings'; render(); setTimeout(() => $('#sync-panel')?.scrollIntoView({behavior:'smooth'}), 50); return;
+    case 'editrec': return startEdit(S.modal);
+    case 'canceledit': S.modal.edit = null; return renderModal();
+    case 'saveedit': return saveEdit(S.modal);
+    case 'restorerec': return restoreRecipe(S.modal);
+    case 'adjust': return runAdjust(S.modal);
+    case 'adjidea': { const e = S.modal.edit; e.ask = t.dataset.text; return runAdjust(S.modal); }
+    case 'adjundo': { const e = S.modal.edit; if (e.before) Object.assign(e, e.before, {before: null, note: ''}); return renderModal(); }
     case 'exportdata': {
       const data = {supperBoard: 1, settings: S.settings, fridge: S.fridge, walmart: S.walmart, overrides: S.overrides, custom: S.custom, weeks: S.weeks};
       return shareText(JSON.stringify(data), 'Supper Board data', 'Data');
@@ -1979,6 +2079,7 @@ document.addEventListener('input', e => {
   if (t.id === 'rq') { clearTimeout(searchTimer); searchTimer = setTimeout(() => { S.rf.q = t.value; S.rf.limit = 60; render(); }, 180); }
   if (t.id === 'pick-q') { S.modal.q = t.value; S.modal.focus = 'pick-q'; clearTimeout(searchTimer); searchTimer = setTimeout(renderModal, 150); }
   if (t.id === 'fridge-in') S.fridgeDraft = t.value;
+  if (/^re-(n|s|i|d|ask)$/.test(t.id) && S.modal?.edit) S.modal.edit[t.id.slice(3)] = t.value;
 });
 document.addEventListener('toggle', e => {
   if (e.target.matches?.('[data-useup]')) { if (S.useupOpen !== e.target.open) { S.useupOpen = e.target.open; render(); } }
@@ -1986,6 +2087,7 @@ document.addEventListener('toggle', e => {
 document.addEventListener('click', e => { const open = document.querySelector('details.more[open]'); if (open && !open.contains(e.target)) open.open = false; if (open && e.target.closest('.menu button') && !(e.target.closest('[data-act="replan"]') && !e.target.closest('[data-act="replan"]').dataset.sure)) open.open = false; }, true);
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape' && S.modal) closeModal();
+  if (e.key === 'Enter' && e.target.id === 're-ask') { e.preventDefault(); document.querySelector('[data-act="adjust"]')?.click(); return; }
   if (e.key === 'Enter' && e.target.matches('#extra-in,#staple-in,#pantry-in,#fridge-in')) { e.preventDefault(); const map = {'extra-in':'addextra','staple-in':'addstaple','pantry-in':'addpantry','fridge-in':'addfridge'}; document.querySelector(`[data-act="${map[e.target.id]}"]`)?.click(); }
 });
 document.addEventListener('submit', e => {

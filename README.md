@@ -79,3 +79,7 @@ service cloud.firestore {
 ```
 
 In **Authentication → Settings → Authorized domains**, add the GitHub Pages domain (for example `yourname.github.io`). The Claude version of the board keeps using Claude's own storage and doesn't use Firebase.
+
+## Editing and adjusting recipes
+
+Open any recipe and tap **Edit or adjust**. Change the name, servings, ingredients (one per line) or directions and tap **Save changes**. The grocery list uses the edited version. **Adjust with Claude** rewrites the recipe for a change you describe (white sauce instead of red, healthier, quicker, slow cooker, use the fridge leftovers, or anything you type); review what it filled in, then save or tap **Undo**. **Restore original** puts back the imported version of one of your recipes.
