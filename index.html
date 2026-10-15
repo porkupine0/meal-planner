@@ -73,6 +73,10 @@ a{color:var(--accent)}
 /* common */
 .btn{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 13px;cursor:pointer;font-weight:600;display:inline-flex;align-items:center;gap:7px;line-height:1.2;white-space:nowrap}
 .btn:hover{border-color:var(--accent)}
+a.btn{text-decoration:none;color:inherit}
+a.btn.primary{color:var(--accent-ink)}
+.narrow-only{display:none}
+@media (max-width:900px){.narrow-only{display:inline-flex}}
 .btn svg{width:16px;height:16px;flex:none}
 .btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 .btn.ghost{background:transparent;border-color:transparent;color:var(--muted)}
@@ -153,6 +157,11 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,va
 .it-for{font-size:12.5px;color:var(--muted);margin-top:1px}
 .it-x{margin-left:auto}
 .side-panel{display:flex;flex-direction:column;gap:14px}
+.wm-btn{border:1px dashed var(--line);background:transparent;color:var(--muted);border-radius:99px;padding:3px 9px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}
+.wm-btn:hover{border-color:var(--sky);color:var(--sky)}
+.wm-btn.on{border-style:solid;border-color:transparent;background:var(--sky-soft);color:var(--sky)}
+.wm-panel{border-color:var(--sky)}
+.items li .it-x{align-self:center}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px}
 .panel h3{font-size:16px;margin-bottom:8px}
 details.pantry summary{cursor:pointer;font-weight:700;list-style:none;display:flex;gap:8px;align-items:center}
@@ -309,7 +318,7 @@ const DEFAULT_SETTINGS = {
 // ---------- state ----------
 const S = {
   base:[], recipes:[], byId:{}, thumbs:{},
-  settings: structuredClone(DEFAULT_SETTINGS), fridge:{items:[]}, overrides:{}, custom:{}, weeks:{},
+  settings: structuredClone(DEFAULT_SETTINGS), fridge:{items:[]}, walmart:{map:{}}, overrides:{}, custom:{}, weeks:{},
   drafts:{}, mode:'loading', view:'plan', weekOffset:0,
   rf:{q:'', tag:'', fav:false, quick:false, mains:true, sort:'fav', limit:60},
   fridgeDraft:'', modal:null,
@@ -541,6 +550,7 @@ function loadLocal(){
     const g = k => { const v = localStorage.getItem('sb.' + k); return v ? JSON.parse(v) : null; };
     const st = g('app/settings'); if (st) S.settings = {...structuredClone(DEFAULT_SETTINGS), ...st};
     const fr = g('app/fridge'); if (fr) S.fridge = fr;
+    const wm = g('app/walmart'); if (wm && wm.map) S.walmart = wm;
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i); if (!k || !k.startsWith('sb.')) continue;
       const p = k.slice(3).split('/');
@@ -567,6 +577,7 @@ async function initDb(){
   db = d; S.mode = 'db'; setStatus();
   const onErr = () => {};
   db.doc('app/settings').onSnapshot(s => { if (s.exists) S.settings = {...structuredClone(DEFAULT_SETTINGS), ...structuredClone(s.data())}; S.drafts = {}; scheduleRender(); }, onErr);
+  db.doc('app/walmart').onSnapshot(s => { S.walmart = s.exists ? structuredClone(s.data()) : {map:{}}; if (!S.walmart.map) S.walmart.map = {}; scheduleRender(); }, onErr);
   db.doc('app/fridge').onSnapshot(s => { S.fridge = s.exists ? structuredClone(s.data()) : {items:[]}; scheduleRender(); }, onErr);
   db.collection('overrides').onSnapshot(q => { S.overrides = Object.fromEntries(q.docs.map(x => [x.id, structuredClone(x.data())])); rebuildRecipes(); scheduleRender(); }, onErr);
   db.collection('custom').onSnapshot(q => { S.custom = Object.fromEntries(q.docs.map(x => [x.id, structuredClone(x.data())])); rebuildRecipes(); scheduleRender(); }, onErr);
@@ -574,6 +585,7 @@ async function initDb(){
 }
 const saveSettings = () => persist('app/settings', S.settings);
 const saveFridge = () => persist('app/fridge', S.fridge);
+const saveWalmart = () => persist('app/walmart', S.walmart);
 function saveOverride(id, patch){
   const o = {...(S.overrides[id] || {}), ...patch};
   for (const k in o) if (o[k] === undefined || o[k] === null) delete o[k];
@@ -718,7 +730,7 @@ function groceryModel(){
     if (isP && !need.has(pk)) { if (!pantryHits.has(pk)) pantryHits.set(pk, new Set()); pantryHits.get(pk).add(rname); return; }
     const aisle = aisleOf(it);
     const k = aisle + '|' + gkey;
-    const g = groups[k] || (groups[k] = {k, aisle, name: it.name, parts: [], recipes: new Set()});
+    const g = groups[k] || (groups[k] = {k, aisle, name: it.name, core: gkey, parts: [], recipes: new Set()});
     g.parts.push(it); g.recipes.add(rname);
   };
   for (const [, day] of Object.entries(w.days)) {
@@ -742,6 +754,28 @@ function groceryModel(){
   const remaining = all.filter(k => !(w.checked||{})[k]).length;
   return {w, groups, pantryHits, staples, extras, remaining, total: all.length};
 }
+const WM_CART = 'https://affil.walmart.com/cart/addToCart?items=';
+const wmSearch = name => 'https://www.walmart.com/search?q=' + encodeURIComponent(name);
+function wmItemId(text){
+  const t = String(text || '').trim();
+  let m = t.match(/\/ip\/(?:[^?#]*\/)?(\d{5,})(?:[/?#]|$)/); if (m) return m[1];
+  m = t.match(/[?&](?:itemId|item_id|productId)=(\d{5,})/i); if (m) return m[1];
+  m = t.match(/^(\d{5,})$/); if (m) return m[1];
+  return null;
+}
+function walmartModel(m){
+  const ch = m.w.checked || {}; const map = S.walmart.map || {};
+  const rows = [
+    ...Object.values(m.groups).filter(g => !ch[g.k]).map(g => ({key:'i:' + g.core, name:g.name})),
+    ...m.staples.filter(s => !ch['staple|' + s.name]).map(s => ({key:'s:' + s.name.toLowerCase(), name:s.name})),
+    ...m.extras.filter(e => !ch['extra|' + e.id]).map(e => ({key:'x:' + e.name.toLowerCase(), name:e.name})),
+  ];
+  const seen = new Set(); const mapped = []; const missing = [];
+  for (const r of rows) { const p = map[r.key]; if (p && p.id) { if (!seen.has(p.id)) { seen.add(p.id); mapped.push({...r, p}); } } else missing.push(r); }
+  const url = mapped.length ? WM_CART + mapped.map(x => `${x.p.id}|${Math.max(1, +x.p.qty || 1)}`).join(',') : '';
+  return {mapped, missing, url};
+}
+const wmBtn = (key, name) => { const on = !!(S.walmart.map || {})[key]; return `<button class="wm-btn ${on?'on':''}" data-act="wmset" data-key="${esc(key)}" data-name="${esc(name)}" title="${on?'Change the Walmart product':'Choose the Walmart product'}">${on?'Walmart ✓':'+ Walmart'}</button>`; };
 function viewGrocery(){
   const m = groceryModel(); const w = m.w; const ch = w.checked || {};
   const start = curStart(); const dates = weekDates(start);
@@ -750,21 +784,28 @@ function viewGrocery(){
   const li = (k, name, qty, sub, extra='') => `<li class="${ch[k]?'done':''}"><input type="checkbox" class="check" id="ck-${hashStr(k)}" data-check="${esc(k)}" ${ch[k]?'checked':''} aria-label="${esc(name)}"><label class="it-b" for="ck-${hashStr(k)}"><div class="it-name">${qty?`<span class="it-qty">${esc(qty)}</span> `:''}${esc(name)}</div>${sub?`<div class="it-for">${sub}</div>`:''}</label>${extra}</li>`;
   const aisles = AISLE_ORDER.filter(a => byAisle[a]).map(a => {
     const items = byAisle[a].sort((x,y) => x.name.localeCompare(y.name));
-    return `<section class="aisle"><h3>${esc(a)} <span class="muted">${items.length}</span></h3><ul class="items">${items.map(g => li(g.k, g.name, g.qty, esc([...g.recipes].join(' · ')) + (g.fridge?` <span class="chip fridge">Check fridge first</span>`:''))).join('')}</ul></section>`;
+    return `<section class="aisle"><h3>${esc(a)} <span class="muted">${items.length}</span></h3><ul class="items">${items.map(g => li(g.k, g.name, g.qty, esc([...g.recipes].join(' · ')) + (g.fridge?` <span class="chip fridge">Check fridge first</span>`:''), `<span class="it-x">${wmBtn('i:' + g.core, g.name)}</span>`)).join('')}</ul></section>`;
   }).join('');
-  const staplesHTML = m.staples.length ? `<section class="aisle"><h3>Weekly staples <span class="muted">${m.staples.length}</span></h3><ul class="items">${m.staples.map(s => li('staple|'+s.name, s.name, '', '', `<button class="btn ghost sm it-x" data-act="stapleoff" data-name="${esc(s.name)}" title="Skip this week">Skip</button>`)).join('')}</ul></section>` : '';
-  const extrasHTML = m.extras.length ? `<section class="aisle"><h3>Added this week <span class="muted">${m.extras.length}</span></h3><ul class="items">${m.extras.map(e => li('extra|'+e.id, e.name, '', '', `<button class="btn ghost sm icon it-x" data-act="rmextra" data-id="${e.id}" aria-label="Remove">${I.x}</button>`)).join('')}</ul></section>` : '';
+  const staplesHTML = m.staples.length ? `<section class="aisle"><h3>Weekly staples <span class="muted">${m.staples.length}</span></h3><ul class="items">${m.staples.map(s => li('staple|'+s.name, s.name, '', '', `<span class="it-x row" style="gap:4px;flex-wrap:nowrap">${wmBtn('s:' + s.name.toLowerCase(), s.name)}<button class="btn ghost sm" data-act="stapleoff" data-name="${esc(s.name)}" title="Skip this week">Skip</button></span>`)).join('')}</ul></section>` : '';
+  const extrasHTML = m.extras.length ? `<section class="aisle"><h3>Added this week <span class="muted">${m.extras.length}</span></h3><ul class="items">${m.extras.map(e => li('extra|'+e.id, e.name, '', '', `<span class="it-x row" style="gap:4px;flex-wrap:nowrap">${wmBtn('x:' + e.name.toLowerCase(), e.name)}<button class="btn ghost sm icon" data-act="rmextra" data-id="${e.id}" aria-label="Remove">${I.x}</button></span>`)).join('')}</ul></section>` : '';
   const skipped = (w.staplesOff||[]);
   const pantryList = [...m.pantryHits.entries()].sort((a,b)=>a[0].localeCompare(b[0]));
   const planned = Object.values(w.days).filter(d => d.rid && !NOCOOK.some(n=>n[0]===d.cat)).length;
   return `<div class="section-h"><div><div class="label">${MON[dates[0].getMonth()]} ${dates[0].getDate()} – ${MON[dates[6].getMonth()]} ${dates[6].getDate()} · ${planned} meals planned</div><h1>Grocery list</h1></div>
-    <div class="row"><span class="muted">${m.total - m.remaining} of ${m.total} checked</span><button class="btn" data-act="uncheck" ${m.total-m.remaining?'':'disabled'}>Uncheck all</button><button class="btn primary" data-act="copylist">${I.copy}Copy list</button></div></div>
+    <div class="row"><span class="muted">${m.total - m.remaining} of ${m.total} checked</span><button class="btn" data-act="uncheck" ${m.total-m.remaining?'':'disabled'}>Uncheck all</button><button class="btn primary" data-act="copylist">${I.copy}Copy list</button>${(() => { const wm = walmartModel(m); return wm.mapped.length ? `<a class="btn narrow-only" href="${esc(wm.url)}" target="_blank" rel="noopener">${I.cart}Walmart cart (${wm.mapped.length})</a>` : ''; })()}</div></div>
   <div class="g-grid"><div>
     ${!m.total ? `<div class="empty">Nothing on the list yet. Plan some meals or add weekly staples.</div>` : ''}
     ${staplesHTML}${aisles}${extrasHTML}
     <div class="addrow"><input type="text" id="extra-in" placeholder="Add something else (paper towels, snacks…)" aria-label="Add grocery item"><button class="btn" data-act="addextra">${I.plus}Add</button></div>
   </div>
   <aside class="side-panel">
+    ${(() => { const wm = walmartModel(m); const n = wm.mapped.length;
+      return `<div class="panel wm-panel"><h3>Walmart pickup</h3>
+      <p class="muted" style="margin:0 0 10px;font-size:13.5px">${n} of ${n + wm.missing.length} items still on the list have a Walmart product saved. Check off anything you already have first.</p>
+      ${n ? `<a class="btn primary" style="width:100%;justify-content:center" href="${esc(wm.url)}" target="_blank" rel="noopener">${I.cart}Add ${n} item${n>1?'s':''} to Walmart cart</a>
+        <p class="muted" style="margin:8px 0 0;font-size:12.5px">Opens Walmart with these items in your cart. Pick a pickup time when you check out.</p>` : `<p style="margin:0;font-size:14px">Tap <b>+ Walmart</b> next to an item to save the exact product you buy. You only do this once per item.</p>`}
+      ${wm.missing.length ? `<details style="margin-top:10px" ${n ? '' : 'open'}><summary style="cursor:pointer;font-weight:700">Not set up yet <span class="chip">${wm.missing.length}</span></summary><div class="mini-list">${wm.missing.map(x => `<div class="mini"><span class="grow">${esc(x.name)}</span><a class="btn ghost sm" href="${esc(wmSearch(x.name))}" target="_blank" rel="noopener">Search</a><button class="btn sm" data-act="wmset" data-key="${esc(x.key)}" data-name="${esc(x.name)}">Set</button></div>`).join('')}</div></details>` : ''}
+      </div>`; })()}
     <div class="panel"><h3>Weekly staples</h3><p class="muted" style="margin:0 0 6px;font-size:13.5px">Added to the list every week. Turn off the ones you don't need every time.</p>
       <div class="mini-list">${(S.settings.staples||[]).map((s,i) => `<label class="mini"><input type="checkbox" class="check" data-staple="${i}" ${s.on?'checked':''}><span class="grow">${esc(s.name)}${skipped.includes(s.name)?' <span class="chip">skipped this week</span>':''}</span>${skipped.includes(s.name)?`<button class="btn ghost sm" data-act="stapleon" data-name="${esc(s.name)}">Undo skip</button>`:''}<button class="btn ghost sm icon" data-act="rmstaple" data-i="${i}" aria-label="Remove ${esc(s.name)}">${I.x}</button></label>`).join('')}</div>
       <div class="addrow"><input type="text" id="staple-in" placeholder="Add a staple" aria-label="Add a weekly staple"><button class="btn" data-act="addstaple">${I.plus}</button></div></div>
@@ -917,6 +958,19 @@ function renderModal(){
       <div><label class="label" for="nf-d">Directions</label><textarea id="nf-d" style="margin-top:6px;min-height:120px"></textarea></div>
       <div><label class="label" for="nf-u">Link (optional)</label><input type="text" id="nf-u" style="margin-top:6px" placeholder="https://"></div>
       <div class="row" style="justify-content:flex-end"><button type="button" class="btn" data-act="close">Cancel</button><button type="submit" class="btn primary">Save recipe</button></div></form>`;
+  } else if (m.type === 'wm') {
+    const cur = (S.walmart.map || {})[m.key];
+    title = 'Walmart product';
+    body = `<p style="margin:0">Choose the exact Walmart product you buy for <b>${esc(m.name)}</b>. It's saved for every week.</p>
+      <ol style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;font-size:14.5px">
+        <li><a href="${esc(wmSearch(m.name))}" target="_blank" rel="noopener">Search Walmart for “${esc(m.name)}”</a> and open the product you want.</li>
+        <li>Copy its link. In the Walmart app, tap <b>Share</b>, then <b>Copy link</b>.</li>
+        <li>Paste it below.</li></ol>
+      <div><label class="label" for="wm-url">Product link or item number</label><input type="text" id="wm-url" style="margin-top:6px" placeholder="https://www.walmart.com/ip/…/10450114" value="${esc(cur ? (cur.url || cur.id) : '')}"></div>
+      <div class="formgrid"><div><label class="label" for="wm-qty">How many to buy</label><input type="number" id="wm-qty" min="1" style="margin-top:6px" value="${cur ? (cur.qty || 1) : 1}"></div><div><label class="label" for="wm-label">Product name (optional)</label><input type="text" id="wm-label" style="margin-top:6px" placeholder="Great Value sour cream 16 oz" value="${esc(cur?.label || '')}"></div></div>
+      <p id="wm-err" style="margin:0;color:var(--tomato);font-size:14px">${esc(m.err || '')}</p>
+      ${cur ? `<p class="muted" style="margin:0;font-size:13px">Saved item #${esc(cur.id)}. <a href="https://www.walmart.com/ip/${esc(cur.id)}" target="_blank" rel="noopener">View on Walmart</a></p>` : ''}
+      <div class="row" style="justify-content:flex-end">${cur ? `<button class="btn" data-act="wmremove">${I.trash}Remove</button>` : ''}<button class="btn" data-act="close">Cancel</button><button class="btn primary" data-act="wmsave">Save</button></div>`;
   } else if (m.type === 'copy') {
     title = 'Copy your list';
     body = `<p class="muted" style="margin:0">Copying isn't available here. Select the text below and copy it.</p><textarea class="copyfall" id="copy-ta" readonly>${esc(m.text)}</textarea>`;
@@ -986,6 +1040,14 @@ document.addEventListener('click', async e => {
     // fridge
     case 'addfridge': return addFromInput('fridge-in', v => { v.split(/,/).map(x=>x.trim()).filter(Boolean).forEach(name => S.fridge.items = [...(S.fridge.items||[]), {id:uid(), name, added:Date.now()}]); S.fridgeDraft=''; saveFridge(); render(); });
     case 'quickfridge': S.fridge.items = [...(S.fridge.items||[]), {id:uid(), name:t.dataset.name, added:Date.now()}]; saveFridge(); return render();
+    case 'wmset': return openModal({type:'wm', key:t.dataset.key, name:t.dataset.name, focus:'wm-url'});
+    case 'wmsave': {
+      const m = S.modal; const raw = $('#wm-url').value; const id = wmItemId(raw);
+      if (!id) { m.err = raw.trim() ? 'That link has no item number in it. Open the product in your browser and copy the address from there, or type the item number.' : 'Paste a Walmart product link first.'; m.focus = 'wm-url'; return renderModal(); }
+      S.walmart.map = {...(S.walmart.map || {}), [m.key]: {id, url: /^https?:/.test(raw.trim()) ? raw.trim().split('#')[0] : '', qty: Math.max(1, +$('#wm-qty').value || 1), label: $('#wm-label').value.trim(), name: m.name}};
+      saveWalmart(); closeModal(); render(); toast('Walmart product saved'); return;
+    }
+    case 'wmremove': { const m = S.modal; const map = {...(S.walmart.map || {})}; delete map[m.key]; S.walmart.map = map; saveWalmart(); closeModal(); render(); return; }
     case 'usedfridge': S.fridge.items = (S.fridge.items||[]).filter(x => x.id !== t.dataset.id); saveFridge(); return render();
   }
 });

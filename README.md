@@ -35,3 +35,7 @@ Then open http://localhost:8000. It has to be served over http because the app f
 - **Android (Chrome):** tap ⋮, then **Add to Home screen** (or **Install app**).
 
 It opens full screen with the Supper Board bowl icon.
+
+## Walmart pickup
+
+On the grocery list, tap **+ Walmart** next to an item and paste the link of the exact Walmart product you buy (or its item number). It's remembered for every week. **Add to Walmart cart** then opens Walmart with every saved product still on your list in the cart, so you can choose a pickup time and check out. Check off anything you already have first so it isn't added.
