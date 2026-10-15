@@ -159,6 +159,8 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,va
 .tonight .grow{flex:1;min-width:0}
 .tonight .meal-name{font-size:16.5px}
 .useup{background:var(--sky-soft);border-radius:var(--r);margin-bottom:14px}
+.useup:not([open]):has(+ .ai-bar){margin-bottom:8px}
+.ai-bar{width:100%;margin-bottom:14px;padding:10px 12px}
 .useup summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:11px 14px;color:var(--sky);font-weight:600;font-size:14px}
 .useup summary::-webkit-details-marker{display:none}
 .useup-t{display:flex;align-items:center;gap:7px;white-space:nowrap;font-weight:700}
@@ -910,7 +912,8 @@ function useUpPanel(){
       ${fr.length ? `<div class="chips">${fr.map(f => { const night = Object.entries(useClaims).find(([, ns]) => ns.includes(f.name)); return `<span class="chip fridge chip-x ${night ? 'claimed' : ''}">${esc(f.name)}${night ? ` · ${DOW[parseISO(night[0]).getDay()]}` : ''}<button class="btn ghost sm icon" data-act="usedfridge" data-id="${f.id}" aria-label="Used up ${esc(f.name)}">${I.x}</button></span>`; }).join('')}</div>${Object.keys(useClaims).length ? `<p class="muted" style="margin:0;font-size:12.5px">The day shows which night uses it up. Other recipes with the same ingredient get it from the grocery list.</p>` : ''}` : ''}
       ${fr.length ? `<button class="btn ai-all" data-act="aiopen" data-all="1">${I.wand}Ask Claude for one meal that uses ${fr.length > 1 ? `all ${fr.length}` : 'it'}</button>` : ''}
       ${sugg.length ? `<div class="label">Recipes that use them</div><div class="sugg">${sugg.map(({r,m}) => `<div class="srow">${thumbHTML(r)}<div class="grow"><button class="meal-name" data-open="${r.id}">${esc(r.n)}</button><div class="meal-meta"><span class="chip fridge">${esc(m.join(', '))}</span>${r.t?`<span class="chip">${fmtMin(r.t)}</span>`:''}</div></div><select data-plan="${r.id}" aria-label="Plan ${esc(r.n)}"><option value="">Plan…</option>${dayOpts}</select></div>`).join('')}</div>` : ''}
-    </div></details>`;
+    </div></details>
+    ${fr.length && !S.useupOpen ? `<button class="btn ai-all ai-bar" data-act="aiopen" data-all="1">${I.wand}Ask Claude for one meal that uses ${fr.length > 1 ? `all ${fr.length} leftovers` : esc(fr[0].name)}</button>` : ''}`;
 }
 const FREEZER_RE = /\b(chicken|beef|steak|pork|sausage|turkey|chuck|roast|ribs|brisket|thighs?|breasts?|drumsticks?|tenderloin|loin|chops?|cutlets?|tenders|wings)\b/;
 const NOT_FROZEN_RE = /\b(rotisserie|deli|cooked|pepperoni|salami|ham|bacon|hot dogs?|meatballs?|broth|stock|bouillon|smoked|kielbasa|prosciutto|shredded|leftover)\b/;
@@ -1541,7 +1544,7 @@ document.addEventListener('input', e => {
   if (t.id === 'fridge-in') S.fridgeDraft = t.value;
 });
 document.addEventListener('toggle', e => {
-  if (e.target.matches?.('[data-useup]')) { if (S.useupOpen !== e.target.open) { S.useupOpen = e.target.open; const x = e.target.querySelector('.useup-x'); if (x) x.textContent = S.useupOpen ? 'Close' : (S.fridge.items||[]).length ? 'Edit' : 'Add'; } }
+  if (e.target.matches?.('[data-useup]')) { if (S.useupOpen !== e.target.open) { S.useupOpen = e.target.open; render(); } }
 }, true);
 document.addEventListener('click', e => { const open = document.querySelector('details.more[open]'); if (open && !open.contains(e.target)) open.open = false; if (open && e.target.closest('.menu button') && !(e.target.closest('[data-act="replan"]') && !e.target.closest('[data-act="replan"]').dataset.sure)) open.open = false; }, true);
 document.addEventListener('keydown', e => {
