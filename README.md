@@ -15,6 +15,7 @@ A weekly family meal planner. It runs entirely in the browser: open `index.html`
 - `index.html`: the whole app (HTML, CSS and JavaScript, no build step)
 - `recipes.json`: recipe data
 - `thumbs.json`: recipe photo thumbnails
+- `icons/` and `manifest.webmanifest`: app logo and home-screen icon
 
 ## Saving
 
@@ -27,3 +28,10 @@ python3 -m http.server
 ```
 
 Then open http://localhost:8000. It has to be served over http because the app fetches the JSON files, so opening the file directly won't work.
+
+## Add it to your phone's home screen
+
+- **iPhone (Safari):** tap Share, then **Add to Home Screen**.
+- **Android (Chrome):** tap ⋮, then **Add to Home screen** (or **Install app**).
+
+It opens full screen with the Supper Board bowl icon.

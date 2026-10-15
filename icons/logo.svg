@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="0" fill="#2D6A4C"/>
+  <circle cx="256" cy="262" r="196" fill="#3A7D5B"/>
+  <!-- steam -->
+  <g fill="none" stroke="#FFF6E3" stroke-width="18" stroke-linecap="round">
+    <path d="M196 196c-18-22 18-38 0-62s14-40 4-56"/>
+    <path d="M256 186c-18-22 18-38 0-62s14-40 4-56"/>
+    <path d="M316 196c-18-22 18-38 0-62s14-40 4-56"/>
+  </g>
+  <!-- bowl -->
+  <path d="M104 236h304c0 92-66 158-152 158S104 328 104 236Z" fill="#F2B441"/>
+  <rect x="88" y="222" width="336" height="30" rx="15" fill="#F7C963"/>
+  <path d="M208 392h96l-10 22h-76Z" fill="#D98F1E"/>
+  <!-- face -->
+  <circle cx="210" cy="292" r="13" fill="#1C251F"/>
+  <circle cx="302" cy="292" r="13" fill="#1C251F"/>
+  <path d="M226 324q30 26 60 0" fill="none" stroke="#1C251F" stroke-width="12" stroke-linecap="round"/>
+  <circle cx="182" cy="320" r="14" fill="#EC7A62" opacity=".55"/>
+  <circle cx="330" cy="320" r="14" fill="#EC7A62" opacity=".55"/>
+  <!-- basil sprig -->
+  <path d="M352 226c10-34 40-52 70-50-4 32-30 52-70 50Z" fill="#7BC89A"/>
+  <path d="M352 226c22-14 40-30 58-44" stroke="#2D6A4C" stroke-width="5" fill="none" stroke-linecap="round"/>
+</svg>

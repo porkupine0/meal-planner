@@ -1,0 +1,14 @@
+{
+  "name": "Supper Board",
+  "short_name": "Supper Board",
+  "description": "Weekly family meal planner and grocery list",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F4F6F1",
+  "theme_color": "#2D6A4C",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
