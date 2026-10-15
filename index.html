@@ -197,7 +197,6 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,va
 .chips.scroll::-webkit-scrollbar{display:none}
 .chips.scroll .chipbtn{flex:none}
 @media (max-width:760px){.rgrid.rgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.rcard .rn{font-size:14px}.rcard .rb{padding:8px 9px 10px;gap:5px}}
-.pattern{grid-template-columns:auto minmax(0,1fr) auto}
 .day-h .busy-t{flex:none;padding:5px 9px;font-size:12px}
 .busy-t[aria-pressed="true"]{background:var(--sun-soft);border-color:var(--sun);color:var(--ink)}
 .chip.kid{background:#FDE7EF;color:#B23A6B}
@@ -318,8 +317,10 @@ details.pantry summary::-webkit-details-marker{display:none}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-weight:600;z-index:60;box-shadow:var(--shadow);max-width:calc(100% - 32px)}
 @media (min-width:761px){.toast{bottom:24px}}
 .settings{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:14px}
-.pattern{display:grid;grid-template-columns:auto 1fr;gap:6px 10px;align-items:center}
-.pattern span{font-weight:600}
+.pattern{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px 10px;align-items:center}
+.pattern span{font-weight:600;white-space:nowrap}
+.pattern select{min-width:0;width:100%}
+.pattern .busy-t{padding:6px 11px;font-size:13px}
 .loading{padding:60px 0;text-align:center;color:var(--muted)}
 .copyfall{width:100%;min-height:200px;font-family:ui-monospace,monospace;font-size:13px}
 @media (prefers-reduced-motion:no-preference){.day,.rcard{transition:border-color .15s}}
@@ -907,7 +908,7 @@ function viewSetup(start, w, label, dates){
         ${(() => { const q = recentFresh(); return q.length ? `<div class="label" style="margin:14px 0 6px">Left from last week's meals? Tap to add</div><div class="chips">${q.map(k => `<button class="chipbtn" data-act="quickfridge" data-name="${esc(k)}">+ ${esc(k)}</button>`).join('')}</div>` : ''; })()}</section>
       <section class="panel"><div class="label">Step 2</div><h3>What kind of night is each day?</h3>
         <p class="muted" style="margin:0 0 10px;font-size:14px">Filled in from your usual week. Change any of them for this week.</p>
-        <div class="pattern">${dates.map(d => { const id = iso(d); return `<span>${DOWL[d.getDay()]} ${d.getDate()}</span><select data-draftcat="${id}" aria-label="Category for ${DOWL[d.getDay()]}">${catOptions(w.days[id]?.cat || '')}</select><button class="chipbtn busy-t" data-act="draftbusy" data-day="${id}" aria-pressed="${!!w.days[id]?.busy}" title="Busy nights get quick or slow cooker meals">Busy</button>`; }).join('')}</div>
+        <div class="pattern">${dates.map(d => { const id = iso(d); return `<span>${DOW[d.getDay()]} ${d.getDate()}</span><select data-draftcat="${id}" aria-label="Category for ${DOWL[d.getDay()]}">${catOptions(w.days[id]?.cat || '')}</select><button class="chipbtn busy-t" data-act="draftbusy" data-day="${id}" aria-pressed="${!!w.days[id]?.busy}" title="Busy nights get quick or slow cooker meals">Busy</button>`; }).join('')}</div>
         <p class="muted" style="margin:10px 0 0;font-size:13px"><b>Busy</b> nights get a quick or slow cooker meal.</p></section>
       <section class="panel setup-go"><div class="label">Step 3</div>
         <button class="btn primary" data-act="generate" style="width:100%;justify-content:center;padding:13px">${I.wand}Make my plan${fr.length ? ` (using up ${fr.length} item${fr.length>1?'s':''} first)` : ''}</button>
