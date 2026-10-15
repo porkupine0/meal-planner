@@ -55,3 +55,27 @@ Each item on the grocery list has a store menu (Walmart or Sam's Club). The choi
 On the grocery list, tap **+ Walmart** next to an item and paste the link of the exact Walmart product you buy (or its item number). It's remembered for every week. **Add to Walmart cart** then opens Walmart with every saved product still on your list in the cart, so you can choose a pickup time and check out. Check off anything you already have first so it isn't added.
 
 About 150 common items (milk, eggs, butter, cheeses, bread, tortillas, chicken, ground beef and turkey, broth, canned beans, pasta, egg noodles, rice, Greek yogurt, and produce like onions, baby carrots, bell peppers (green unless the recipe says red) and cilantro) already link to a Great Value product (or Walmart's own produce) found on walmart.com, so they go in the cart without any setup. Some swaps happen on the list itself. Plain "chicken" is bought as chicken breasts, or as a rotisserie chicken (from Sam's Club) when the recipe uses it cooked or shredded. Prosciutto and pancetta are bought as bacon. Tomatoes are Roma, lettuce is romaine, bell peppers are green unless the recipe names a color, and yellow or orange peppers use red. Tap the **Great Value ✓** / **Default ✓** button to pick a different product, or choose **Don't add from Walmart** to leave that item out. **Use this** brings the default back.
+
+## Family sync (Firebase)
+
+The GitHub Pages site syncs through a Firebase project, so everyone signed in sees the same plan, grocery list and check-offs. Sign in under **Settings → Family sync** (Google, or email and password). The first phone to sign in copies its plan into the shared board.
+
+Only the accounts listed in the Firestore security rules can read or write. Paste these into **Firestore Database → Rules** in the Firebase console, with your own addresses in lowercase:
+
+```
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function family() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email.lower() in ['you@example.com', 'partner@example.com'];
+    }
+    match /{document=**} {
+      allow read, write: if family();
+    }
+  }
+}
+```
+
+In **Authentication → Settings → Authorized domains**, add the GitHub Pages domain (for example `yourname.github.io`). The Claude version of the board keeps using Claude's own storage and doesn't use Firebase.

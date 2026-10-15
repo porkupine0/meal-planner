@@ -714,7 +714,7 @@ function setStatus(){
   const el = $('#status');
   const m = { db:['ok','Synced'], local:['local','Saved on this device'], loading:['','Loading…'] }[S.mode];
   el.innerHTML = `<span class="dot ${m[0]}"></span><span>${m[1]}</span>`;
-  el.title = S.mode === 'db' ? 'Plans, lists and edits save to this artifact and sync across devices.' : S.mode === 'local' ? 'Saving in this browser only. Open the page signed in to claude.ai to sync.' : '';
+  el.title = S.mode === 'db' ? 'Plans, lists and edits sync across devices.' : S.mode === 'local' ? 'Saving in this browser only. Open the page signed in to claude.ai to sync.' : '';
 }
 let rerenderTimer = null;
 function scheduleRender(){ clearTimeout(rerenderTimer); rerenderTimer = setTimeout(render, 30); }
@@ -722,7 +722,9 @@ async function initDb(){
   let d = null;
   try { d = window.claude?.use ? await window.claude.use('db') : null; } catch { d = null; }
   if (!d) { S.mode = 'local'; loadLocal(); setStatus(); rebuildRecipes(); render(); return; }
-  db = d; S.mode = 'db'; setStatus();
+  db = d; S.mode = 'db'; setStatus(); attachListeners();
+}
+function attachListeners(){
   const onErr = () => {};
   db.doc('app/settings').onSnapshot(s => { if (s.exists) { S.settings = {...structuredClone(DEFAULT_SETTINGS), ...structuredClone(s.data())}; upgradeSettings(); } S.drafts = {}; scheduleRender(); }, onErr);
   db.doc('app/walmart').onSnapshot(s => { S.walmart = s.exists ? structuredClone(s.data()) : {map:{}}; if (!S.walmart.map) S.walmart.map = {}; scheduleRender(); }, onErr);
@@ -730,6 +732,133 @@ async function initDb(){
   db.collection('overrides').onSnapshot(q => { S.overrides = Object.fromEntries(q.docs.map(x => [x.id, structuredClone(x.data())])); rebuildRecipes(); scheduleRender(); }, onErr);
   db.collection('custom').onSnapshot(q => { S.custom = Object.fromEntries(q.docs.map(x => [x.id, structuredClone(x.data())])); rebuildRecipes(); scheduleRender(); }, onErr);
   db.collection('weeks').orderBy('start','desc').limit(40).onSnapshot(q => { S.weeks = Object.fromEntries(q.docs.map(x => [x.id, structuredClone(x.data())])); S.drafts = {}; scheduleRender(); }, onErr);
+}
+// ---------- family sync (Firebase) for the GitHub Pages site ----------
+const FB_CONFIG = {
+  apiKey: 'AIzaSyBekcQ5ab02jgmVHZfLY-y8-LUFOeB1FuE',
+  authDomain: 'meal-planning-a2cb7.firebaseapp.com',
+  projectId: 'meal-planning-a2cb7',
+  storageBucket: 'meal-planning-a2cb7.firebasestorage.app',
+  messagingSenderId: '471520348399',
+  appId: '1:471520348399:web:7c0ed97a44b1d5fb08b31a',
+};
+const FB_SDK = 'https://www.gstatic.com/firebasejs/11.0.2/';
+const FB = {state: 'off', user: null, err: ''}; // off | loading | signedout | checking | on | error
+let fb = null;
+// Wraps Firestore so the rest of the app can use the same doc/collection calls as the Claude version.
+function fbAdapter(fs, fdb){
+  const snap = x => ({exists: x.exists(), id: x.id, data: () => x.data()});
+  const query = ref => ({
+    orderBy: (f, d) => query(fs.query(ref, fs.orderBy(f, d))),
+    limit: n => query(fs.query(ref, fs.limit(n))),
+    onSnapshot: (cb, err) => fs.onSnapshot(ref, q => cb({docs: q.docs.map(snap)}), err),
+  });
+  return {
+    doc: path => { const r = fs.doc(fdb, path); return {
+      set: data => fs.setDoc(r, data), delete: () => fs.deleteDoc(r),
+      onSnapshot: (cb, err) => fs.onSnapshot(r, x => cb(snap(x)), err) }; },
+    collection: name => query(fs.collection(fdb, name)),
+  };
+}
+async function startFirebase(){
+  FB.state = 'loading';
+  try {
+    const [ap, fs, au] = await Promise.all(['firebase-app.js', 'firebase-firestore.js', 'firebase-auth.js'].map(f => import(FB_SDK + f)));
+    const app = ap.initializeApp(FB_CONFIG);
+    let fdb;
+    try { fdb = fs.initializeFirestore(app, {ignoreUndefinedProperties: true, localCache: fs.persistentLocalCache({tabManager: fs.persistentMultipleTabManager()})}); }
+    catch { fdb = fs.initializeFirestore(app, {ignoreUndefinedProperties: true}); }
+    const auth = au.getAuth(app);
+    fb = {fs, fdb, au, auth};
+    au.getRedirectResult(auth).catch(e => { FB.err = fbMessage(e); render(); });
+    au.onAuthStateChanged(auth, u => {
+      FB.user = u;
+      if (u) connectFirebase(u);
+      else { if (S.mode === 'db') { location.reload(); return; } FB.state = 'signedout'; render(); }
+    });
+  } catch { FB.state = 'error'; FB.err = "Sync couldn't load. Check your connection and reload."; render(); }
+}
+function fbMessage(e){
+  const c = (e && e.code) || '';
+  if (/popup-closed|cancelled-popup/.test(c)) return '';
+  if (/wrong-password|invalid-credential|user-not-found|invalid-login/.test(c)) return "That email and password don't match. Try again or create an account.";
+  if (/email-already-in-use/.test(c)) return 'That email already has an account. Tap Sign in instead.';
+  if (/weak-password/.test(c)) return 'Use a password with at least 6 characters.';
+  if (/invalid-email/.test(c)) return "That email address doesn't look right.";
+  if (/unauthorized-domain/.test(c)) return 'This website needs to be added to Authorized domains in the Firebase console.';
+  if (/operation-not-allowed/.test(c)) return 'This sign-in method is turned off in the Firebase console.';
+  if (/network/.test(c)) return 'No connection. Try again when you have signal.';
+  return 'Sign-in failed. Try again.';
+}
+async function connectFirebase(u){
+  FB.state = 'checking'; FB.err = ''; render();
+  const {fs, fdb} = fb;
+  let first = false;
+  try { first = !(await fs.getDoc(fs.doc(fdb, 'app/settings'))).exists(); }
+  catch (e) {
+    if (e && e.code === 'permission-denied') {
+      FB.err = u.emailVerified === false
+        ? `We sent a link to ${u.email}. Open it to confirm your email, then sign in again.`
+        : `${u.email || 'This account'} isn't on the household list yet. Ask whoever set up sync to add it.`;
+      await fb.au.signOut(fb.auth); return;
+    }
+    // offline: keep going with what's cached on this phone
+  }
+  if (first && localHasData()) {
+    // First phone to sign in: copy what's already on this phone into the shared board.
+    try {
+      const b = fs.writeBatch(fdb); const put = (path, data) => b.set(fs.doc(fdb, path), data);
+      put('app/settings', S.settings); put('app/fridge', S.fridge); put('app/walmart', S.walmart);
+      for (const [id, o] of Object.entries(S.overrides)) put('overrides/' + id, o);
+      for (const [id, r] of Object.entries(S.custom)) put('custom/' + id, r);
+      for (const [id, w] of Object.entries(S.weeks)) if (w && w.start) put('weeks/' + id, w);
+      await b.commit(); toast("This phone's plan is now shared");
+    } catch { toast("Couldn't copy this phone's plan. Use Settings → Move or back up your data."); }
+  }
+  db = fbAdapter(fs, fdb); S.mode = 'db'; FB.state = 'on'; setStatus(); attachListeners(); render();
+}
+function localHasData(){
+  try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i) || ''; if (/^sb\.(app\/settings|weeks\/)/.test(k)) return true; } } catch {}
+  return false;
+}
+async function fbSignIn(kind){
+  if (!fb) return;
+  const {au, auth} = fb; FB.err = '';
+  try {
+    if (kind === 'google') {
+      const prov = new au.GoogleAuthProvider();
+      try { await au.signInWithPopup(auth, prov); }
+      catch (e) { if (/popup-blocked|operation-not-supported/.test(e.code || '')) await au.signInWithRedirect(auth, prov); else throw e; }
+    } else {
+      const email = ($('#fb-email')?.value || '').trim(), pass = $('#fb-pass')?.value || '';
+      if (!email || !pass) { FB.err = 'Enter your email and a password.'; render(); return; }
+      if (kind === 'create') {
+        const cred = await au.createUserWithEmailAndPassword(auth, email, pass);
+        await au.sendEmailVerification(cred.user).catch(() => {});
+      } else await au.signInWithEmailAndPassword(auth, email, pass);
+    }
+  } catch (e) { FB.err = fbMessage(e); render(); }
+}
+function syncBanner(){
+  if (S.mode === 'db' || !['signedout', 'error'].includes(FB.state)) return '';
+  if (S.view === 'settings') return '';
+  return `<div class="sams-bar sync-bar"><div class="grow"><b>Share this board with your family</b><div class="muted" style="font-size:13px">${FB.err ? esc(FB.err) : 'Sign in so everyone in the house sees the same plan and grocery list.'}</div></div>
+    ${FB.state === 'signedout' ? `<button class="btn primary" data-act="fbgoogle">Sign in with Google</button><button class="btn" data-act="fbmore">Use email</button>` : ''}</div>`;
+}
+function syncPanel(){
+  if (FB.state === 'off') return '';
+  const u = FB.user;
+  return `<div class="panel" id="sync-panel"><h3>Family sync</h3>
+    ${FB.state === 'on' ? `<p style="margin:0 0 10px;font-size:14px">Signed in as <b>${esc(u?.email || '')}</b>. Plans, lists, check-offs and recipe edits sync to every phone signed in to this board.</p><button class="btn" data-act="fbsignout">Sign out</button>`
+    : FB.state === 'loading' || FB.state === 'checking' ? `<p class="muted" style="margin:0;font-size:14px">Connecting…</p>`
+    : FB.state === 'error' ? `<p style="margin:0;font-size:14px">${esc(FB.err)}</p>`
+    : `<p style="margin:0 0 10px;font-size:14px">Sign in so you and your family share one plan and grocery list. Each person signs in with their own account.</p>
+      ${FB.err ? `<p style="margin:0 0 10px;color:var(--tomato);font-size:14px">${esc(FB.err)}</p>` : ''}
+      <button class="btn primary" data-act="fbgoogle">Sign in with Google</button>
+      <div class="label" style="margin:14px 0 6px">Or use email and password</div>
+      <div style="display:flex;flex-direction:column;gap:8px"><input type="email" id="fb-email" placeholder="Email" autocomplete="username" aria-label="Email"><input type="password" id="fb-pass" placeholder="Password (6+ characters)" autocomplete="current-password" aria-label="Password">
+      <div class="row"><button class="btn" data-act="fbemail">Sign in</button><button class="btn ghost" data-act="fbcreate">Create account</button></div></div>`}
+  </div>`;
 }
 const saveSettings = () => persist('app/settings', S.settings);
 // One-time update for saved settings: garlic is always on hand, so keep it off the list.
@@ -845,7 +974,7 @@ function render(){
   const y = window.scrollY;
   renderTabs();
   const app = $('#app');
-  app.innerHTML = ({plan:viewPlan, grocery:viewGrocery, recipes:viewRecipes, settings:viewSettings}[S.view] || viewPlan)();
+  app.innerHTML = syncBanner() + ({plan:viewPlan, grocery:viewGrocery, recipes:viewRecipes, settings:viewSettings}[S.view] || viewPlan)();
   if (focusId) { const el = document.getElementById(focusId); if (el) { el.focus({preventScroll:true}); if (sel && el.setSelectionRange) try { el.setSelectionRange(...sel); } catch {} } }
   window.scrollTo(0, y);
   if (S.modal) renderModal();
@@ -1456,6 +1585,7 @@ function viewSettings(){
            <div class="addrow" style="margin:0"><input type="password" id="ai-key" placeholder="sk-ant-…" autocomplete="off" aria-label="Anthropic API key"><button class="btn primary" data-act="savekey">Save</button></div>
            <p class="muted" style="margin:8px 0 0;font-size:12.5px">The key stays in this browser and is sent only to Anthropic. Anyone using this device and browser could use it.</p>`}
     </div>
+    ${syncPanel()}
     <div class="panel"><h3>Move or back up your data</h3>
       <p style="margin:0 0 10px;font-size:14px">Copies your settings, weeks, leftovers, Walmart links and recipe edits as one block of text. Send it to yourself, then paste it into the other version of the board.</p>
       <button class="btn" data-act="exportdata">${I.share}Copy my data</button>
@@ -1464,7 +1594,7 @@ function viewSettings(){
       <p class="muted" style="margin:8px 0 0;font-size:12.5px">Loading replaces the settings, Walmart links and leftovers here and adds the weeks and recipe edits.</p>
     </div>
     <div class="panel"><h3>About this board</h3>
-      <p style="margin:0 0 8px;font-size:14px">${S.mode==='db'?'Plans, lists and recipe edits save to this page and sync anywhere you open it. If you share the page with your partner as an editor, you both see the same plan.':'Saving in this browser only. Open the page while signed in to claude.ai to sync across devices.'}</p>
+      <p style="margin:0 0 8px;font-size:14px">${FB.state==='on'?'Plans, lists and recipe edits sync to every phone signed in under Family sync.':S.mode==='db'?'Plans, lists and recipe edits save to this page and sync anywhere you open it. If you share the page with your partner as an editor, you both see the same plan.':FB.state!=='off'?'Saving on this phone only until you sign in under Family sync.':'Saving in this browser only. Open the page while signed in to claude.ai to sync across devices.'}</p>
       <p class="muted" style="margin:0;font-size:13.5px">"Quick & Easy" means 20 minutes or less of hands-on time and 30 minutes or less in total. Times for recipes that didn't have one are estimates. Open any recipe to change its time, categories or rating.</p></div>
   </div>`;
 }
@@ -1793,6 +1923,11 @@ document.addEventListener('click', async e => {
     case 'aisaveplan': { const m = S.modal; const dayId = m.day || $('#ai-day')?.value; if (!dayId) { toast('Pick a night first'); $('#ai-day')?.focus(); return; } m.day = dayId;
       if (isDraft(curStart()) && !m.side) { const id = saveAiRecipe(m); const d = getWeek(curStart()).days[dayId]; d.rid = id; d.locked = true; if (!d.cat || NOCOOK.some(n=>n[0]===d.cat)) d.cat = 'any'; closeModal(); render(); toast(`Saved for ${DOWL[parseISO(dayId).getDay()]}. Make my plan will build the rest of the week.`); return; }
       const id = saveAiRecipe(m); editWeek(w => { const d = w.days[m.day]; if (m.side) { d.side = id; d.sideText = null; rememberSide(d.rid, 'r:' + id); } else { d.rid = id; d.locked = true; if (!d.cat || NOCOOK.some(n=>n[0]===d.cat)) d.cat = 'any'; } }); closeModal(); toast(m.side ? 'Side saved and added' : 'Saved and planned'); return; }
+    case 'fbgoogle': return fbSignIn('google');
+    case 'fbemail': return fbSignIn('email');
+    case 'fbcreate': return fbSignIn('create');
+    case 'fbsignout': if (fb && confirm('Sign out of family sync on this phone?')) fb.au.signOut(fb.auth); return;
+    case 'fbmore': S.view = 'settings'; render(); setTimeout(() => $('#sync-panel')?.scrollIntoView({behavior:'smooth'}), 50); return;
     case 'exportdata': {
       const data = {supperBoard: 1, settings: S.settings, fridge: S.fridge, walmart: S.walmart, overrides: S.overrides, custom: S.custom, weeks: S.weeks};
       return shareText(JSON.stringify(data), 'Supper Board data', 'Data');
@@ -1892,6 +2027,7 @@ async function boot(){
   loadLocal(); rebuildRecipes(); render(); setStatus();
   fetch('thumbs.json').then(r => r.json()).then(t => { S.thumbs = t; render(); }).catch(()=>{});
   if (window.claude?.use) { S.mode = 'loading'; setStatus(); initDb(); window.claude.use('sample').then(f => { S.sample = f || null; render(); }).catch(() => {}); }
+  else if (FB_CONFIG.apiKey) startFirebase();
 }
 boot();
 })();
