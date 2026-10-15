@@ -161,6 +161,13 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,va
 .it-for{font-size:12.5px;color:var(--muted);margin-top:1px}
 .it-x{margin-left:auto}
 .side-panel{display:flex;flex-direction:column;gap:14px}
+.setup{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:14px;align-items:start}
+.setup .panel h3{font-size:19px;margin:2px 0 6px}
+.setup-go{grid-column:1/-1}
+.ai-out{display:flex;flex-direction:column;gap:12px}
+.ai-wait{display:flex;flex-direction:column;align-items:center;gap:10px;padding:30px 0;color:var(--muted);text-align:center}
+.spin{width:34px;height:34px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--accent);animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 .wm-btn{border:1px dashed var(--line);background:transparent;color:var(--muted);border-radius:99px;padding:3px 9px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}
 .wm-btn:hover{border-color:var(--sky);color:var(--sky)}
 .wm-btn.on{border-style:solid;border-color:transparent;background:var(--sky-soft);color:var(--sky)}
@@ -618,7 +625,6 @@ function buildDraft(start){
     const cat = S.settings.pattern?.[d.getDay()] ?? '';
     w.days[iso(d)] = {cat, rid:null, locked:false, side:null};
   }
-  for (const d of weekDates(start)) { const day = w.days[iso(d)]; if (day.cat && !NOCOOK.some(n=>n[0]===day.cat)) day.rid = pick(day.cat, w, iso(d), r); }
   return w;
 }
 function recentIds(startISO){
@@ -657,6 +663,12 @@ function editWeek(fn){
 }
 
 // ---------- render ----------
+function sideLine(id, day){
+  const side = day.side && S.byId[day.side];
+  if (side) return `<div class="side-line">Side: <button class="btn ghost sm" data-open="${side.id}">${esc(side.n)}</button><button class="btn ghost sm icon" data-act="unside" data-day="${id}" aria-label="Remove side">${I.x}</button></div>`;
+  if (day.sideText) return `<div class="side-line">Side: <b style="color:var(--ink);padding:0 4px">${esc(day.sideText)}</b><button class="btn ghost sm icon" data-act="unside" data-day="${id}" aria-label="Remove side">${I.x}</button></div>`;
+  return `<div class="side-line"><button class="btn ghost sm" data-act="side" data-day="${id}">${I.plus}Add a side</button></div>`;
+}
 const VIEWS = [['plan','Plan',I.plan],['grocery','Groceries',I.cart],['fridge','Fridge',I.fridge],['recipes','Recipes',I.book],['settings','Settings',I.gear]];
 function renderTabs(){
   const g = S.recipes.length ? groceryModel().remaining : 0;
@@ -679,8 +691,50 @@ function catOptions(sel){
   <optgroup label="Cook">${CATS.map(([k,l]) => `<option value="${k}" ${sel===k?'selected':''}>${esc(l)}</option>`).join('')}</optgroup>
   <optgroup label="No cooking">${NOCOOK.map(([k,l]) => `<option value="${k}" ${sel===k?'selected':''}>${esc(l)}</option>`).join('')}</optgroup>`;
 }
+function generateWeek(w){
+  const keys = Object.keys(w.days).sort();
+  const cookDays = keys.filter(k => !NOCOOK.some(n => n[0] === w.days[k].cat));
+  const recent = recentIds(w.start); const used = new Set();
+  let open = new Set((S.fridge.items || []).map(f => f.name.toLowerCase()));
+  for (const k of cookDays.slice(0, 3)) {
+    if (!open.size) break;
+    const d = w.days[k]; let best = null, bestScore = 0, bestHits = [];
+    for (const r of S.recipes) {
+      if (r.k !== 'main' || r.hide || isSeafood(r) || used.has(r.id) || !(r.i || []).length || (S.settings.redMode === 'avoid' && r.red)) continue;
+      const hits = fridgeMatches(r).filter(x => open.has(x.toLowerCase()));
+      if (!hits.length) continue;
+      const sc = hits.length * 10 + (d.cat && inCat(r, d.cat) ? 8 : 0) - (/\bfor 1\b/i.test(r.n) ? 5 : 0) + (r.r || 0) * 0.6 + (isQuick(r) ? 0.5 : 0) - (recent.has(r.id) ? 6 : 0) + Math.random();
+      if (sc > bestScore) { bestScore = sc; best = r; bestHits = hits; }
+    }
+    if (!best) break;
+    d.rid = best.id; d.useUp = bestHits; if (!d.cat) d.cat = 'any'; used.add(best.id);
+    bestHits.forEach(x => open.delete(x.toLowerCase()));
+  }
+  for (const k of cookDays) { const d = w.days[k]; if (!d.rid && d.cat) d.rid = pick(d.cat, w, k); }
+}
+function viewSetup(start, w, label, dates){
+  const fr = S.fridge.items || [];
+  return `<div class="section-h weekbar">
+      <div class="weeknav"><button class="btn icon" data-act="wk" data-n="-1" aria-label="Previous week">${I.chev}</button>
+      <div class="weekrange"><small>${esc(label)} · not planned yet</small>${MON[dates[0].getMonth()]} ${dates[0].getDate()} – ${dates[0].getMonth()!==dates[6].getMonth()?MON[dates[6].getMonth()]+' ':''}${dates[6].getDate()}</div>
+      <button class="btn icon" data-act="wk" data-n="1" aria-label="Next week">${I.chevr}</button></div>
+      ${S.weekOffset!==0?`<div class="plan-actions"><button class="btn" data-act="wk0">This week</button></div>`:''}</div>
+    <div class="setup">
+      <section class="panel"><div class="label">Step 1</div><h3>What needs to be used up?</h3>
+        <p class="muted" style="margin:0 0 4px;font-size:14px">Add leftover or half-used ingredients from the fridge. The first meals of the week will be planned around them.</p>
+        <div class="addrow"><input type="text" id="fridge-in" placeholder="e.g. spinach, sour cream, ham" aria-label="Ingredient to use up" value="${esc(S.fridgeDraft)}"><button class="btn" data-act="addfridge">${I.plus}Add</button></div>
+        <div class="chips" style="margin-top:10px">${fr.length ? fr.map(f => `<span class="chip fridge" style="font-size:13px;padding:4px 6px 4px 10px">${esc(f.name)}<button class="btn ghost sm icon" style="padding:2px" data-act="usedfridge" data-id="${f.id}" aria-label="Remove ${esc(f.name)}">${I.x}</button></span>`).join('') : '<span class="muted" style="font-size:14px">Nothing yet. Skip this step if the fridge is clear.</span>'}</div></section>
+      <section class="panel"><div class="label">Step 2</div><h3>What kind of night is each day?</h3>
+        <p class="muted" style="margin:0 0 10px;font-size:14px">Filled in from your usual week. Change any of them for this week.</p>
+        <div class="pattern">${dates.map(d => { const id = iso(d); return `<span>${DOWL[d.getDay()]} ${d.getDate()}</span><select data-draftcat="${id}" aria-label="Category for ${DOWL[d.getDay()]}">${catOptions(w.days[id]?.cat || '')}</select>`; }).join('')}</div></section>
+      <section class="panel setup-go"><div class="label">Step 3</div>
+        <button class="btn primary" data-act="generate" style="width:100%;justify-content:center;padding:13px">${I.wand}Make my plan${fr.length ? ` (using up ${fr.length} item${fr.length>1?'s':''} first)` : ''}</button>
+        <button class="btn ghost" data-act="planhand" style="width:100%;justify-content:center;margin-top:6px">I'll pick the meals myself</button></section>
+    </div>`;
+}
 function viewPlan(){
   const start = curStart(); const dates = weekDates(start); const w = getWeek(start);
+  if (isDraft(start)) return viewSetup(start, w, S.weekOffset === 0 ? 'This week' : S.weekOffset === 1 ? 'Next week' : S.weekOffset === -1 ? 'Last week' : (S.weekOffset > 0 ? `${S.weekOffset} weeks ahead` : `${-S.weekOffset} weeks ago`), dates);
   const today = iso(new Date());
   const fr = S.fridge.items || [];
   const label = S.weekOffset === 0 ? 'This week' : S.weekOffset === 1 ? 'Next week' : S.weekOffset === -1 ? 'Last week' : (S.weekOffset > 0 ? `${S.weekOffset} weeks ahead` : `${-S.weekOffset} weeks ago`);
@@ -692,7 +746,7 @@ function viewPlan(){
     if (nocook) body = `<div class="nocook">${day.cat==='OUT'?I.out:day.cat==='LO'?I.box:I.sun}<div><b style="color:var(--ink)">${esc(nocook[1])}</b><br>${day.cat==='LO'?'Nothing to cook. Use up what\'s in the fridge.':day.cat==='OUT'?'Nothing to buy for tonight.':'Leave this night open.'}</div></div>`;
     else if (r) body = `<div class="meal">${thumbHTML(r)}<div class="meal-b"><button class="meal-name" data-open="${r.id}">${esc(r.n)}</button><div class="meal-meta">${badges(r,{fridge:true,reminder:true})}</div></div></div>
       ${r.red && S.settings.redMode==='swap' ? `<div class="tip"><b>White-sauce swap:</b> ${esc(SWAP[r.red]||SWAP.other)}</div>`:''}
-      <div class="side-line">${side ? `Side: <button class="btn ghost sm" data-open="${side.id}">${esc(side.n)}</button><button class="btn ghost sm icon" data-act="unside" data-day="${id}" aria-label="Remove side">${I.x}</button>` : `<button class="btn ghost sm" data-act="side" data-day="${id}">${I.plus}Add a side</button>`}</div>`;
+      ${sideLine(id, day)}`;
     else body = `<div class="nocook" style="padding-top:2px">${day.cat ? `<div>No match for this category. Try <b>Reroll</b> or pick a recipe.</div>` : `<div>Choose a category above, or pick a recipe.</div>`}</div>`;
     return `<article class="day ${id===today?'today':''} ${day.locked?'locked':''}">
       <div class="day-h"><div class="day-date"><span>${DOW[d.getDay()]}</span><b>${d.getDate()}</b></div>
@@ -714,8 +768,9 @@ function viewPlan(){
         <button class="btn primary" data-act="fill">${I.wand}Fill open days</button>
         <button class="btn" data-act="rerollall">${I.reroll}Reroll unlocked</button>
         <button class="btn" data-act="savepattern" title="Make these categories the default for future weeks">Save as usual week</button>
+        <button class="btn ghost" data-act="replan" title="Clear this week and start over">Start over</button>
       </div></div>
-    ${isDraft(start) ? `<div class="draft-note"><b>Suggested plan.</b> This is built from your usual week. Change any day to keep it, or <button class="btn sm" data-act="keep">Keep this plan</button></div>`:''}
+
     ${fr.length ? `<div class="usefirst">${I.fridge.replace('<svg','<svg width="18" height="18"')}Use up first: <span class="chips">${fr.slice(0,8).map(f=>`<span class="chip">${esc(f.name)}</span>`).join('')}</span><button class="btn sm" data-view="fridge" style="margin-left:auto">Manage</button></div>`:''}
     <div class="days">${days}</div>`;
 }
@@ -743,6 +798,14 @@ function groceryModel(){
       if (NOCOOK.some(n=>n[0]===day.cat) && rid === day.rid) continue;
       ingOf(r).forEach(it => add(it, r.n));
     }
+  }
+  for (const [dk, day] of Object.entries(w.days)) {
+    if (!day.sideText || NOCOOK.some(n=>n[0]===day.cat)) continue;
+    const name = day.sideText.trim(); const low = name.toLowerCase();
+    const aisle = aisleOf({name: low, unit: null});
+    const k = aisle + '|' + low;
+    const g = groups[k] || (groups[k] = {k, aisle, name, core: low, parts: [], recipes: new Set()});
+    g.recipes.add('Side for ' + DOWL[parseISO(dk).getDay()]);
   }
   // quantities
   for (const g of Object.values(groups)) {
@@ -869,7 +932,7 @@ function filteredRecipes(){
 function viewRecipes(){
   const list = filteredRecipes(); const f = S.rf;
   const nNew = S.recipes.filter(r=>r.nw).length;
-  return `<div class="section-h"><div><div class="label">${S.recipes.length} recipes · ${nNew} added by Claude · no seafood</div><h1>Recipe box</h1></div><button class="btn primary" data-act="newrecipe">${I.plus}Add a recipe</button></div>
+  return `<div class="section-h"><div><div class="label">${S.recipes.length} recipes · ${nNew} added by Claude · no seafood</div><h1>Recipe box</h1></div><div class="row"><button class="btn" data-act="newrecipe">${I.plus}Add a recipe</button><button class="btn primary" data-act="aiopen">${I.wand}Create with Claude</button></div></div>
   <div class="filters">
     <div class="row" style="flex-wrap:nowrap"><div class="searchbox" style="flex:1">${I.search}<input type="search" id="rq" placeholder="Search by name or ingredient (try “spinach”)" value="${esc(f.q)}" aria-label="Search recipes"></div>
       <select id="rsort" style="width:auto" aria-label="Sort"><option value="fav" ${f.sort==='fav'?'selected':''}>Top rated</option><option value="time" ${f.sort==='time'?'selected':''}>Fastest</option><option value="name" ${f.sort==='name'?'selected':''}>A–Z</option><option value="new" ${f.sort==='new'?'selected':''}>Newest</option></select></div>
@@ -904,12 +967,103 @@ function viewSettings(){
     <div class="panel"><h3>Pantry staples</h3><p class="muted" style="margin:0 0 8px;font-size:14px">Checked items are always on hand, so they stay off the grocery list.</p>
       <div class="addrow" style="margin:0 0 10px"><input type="text" id="pantry-in" placeholder="Add a pantry staple" aria-label="Add pantry staple"><button class="btn" data-act="addpantry">${I.plus}</button></div>
       <div class="mini-list" style="max-height:420px;overflow:auto;padding-right:4px">${(st.pantry||[]).map((p,i)=>`<label class="mini"><input type="checkbox" class="check" data-pantry="${i}" ${p.on?'checked':''}><span class="grow">${esc(p.name)}</span><button class="btn ghost sm icon" data-act="rmpantry" data-i="${i}" aria-label="Remove ${esc(p.name)}">${I.x}</button></label>`).join('')}</div></div>
+    <div class="panel"><h3>Creating recipes with Claude</h3>
+      ${S.sample ? `<p style="margin:0;font-size:14px">Ready. New recipes use your Claude account, and Claude asks permission the first time.</p>`
+        : IN_CLAUDE ? `<p style="margin:0;font-size:14px">Sign in to claude.ai to create recipes with Claude.</p>`
+        : getKey() ? `<p style="margin:0 0 10px;font-size:14px">Ready. Your Anthropic API key is saved on this device only (ends in …${esc(getKey().slice(-4))}).</p><button class="btn" data-act="rmkey">${I.trash}Remove key</button>`
+        : `<p style="margin:0 0 8px;font-size:14px">Paste an Anthropic API key to create recipes on this site. Get one at console.anthropic.com under <b>API Keys</b>. Each recipe costs about 5 cents.</p>
+           <div class="addrow" style="margin:0"><input type="password" id="ai-key" placeholder="sk-ant-…" autocomplete="off" aria-label="Anthropic API key"><button class="btn primary" data-act="savekey">Save</button></div>
+           <p class="muted" style="margin:8px 0 0;font-size:12.5px">The key stays in this browser and is sent only to Anthropic. Anyone using this device and browser could use it.</p>`}
+    </div>
     <div class="panel"><h3>About this board</h3>
       <p style="margin:0 0 8px;font-size:14px">${S.mode==='db'?'Plans, lists and recipe edits save to this page and sync anywhere you open it. If you share the page with your partner as an editor, you both see the same plan.':'Saving in this browser only. Open the page while signed in to claude.ai to sync across devices.'}</p>
       <p class="muted" style="margin:0;font-size:13.5px">"Quick & Easy" means 20 minutes or less of hands-on time and 30 minutes or less in total. Times for recipes that didn't have one are estimates. Open any recipe to change its time, categories or rating.</p></div>
   </div>`;
 }
 
+// ---------- Claude recipe creator ----------
+const SDK_URL = 'https://cdn.jsdelivr.net/npm/@anthropic-ai/sdk@0.130.0/+esm';
+const IN_CLAUDE = !!window.claude;
+function getKey(){ try { return localStorage.getItem('sb.anthropicKey') || ''; } catch { return ''; } }
+function aiMode(){ if (S.sample) return 'sample'; if (!IN_CLAUDE && getKey()) return 'key'; return null; }
+function aiPrompt(m){
+  const w = getWeek(curStart()); const day = m.day && w.days[m.day]; const entree = day && day.rid && S.byId[day.rid];
+  const favs = S.recipes.filter(r => r.k === 'main' && (r.r || 0) >= 4).map(r => r.n).slice(0, 40);
+  const lines = [];
+  if (m.side) lines.push(`Write a simple side dish (15 to 25 minutes) to serve with: ${entree ? entree.n : 'dinner'}.`);
+  else if (m.surprise) lines.push('Write a dinner recipe they have probably never made: something new and a little different, that still follows every family rule.');
+  else lines.push('Write a dinner recipe.');
+  if (!m.side && m.fit && day && day.cat && CATNAME[day.cat] && !['any','new','fav'].includes(day.cat)) lines.push(`It should fit this category: ${CATNAME[day.cat]}.`);
+  if (m.mood.trim()) lines.push(`What they're in the mood for: ${m.mood.trim()}`);
+  if (m.quick) lines.push('It must take 30 minutes or less in total, with 20 minutes or less of hands-on work.');
+  if (m.useFridge && (S.fridge.items || []).length) lines.push(`Use up as many of these leftover ingredients as makes sense: ${S.fridge.items.map(f => f.name).join(', ')}.`);
+  const existing = S.recipes.filter(r => !m.side ? r.k === 'main' : r.k !== 'main').map(r => r.n);
+  return `You are writing one new recipe for a family's weekly meal planner.
+
+Family rules:
+- No seafood or fish of any kind.
+- The kids don't like red sauce. No marinara, pizza sauce, tomato sauce, red enchilada sauce or tomato-based soups or chili. Use creamy, cheesy, Alfredo, garlic butter, green chile, gravy, teriyaki or similar sauces instead. Fresh tomatoes as a topping are fine.
+- Kid-friendly and mild. Any heat goes on the side.
+- They like quick weeknight cooking.
+- Use ingredients from a regular US grocery store like Walmart.
+- 4 to 6 servings.
+
+Some family favorites, for taste: ${favs.join('; ')}.
+
+Don't repeat a recipe they already have. Their recipe names: ${existing.join('; ')}.
+
+Request:
+${lines.join('\n')}
+
+Reply with only a JSON object, no other text, in exactly this shape:
+{"name": "short recipe name", "description": "one appealing sentence", "categories": ["codes from: ${TAGS.map(([k,l]) => `${k}=${l}`).join(', ')}"], "total_minutes": 30, "hands_on_minutes": 15, "servings": "4 to 6", "ingredients": ["one ingredient per string with amount first, like 1 lb boneless skinless chicken breasts"], "steps": ["one step per string"]}`;
+}
+function parseRecipeJSON(v){
+  let o = v;
+  if (typeof v === 'string') { const a = v.indexOf('{'), b = v.lastIndexOf('}'); if (a < 0 || b < a) throw {code:'bad_output'}; o = JSON.parse(v.slice(a, b + 1)); }
+  const strs = x => Array.isArray(x) ? x.map(y => String(y).trim()).filter(Boolean) : [];
+  const r = {name: String(o?.name || '').trim(), description: String(o?.description || '').trim(), categories: strs(o?.categories).filter(c => TAGS.some(([k]) => k === c)),
+    total: Math.round(+o?.total_minutes) || null, hands: Math.round(+o?.hands_on_minutes) || null, servings: String(o?.servings || ''), ingredients: strs(o?.ingredients), steps: strs(o?.steps)};
+  if (!r.name || r.ingredients.length < 2 || !r.steps.length) throw {code:'bad_output'};
+  return r;
+}
+async function aiGenerate(m){
+  const prompt = aiPrompt(m);
+  if (aiMode() === 'sample') return parseRecipeJSON(await S.sample.json(prompt, {modelTier:'default', cache:false}));
+  const key = getKey(); if (!key) throw {code:'no_key'};
+  const mod = await import(SDK_URL); const Anthropic = mod.default || mod.Anthropic;
+  const client = new Anthropic({apiKey: key, dangerouslyAllowBrowser: true});
+  const resp = await client.beta.messages.create({
+    model: 'claude-opus-5-5', max_tokens: 16000,
+    betas: ['server-side-fallback-2026-07-01'], fallbacks: 'default',
+    output_config: {effort: 'medium'},
+    messages: [{role: 'user', content: prompt}],
+  });
+  if (resp.stop_reason === 'refusal') throw {code:'refusal'};
+  return parseRecipeJSON(resp.content.filter(b => b.type === 'text').map(b => b.text).join(''));
+}
+function aiErrorText(e){
+  const c = e?.code, st = e?.status;
+  if (c === 'not_granted') return 'Claude access was declined. Close this and try again, then choose Allow.';
+  if (c === 'rate_limited' || st === 429) return 'Claude is busy right now. Wait a minute and try again.';
+  if (c === 'no_key') return 'Add your Anthropic API key in Settings first.';
+  if (st === 401 || st === 403) return "Your Anthropic API key wasn't accepted. Check it in Settings.";
+  if (c === 'refusal') return "Claude couldn't write that one. Try describing it a different way.";
+  if (c === 'bad_output' || e instanceof SyntaxError) return "Claude's answer didn't come back as a recipe. Try again.";
+  return "Couldn't reach Claude. Check your connection and try again.";
+}
+async function runAi(m){
+  m.state = 'loading'; m.err = ''; renderModal();
+  try { const r = await aiGenerate(m); if (S.modal !== m) return; m.result = r; m.state = 'done'; }
+  catch (e) { if (S.modal !== m) return; m.err = aiErrorText(e); m.state = 'form'; }
+  renderModal();
+}
+function saveAiRecipe(m){
+  const r = m.result; const id = 'c-' + uid();
+  const rec = {id, n:r.name, k: m.side ? 'side' : 'main', c:r.categories, t:r.total, h:r.hands, s:r.servings, r:0, i:r.ingredients, d:r.steps.join('\n\n'), no:'', de:r.description, src:'Created with Claude', u:'', nu:'', red:null, img:false, nw:1, ai:1, created:Date.now()};
+  if (SEAFOOD.test(rec.n + ' ' + rec.i.join(' '))) rec.sf = true;
+  S.custom[id] = rec; persist('custom/' + id, rec); rebuildRecipes(); return id;
+}
 // ---------- modal ----------
 function openModal(m){ S.modal = m; renderModal(); }
 function closeModal(){ S.modal = null; $('#modal-root').innerHTML = ''; document.body.style.overflow = ''; }
@@ -943,12 +1097,18 @@ function renderModal(){
         <div class="row"><button class="btn" data-act="hide" aria-pressed="${!!r.hide}">${r.hide?'Hidden from planner':'Never suggest'}</button>${r.custom?`<button class="btn" data-act="delrecipe">${I.trash}Delete</button>`:''}</div></div>`;
   } else if (m.type === 'pick') {
     const w = getWeek(curStart()); const day = w.days[m.day] || {};
+    const entree = day.rid && S.byId[day.rid];
     title = m.side ? 'Choose a side' : `Choose for ${fmtD(parseISO(m.day))}`;
     const q = (m.q||'').toLowerCase();
     const onlyCat = m.onlyCat && day.cat && !NOCOOK.some(n=>n[0]===day.cat) && !m.side;
     let list = S.recipes.filter(r => m.side ? r.k !== 'main' : r.k === 'main').filter(r => !onlyCat || inCat(r, day.cat)).filter(r => !q || (r.n + ' ' + r.i.join(' ')).toLowerCase().includes(q));
     list.sort((a,b) => (fridgeMatches(b).length - fridgeMatches(a).length) || (b.r||0)-(a.r||0) || a.n.localeCompare(b.n));
-    head = `<div class="searchbox" style="padding:0 16px 12px">${I.search.replace('<svg','<svg style="left:27px"')}<input type="search" id="pick-q" placeholder="Search recipes or ingredients" value="${esc(m.q||'')}" aria-label="Search"></div>
+    const sideHead = m.side ? `<div style="padding:0 16px 12px;display:flex;flex-direction:column;gap:8px">
+        <div class="addrow" style="margin:0"><input type="text" id="side-text" placeholder="Type a side: fruit, chips, salad…" aria-label="Type a side"><button class="btn primary" data-act="sidetext">Add</button></div>
+        <div class="chips">${['Fruit','Chips','Salad','Veggies','Garlic bread','Rolls','Rice','Corn'].map(x => `<button class="chipbtn" data-act="sidetext" data-text="${x}">${x}</button>`).join('')}</div>
+        ${entree ? `<button class="btn" data-act="aiopen" data-day="${esc(m.day)}" data-side="1">${I.wand}Ask Claude for a side that goes with ${esc(entree.n)}</button>` : ''}
+        <div class="label" style="margin-top:4px">Or pick a side recipe</div></div>` : `<div style="padding:0 16px 12px"><button class="btn" style="width:100%;justify-content:center" data-act="aiopen" data-day="${esc(m.day)}">${I.wand}Create a new recipe with Claude</button></div>`;
+    head = sideHead + `<div class="searchbox" style="padding:0 16px 12px">${I.search.replace('<svg','<svg style="left:27px"')}<input type="search" id="pick-q" placeholder="Search recipes or ingredients" value="${esc(m.q||'')}" aria-label="Search"></div>
       ${!m.side && day.cat && !NOCOOK.some(n=>n[0]===day.cat) ? `<div class="row" style="padding:0 16px 10px"><button class="chipbtn" data-act="onlycat" aria-pressed="${!!m.onlyCat}">Only ${esc(CATNAME[day.cat])}</button><span class="muted">${list.length} recipes</span></div>`:''}`;
     body = `<div class="picklist">${list.slice(0, 80).map(r => `<button class="pick" data-choose="${r.id}">${thumbHTML(r)}<div class="grow"><div style="font-weight:700">${esc(r.n)}</div><div class="meal-meta">${badges(r,{fridge:true})}</div></div></button>`).join('') || '<div class="empty">No matches.</div>'}</div>`;
   } else if (m.type === 'new') {
@@ -975,6 +1135,35 @@ function renderModal(){
       <p id="wm-err" style="margin:0;color:var(--tomato);font-size:14px">${esc(m.err || '')}</p>
       ${cur ? `<p class="muted" style="margin:0;font-size:13px">Saved item #${esc(cur.id)}. <a href="https://www.walmart.com/ip/${esc(cur.id)}" target="_blank" rel="noopener">View on Walmart</a></p>` : ''}
       <div class="row" style="justify-content:flex-end">${cur ? `<button class="btn" data-act="wmremove">${I.trash}Remove</button>` : ''}<button class="btn" data-act="close">Cancel</button><button class="btn primary" data-act="wmsave">Save</button></div>`;
+  } else if (m.type === 'ai') {
+    const w = getWeek(curStart()); const day = m.day && w.days[m.day]; const entree = day && day.rid && S.byId[day.rid];
+    title = m.side ? 'A side from Claude' : 'New recipe from Claude';
+    const mode = aiMode(); const fr = S.fridge.items || [];
+    if (!mode) {
+      body = IN_CLAUDE ? `<p style="margin:0">Claude isn't available here. Open this page signed in to claude.ai to create recipes.</p>`
+        : `<p style="margin:0">To create recipes with Claude on this site, add an Anthropic API key in Settings. It's kept only in this browser.</p><div class="row" style="justify-content:flex-end"><button class="btn primary" data-view="settings">Go to Settings</button></div>`;
+    } else if (m.state === 'loading') {
+      body = `<div class="ai-wait"><div class="spin"></div><b style="color:var(--ink)">Claude is writing your recipe…</b><span>This usually takes 20 to 60 seconds.</span></div>`;
+    } else if (m.state === 'done') {
+      const r = m.result;
+      body = `<div class="ai-out"><h3 style="font-size:22px">${esc(r.name)}</h3>${r.description ? `<p style="margin:0">${esc(r.description)}</p>` : ''}
+        <div class="meal-meta">${r.total ? `<span class="chip">${I.clock}${fmtMin(r.total)}</span>` : ''}${r.hands ? `<span class="chip">${r.hands} min hands-on</span>` : ''}${r.servings ? `<span class="chip">Serves ${esc(r.servings)}</span>` : ''}${r.categories.map(c => `<span class="chip">${esc(CATNAME[c] || c)}</span>`).join('')}</div>
+        <div><h3 style="font-size:17px;margin-bottom:6px">Ingredients</h3><ul class="ing">${r.ingredients.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>
+        <div class="dirs"><h3 style="font-size:17px;margin-bottom:6px">Directions</h3>${r.steps.map((x, n) => `<p><b>${n + 1}.</b> ${esc(x)}</p>`).join('')}</div>
+        <div class="row" style="justify-content:flex-end"><button class="btn" data-act="aiback">Change request</button><button class="btn" data-act="aigo">${I.reroll}Try another</button><button class="btn ${m.day ? '' : 'primary'}" data-act="aisave">Save to recipe box</button>${m.day ? `<button class="btn primary" data-act="aisaveplan">Save and plan for ${esc(DOW[parseISO(m.day).getDay()])}</button>` : ''}</div></div>`;
+    } else {
+      const canFit = !m.side && day && day.cat && CATNAME[day.cat] && !['any','new','fav'].includes(day.cat) && !NOCOOK.some(n => n[0] === day.cat);
+      body = `${m.side && entree ? `<p style="margin:0">Claude will suggest a side to go with <b>${esc(entree.n)}</b>.</p>` : ''}
+        <div><label class="label" for="ai-mood">${m.side ? 'Anything specific? (optional)' : 'What are you in the mood for?'}</label><textarea id="ai-mood" style="margin-top:6px;min-height:80px" placeholder="${m.side ? 'Something with green beans' : 'Something cozy with chicken and potatoes'}">${esc(m.mood)}</textarea></div>
+        <div class="chips">
+          ${canFit ? `<button class="chipbtn" data-act="aitoggle" data-k="fit" aria-pressed="${!!m.fit}">Fits ${esc(CATNAME[day.cat])}</button>` : ''}
+          ${fr.length ? `<button class="chipbtn" data-act="aitoggle" data-k="useFridge" aria-pressed="${!!m.useFridge}">Use up ${esc(fr.slice(0,3).map(f => f.name).join(', '))}${fr.length > 3 ? '…' : ''}</button>` : ''}
+          <button class="chipbtn" data-act="aitoggle" data-k="quick" aria-pressed="${!!m.quick}">Quick (30 min or less)</button>
+        </div>
+        ${m.err ? `<p style="margin:0;color:var(--tomato)">${esc(m.err)}</p>` : ''}
+        <div class="row" style="justify-content:flex-end">${m.side ? '' : `<button class="btn" data-act="ainew">${I.wand}Surprise me with something new</button>`}<button class="btn primary" data-act="aigo">${I.wand}Create recipe</button></div>
+        <p class="muted" style="margin:0;font-size:12.5px">${mode === 'sample' ? 'Uses your Claude account. Claude asks permission the first time.' : 'Uses your Anthropic API key, about 5 cents per recipe.'} No seafood and no red sauce, every time.</p>`;
+    }
   } else if (m.type === 'copy') {
     title = 'Copy your list';
     body = `<p class="muted" style="margin:0">Copying isn't available here. Select the text below and copy it.</p><textarea class="copyfall" id="copy-ta" readonly>${esc(m.text)}</textarea>`;
@@ -1004,7 +1193,7 @@ document.addEventListener('click', async e => {
   if (t.hasAttribute('data-course')) { const r = S.byId[S.modal.id]; saveOverride(r.id, {k: r.k === 'main' ? 'side' : 'main'}); render(); return; }
   if (t.dataset.choose) {
     const m = S.modal; const id = t.dataset.choose;
-    editWeek(w => { const d = w.days[m.day] ||= {cat:'',rid:null}; if (m.side) d.side = id; else { d.rid = id; if (!d.cat || NOCOOK.some(n=>n[0]===d.cat)) d.cat = 'any'; d.locked = true; } });
+    editWeek(w => { const d = w.days[m.day] ||= {cat:'',rid:null}; if (m.side) { d.side = id; d.sideText = null; } else { d.rid = id; if (!d.cat || NOCOOK.some(n=>n[0]===d.cat)) d.cat = 'any'; d.locked = true; } });
     closeModal(); toast(m.side ? 'Side added' : 'Planned and locked'); return;
   }
   const a = t.dataset.act; const day = t.dataset.day;
@@ -1012,7 +1201,9 @@ document.addEventListener('click', async e => {
     case 'close': return closeModal();
     case 'wk': S.weekOffset += +t.dataset.n; return render();
     case 'wk0': S.weekOffset = 0; return render();
-    case 'keep': editWeek(()=>{}); toast('Plan saved'); return;
+    case 'generate': editWeek(w => generateWeek(w)); window.scrollTo(0,0); toast('Your week is planned'); return;
+    case 'planhand': editWeek(()=>{}); return;
+    case 'replan': { if (!t.dataset.sure) { t.dataset.sure = 1; t.textContent = 'Tap again to clear this week'; return; } const id = iso(curStart()); const old = S.weeks[id]; delete S.weeks[id]; removeDoc('weeks/' + id); S.drafts[id] = buildDraft(curStart()); if (old) for (const [k,d] of Object.entries(old.days||{})) if (S.drafts[id].days[k]) S.drafts[id].days[k].cat = d.cat; render(); toast('Week cleared'); return; }
     case 'fill': editWeek(w => { for (const k of Object.keys(w.days).sort()) { const d = w.days[k]; if (d.cat && !d.rid && !NOCOOK.some(n=>n[0]===d.cat)) d.rid = pick(d.cat, w, k); } }); toast('Open days filled'); return;
     case 'rerollall': editWeek(w => { for (const k of Object.keys(w.days).sort()) { const d = w.days[k]; if (!d.locked && d.cat && !NOCOOK.some(n=>n[0]===d.cat)) d.rid = pick(d.cat, w, k, Math.random, d.rid) ?? d.rid; } }); return;
     case 'savepattern': { const w = getWeek(curStart()); const p = {}; for (const [k,d] of Object.entries(w.days)) p[parseISO(k).getDay()] = d.cat || ''; S.settings.pattern = p; saveSettings(); toast('Saved as your usual week'); return; }
@@ -1021,7 +1212,8 @@ document.addEventListener('click', async e => {
     case 'clear': editWeek(w => { w.days[day] = {cat:'', rid:null, locked:false, side:null}; }); return;
     case 'pick': return openModal({type:'pick', day, onlyCat:false, focus:'pick-q'});
     case 'side': return openModal({type:'pick', day, side:true, focus:'pick-q'});
-    case 'unside': editWeek(w => { w.days[day].side = null; }); return;
+    case 'unside': editWeek(w => { w.days[day].side = null; w.days[day].sideText = null; }); return;
+    case 'sidetext': { const m = S.modal; const v = (t.dataset.text || $('#side-text')?.value || '').trim(); if (!v) { $('#side-text')?.focus(); return; } editWeek(w => { const d = w.days[m.day]; d.side = null; d.sideText = v; }); closeModal(); toast(`Added ${v} to the grocery list`); return; }
     case 'onlycat': S.modal.onlyCat = !S.modal.onlyCat; return renderModal();
     case 'useforday': { const m = S.modal; editWeek(w => { const d = w.days[m.forDay]; d.rid = m.id; d.locked = true; if (!d.cat || NOCOOK.some(n=>n[0]===d.cat)) d.cat='any'; }); closeModal(); return; }
     case 'hide': { const r = S.byId[S.modal.id]; saveOverride(r.id, {hide: r.hide ? undefined : true}); render(); return; }
@@ -1052,12 +1244,21 @@ document.addEventListener('click', async e => {
       saveWalmart(); closeModal(); render(); toast('Walmart product saved'); return;
     }
     case 'wmremove': { const m = S.modal; const map = {...(S.walmart.map || {})}; delete map[m.key]; S.walmart.map = map; saveWalmart(); closeModal(); render(); return; }
+    case 'aiopen': { const d = t.dataset.day || null; const w = d && getWeek(curStart()); const dc = d && w.days[d]?.cat; return openModal({type:'ai', day:d, side:!!t.dataset.side, mood:'', fit:!!dc, useFridge:(S.fridge.items||[]).length > 0 && !t.dataset.side, quick:dc === 'quick', state:'form', focus:'ai-mood'}); }
+    case 'aitoggle': { const m = S.modal; m.mood = $('#ai-mood')?.value ?? m.mood; m[t.dataset.k] = !m[t.dataset.k]; return renderModal(); }
+    case 'aigo': case 'ainew': { const m = S.modal; m.mood = $('#ai-mood')?.value ?? m.mood; m.surprise = a === 'ainew' || (a === 'aigo' && m.surprise && m.state === 'done'); return runAi(m); }
+    case 'aiback': { const m = S.modal; m.state = 'form'; m.surprise = false; return renderModal(); }
+    case 'aisave': { const id = saveAiRecipe(S.modal); closeModal(); render(); openModal({type:'recipe', id}); toast('Saved to your recipe box'); return; }
+    case 'aisaveplan': { const m = S.modal; const id = saveAiRecipe(m); editWeek(w => { const d = w.days[m.day]; if (m.side) { d.side = id; d.sideText = null; } else { d.rid = id; d.locked = true; if (!d.cat || NOCOOK.some(n=>n[0]===d.cat)) d.cat = 'any'; } }); closeModal(); toast(m.side ? 'Side saved and added' : 'Saved and planned'); return; }
+    case 'savekey': { const v = ($('#ai-key')?.value || '').trim(); if (!/^sk-ant-/.test(v)) { toast('That doesn\'t look like an Anthropic API key (it starts with sk-ant-).'); return; } try { localStorage.setItem('sb.anthropicKey', v); } catch {} render(); toast('API key saved on this device'); return; }
+    case 'rmkey': try { localStorage.removeItem('sb.anthropicKey'); } catch {} render(); toast('API key removed'); return;
     case 'usedfridge': S.fridge.items = (S.fridge.items||[]).filter(x => x.id !== t.dataset.id); saveFridge(); return render();
   }
 });
 function addFromInput(id, fn){ const el = document.getElementById(id); const v = (el?.value || '').trim(); if (!v) { el?.focus(); return; } el.value = ''; fn(v); }
 document.addEventListener('change', e => {
   const t = e.target;
+  if (t.dataset.draftcat) { const w = getWeek(curStart()); w.days[t.dataset.draftcat].cat = t.value; return; }
   if (t.dataset.cat) { const id = t.dataset.cat; const v = t.value; editWeek(w => { const d = w.days[id]; d.cat = v; d.locked = false; d.rid = NOCOOK.some(n=>n[0]===v) || !v ? null : pick(v, w, id); }); return; }
   if (t.dataset.check) { const k = t.dataset.check; editWeek(w => { w.checked ||= {}; if (t.checked) w.checked[k] = true; else delete w.checked[k]; }); return; }
   if (t.dataset.staple) { S.settings.staples[+t.dataset.staple].on = t.checked; saveSettings(); return render(); }
@@ -1106,7 +1307,7 @@ async function boot(){
   S.mode = 'local'; // provisional until db answers
   loadLocal(); rebuildRecipes(); render(); setStatus();
   fetch('thumbs.json').then(r => r.json()).then(t => { S.thumbs = t; render(); }).catch(()=>{});
-  if (window.claude?.use) { S.mode = 'loading'; setStatus(); initDb(); }
+  if (window.claude?.use) { S.mode = 'loading'; setStatus(); initDb(); window.claude.use('sample').then(f => { S.sample = f || null; render(); }).catch(() => {}); }
 }
 boot();
 })();

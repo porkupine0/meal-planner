@@ -6,6 +6,9 @@ A weekly family meal planner. It runs entirely in the browser: open `index.html`
 
 - **Plan:** pick a category for each day (Pasta, Soup, Quick & Easy, Leftovers, Eat Out, Surprise Me and more), then fill the week. Reroll, lock or hand-pick any day, and add a side.
 - **Groceries:** builds a list from the week's meals, sorted by store aisle with amounts combined. Pantry staples stay off the list, weekly staples are added every week, and you check items off as you shop or copy the list as text.
+- **Week setup:** each new week starts with a short setup: list what needs to be used up, confirm each night's category, then make the plan. The first meals of the week are chosen to clear out those leftovers.
+- **Sides:** pick a side recipe or just type one, like "fruit" or "chips", and it goes on the grocery list.
+- **Create with Claude:** describe what you're in the mood for, match a night's category, or ask for something new, and Claude writes a recipe that follows the family rules (no seafood, no red sauce). On this GitHub site it needs an Anthropic API key, which you add in Settings and which is stored only in your browser.
 - **Fridge:** track leftover ingredients. The planner favors recipes that use them early in the next week.
 - **Recipes:** 493 recipes (no seafood) with ratings, times and categories, all editable, plus a way to add your own.
 - **Settings:** week start day (default Friday), your usual week, red-sauce handling, the no-repeat window and pantry staples.
