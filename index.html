@@ -218,6 +218,12 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,va
 .cover{background:var(--sun-soft);border-radius:10px;padding:9px 12px;font-size:14px}
 .cover.ok{background:var(--accent-soft);color:var(--accent);font-weight:600}
 .chip-x.claimed{background:var(--accent-soft);color:var(--accent)}
+.store-sel{width:auto;flex:none;font-size:12px;font-weight:600;padding:4px 22px 4px 8px;border-radius:99px;background-position:calc(100% - 11px) 52%,calc(100% - 7px) 52%;background-size:4px 4px}
+.store-sel.sams{background-color:#E3ECF7;border-color:#9DB7D8;color:#1F4E8C}
+@media (max-width:760px){.store-sel{font-size:16px;transform:scale(.75);transform-origin:right center;margin-left:-18px}}
+.store-tabs{margin:-4px 0 12px}
+.sams-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#EEF3FA;border:1px solid #9DB7D8;border-radius:var(--r);padding:10px 12px;margin-bottom:16px}
+.sams-bar .grow{flex:1;min-width:180px}
 /* cook mode */
 .cook{display:flex;flex-direction:column;gap:12px;font-size:17px}
 .cook h3{font-size:19px;margin-top:4px}
@@ -1053,13 +1059,24 @@ function wmItemId(text){
   m = t.match(/^(\d{5,})$/); if (m) return m[1];
   return null;
 }
+// Where each grocery item is bought, remembered per item (same keys as Walmart products).
+const STORES = [['walmart','Walmart'],['sams',"Sam's Club"]];
+const storeOf = key => (S.walmart.stores || {})[key] || 'walmart';
+function groceryEntries(m){
+  const ch = m.w.checked || {};
+  return [
+    ...m.staples.map(s => ({k:'staple|' + s.name, key:'s:' + s.name.toLowerCase(), name:s.name, qty:'', aisle:'Weekly staples'})),
+    ...Object.values(m.groups).map(g => ({k:g.k, key:'i:' + g.core, name:g.name, qty:g.qty, aisle:g.aisle})),
+    ...m.extras.map(e => ({k:'extra|' + e.id, key:'x:' + e.name.toLowerCase(), name:e.name, qty:'', aisle:'Other'})),
+  ].map(e => ({...e, store: storeOf(e.key), checked: !!ch[e.k]}));
+}
 function walmartModel(m){
   const ch = m.w.checked || {}; const map = S.walmart.map || {};
   const rows = [
     ...Object.values(m.groups).filter(g => !ch[g.k]).map(g => ({key:'i:' + g.core, name:g.name})),
     ...m.staples.filter(s => !ch['staple|' + s.name]).map(s => ({key:'s:' + s.name.toLowerCase(), name:s.name})),
     ...m.extras.filter(e => !ch['extra|' + e.id]).map(e => ({key:'x:' + e.name.toLowerCase(), name:e.name})),
-  ];
+  ].filter(r => storeOf(r.key) === 'walmart');
   const seen = new Set(); const mapped = []; const missing = [];
   for (const r of rows) { const p = map[r.key]; if (p && p.id) { if (!seen.has(p.id)) { seen.add(p.id); mapped.push({...r, p}); } } else missing.push(r); }
   const url = mapped.length ? WM_CART + mapped.map(x => `${x.p.id}|${Math.max(1, +x.p.qty || 1)}`).join(',') : '';
@@ -1071,7 +1088,12 @@ function viewGrocery(){
   const start = curStart(); const dates = weekDates(start);
   const edit = !!S.wmEdit; const done = [];
   const li = (k, name, qty, sub, extra='') => `<li class="${ch[k]?'done':''}"><input type="checkbox" class="check" id="ck-${hashStr(k)}" data-check="${esc(k)}" ${ch[k]?'checked':''} aria-label="${esc(name)}"><label class="it-b" for="ck-${hashStr(k)}"><div class="it-name">${qty?`<span class="it-qty">${esc(qty)}</span> `:''}${esc(name)}</div>${sub?`<div class="it-for">${sub}</div>`:''}</label>${extra}</li>`;
-  const row = (k, name, qty, sub, extra, wmKey) => { const html = li(k, name, qty, sub, `<span class="it-x row">${edit ? wmBtn(wmKey, name) : ''}${extra}</span>`); if (ch[k]) { done.push(html); return ''; } return html; };
+  const view = S.storeView || 'all';
+  const storeSel = (key, name) => { const st = storeOf(key); return `<select class="store-sel ${st}" data-store="${esc(key)}" aria-label="Store for ${esc(name)}">${STORES.map(([v,l]) => `<option value="${v}" ${st === v ? 'selected' : ''}>${l}</option>`).join('')}</select>`; };
+  const row = (k, name, qty, sub, extra, wmKey) => {
+    if (view !== 'all' && storeOf(wmKey) !== view) return '';
+    const html = li(k, name, qty, sub, `<span class="it-x row">${edit && storeOf(wmKey) === 'walmart' ? wmBtn(wmKey, name) : ''}${storeSel(wmKey, name)}${extra}</span>`);
+    if (ch[k]) { done.push(html); return ''; } return html; };
   const section = (title, rows) => { const items = rows.filter(Boolean); return items.length ? `<section class="aisle"><h3>${esc(title)} <span class="muted">${items.length}</span></h3><ul class="items">${items.join('')}</ul></section>` : ''; };
   const staplesHTML = section('Weekly staples', m.staples.map(s => row('staple|'+s.name, s.name, '', '', `<button class="btn ghost sm" data-act="stapleoff" data-name="${esc(s.name)}" title="Skip this week">Skip</button>`, 's:' + s.name.toLowerCase())));
   const byAisle = {}; for (const g of Object.values(m.groups)) (byAisle[g.aisle] ||= []).push(g);
@@ -1090,6 +1112,9 @@ function viewGrocery(){
         : `<div class="grow"><b>Walmart pickup</b><div class="muted" style="font-size:13px">${n ? `${n} of ${n + wm.missing.length} items are linked to a Walmart product.` : 'Link items to Walmart products once, then add them all to your cart in one tap.'}</div></div>
            <button class="btn ${n ? '' : 'primary'}" data-act="wmedit">${n ? 'Link more' : 'Set up'}</button>${n ? `<a class="btn primary" href="${esc(wm.url)}" target="_blank" rel="noopener">${I.cart}Add ${n} to cart</a>` : ''}`}
     </div>
+    ${(() => { const ents = groceryEntries(m).filter(e => !e.checked); const nS = ents.filter(e => e.store === 'sams').length, nW = ents.length - nS;
+      return `<div class="chips store-tabs" role="group" aria-label="Show items for">${[['all','All',ents.length],['walmart','Walmart',nW],['sams',"Sam's Club",nS]].map(([v,l,c]) => `<button class="chipbtn" data-act="storeview" data-v="${v}" aria-pressed="${view === v}">${l} <span class="muted">${c}</span></button>`).join('')}</div>
+      ${nS ? `<div class="sams-bar"><div class="grow"><b>Sam's Club</b><div class="muted" style="font-size:13px">${nS} item${nS>1?'s':''} to get at Sam's Club. Sam's doesn't support adding to a cart from a link, so send yourself the list.</div></div><button class="btn" data-act="sendsams">${I.share}Send Sam's list</button><a class="btn" href="https://www.samsclub.com" target="_blank" rel="noopener">Open Sam's Club</a></div>` : ''}`; })()}
     ${!m.total ? `<div class="empty">Nothing on the list yet. Plan some meals or add weekly staples in Settings.</div>` : ''}
     ${staplesHTML}${aisles}${extrasHTML}
     <div class="addrow"><input type="text" id="extra-in" placeholder="Add something else (paper towels, snacks…)" aria-label="Add grocery item"><button class="btn" data-act="addextra">${I.plus}Add</button></div>
@@ -1116,14 +1141,18 @@ async function shareText(text, title, what){
   try { await navigator.clipboard.writeText(text); toast(`${what} copied. Paste it into a text.`); }
   catch { openModal({type:'copy', text}); }
 }
-function groceryText(){
-  const m = groceryModel(); const ch = m.w.checked || {}; const lines = [];
+function groceryText(only){
+  const m = groceryModel();
   const start = curStart(); const dates = weekDates(start);
-  lines.push(`Groceries ${MON[dates[0].getMonth()]} ${dates[0].getDate()}–${MON[dates[6].getMonth()]} ${dates[6].getDate()}`);
-  if (m.staples.length) { lines.push('', 'STAPLES'); m.staples.forEach(s => !ch['staple|'+s.name] && lines.push('☐ ' + s.name)); }
-  const by = {}; Object.values(m.groups).forEach(g => (by[g.aisle] ||= []).push(g));
-  AISLE_ORDER.filter(a=>by[a]).forEach(a => { const its = by[a].filter(g=>!ch[g.k]); if (!its.length) return; lines.push('', a.toUpperCase()); its.sort((x,y)=>x.name.localeCompare(y.name)).forEach(g => lines.push(`☐ ${g.name}${g.qty?` (${g.qty})`:''}`)); });
-  const ex = m.extras.filter(e=>!ch['extra|'+e.id]); if (ex.length) { lines.push('', 'OTHER'); ex.forEach(e => lines.push('☐ ' + e.name)); }
+  const ents = groceryEntries(m).filter(e => !e.checked);
+  const line = e => `☐ ${e.name}${e.qty ? ` (${e.qty})` : ''}`;
+  const range = `${MON[dates[0].getMonth()]} ${dates[0].getDate()}–${MON[dates[6].getMonth()]} ${dates[6].getDate()}`;
+  const sams = ents.filter(e => e.store === 'sams');
+  if (only === 'sams') return [`Sam's Club list ${range}`, '', ...sams.map(line)].join('\n');
+  const lines = [`Groceries ${range}`];
+  const wal = ents.filter(e => e.store === 'walmart');
+  for (const a of ['Weekly staples', ...AISLE_ORDER, 'Other']) { const its = wal.filter(e => e.aisle === a); if (!its.length) continue; lines.push('', a.toUpperCase()); its.sort((x,y) => x.name.localeCompare(y.name)).forEach(e => lines.push(line(e))); }
+  if (sams.length) { lines.push('', "SAM'S CLUB"); sams.sort((x,y) => x.name.localeCompare(y.name)).forEach(e => lines.push(line(e))); }
   return lines.join('\n');
 }
 
@@ -1490,6 +1519,8 @@ document.addEventListener('click', async e => {
     case 'cook': { const m = {type:'cook', id:t.dataset.id, done:{}, scale: +t.dataset.scale || 1}; openModal(m); keepAwake(true).then(ok => { if (ok && S.modal === m) { m.awake = true; renderModal(); } }); return; }
     case 'cookstep': { const m = S.modal; m.done[t.dataset.n] = !m.done[t.dataset.n]; return renderModal(); }
     case 'rateday': { const r = S.byId[t.dataset.id]; const n = +t.dataset.n; saveOverride(r.id, {r: r.r === n ? 0 : n}); render(); toast(r.r === n ? 'Rating cleared' : `Rated ${n} star${n>1?'s':''}`); return; }
+    case 'storeview': S.storeView = t.dataset.v === 'all' ? null : t.dataset.v; return render();
+    case 'sendsams': return shareText(groceryText('sams'), "Sam's Club list", "Sam's Club list");
     case 'wmedit': S.wmEdit = !S.wmEdit; return render();
     case 'wmset': return openModal({type:'wm', key:t.dataset.key, name:t.dataset.name, focus:'wm-url'});
     case 'wmsave': {
@@ -1519,6 +1550,7 @@ document.addEventListener('change', e => {
   if (t.dataset.cooking) { S.modal.done[t.dataset.cooking] = t.checked; return; }
   if (t.dataset.scale) { const id = t.dataset.scale; editWeek(w => { w.days[id].scale = +t.value; }); return; }
   if (t.matches('[data-useup-override]')) { S.settings.useUpOverride = t.checked; saveSettings(); return render(); }
+  if (t.dataset.store) { const stores = {...(S.walmart.stores || {})}; if (t.value === 'walmart') delete stores[t.dataset.store]; else stores[t.dataset.store] = t.value; S.walmart = {...S.walmart, stores}; saveWalmart(); render(); toast(t.value === 'sams' ? "Moved to Sam's Club. It'll stay there every week." : 'Moved to Walmart'); return; }
   if (t.dataset.draftcat) { const w = getWeek(curStart()); w.days[t.dataset.draftcat].cat = t.value; return; }
   if (t.dataset.cat) { const id = t.dataset.cat; const v = t.value; editWeek(w => { const d = w.days[id]; d.cat = v; d.locked = false; d.rid = NOCOOK.some(n=>n[0]===v) || !v ? null : pick(v, w, id); }); return; }
   if (t.dataset.check) { const k = t.dataset.check; editWeek(w => { w.checked ||= {}; if (t.checked) w.checked[k] = true; else delete w.checked[k]; }); return; }

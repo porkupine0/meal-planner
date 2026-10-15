@@ -46,6 +46,10 @@ Then open http://localhost:8000. It has to be served over http because the app f
 
 It opens full screen with the Supper Board bowl icon.
 
-## Walmart pickup
+## Walmart and Sam's Club
+
+Each item on the grocery list has a store menu (Walmart or Sam's Club). The choice is remembered for that item every week. Filter the list by store, send just the Sam's Club items with **Send Sam's list**, and the full list ends with a Sam's Club section. The Walmart cart button only includes Walmart items.
+
+### Walmart pickup
 
 On the grocery list, tap **+ Walmart** next to an item and paste the link of the exact Walmart product you buy (or its item number). It's remembered for every week. **Add to Walmart cart** then opens Walmart with every saved product still on your list in the cart, so you can choose a pickup time and check out. Check off anything you already have first so it isn't added.
