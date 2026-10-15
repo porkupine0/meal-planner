@@ -209,6 +209,9 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,va
 .tomorrow{background:var(--sun-soft);border-radius:var(--r);padding:10px 14px;margin-bottom:12px;font-size:14px}
 .tomorrow ul{margin:4px 0 0;padding-left:18px}
 .tomorrow .meal-name{font-size:15px}
+.override{align-items:flex-start;background:var(--surface);border-radius:10px;padding:9px 10px;font-size:13.5px;line-height:1.35;margin:4px 0}
+.override b{font-weight:700}
+.override .muted{font-size:12.5px}
 /* cook mode */
 .cook{display:flex;flex-direction:column;gap:12px;font-size:17px}
 .cook h3{font-size:19px;margin-top:4px}
@@ -743,7 +746,11 @@ function pick(cat, w, dateISO, rand=Math.random, exclude=null){
   if (w.days[dateISO]?.busy) { const easy = pool.filter(isBusyOk); if (easy.length) pool = easy; }
   const cookIdx = Object.keys(w.days).sort().filter(k => !NOCOOK.some(n => n[0] === w.days[k].cat)).indexOf(dateISO);
   const want = uncoveredLeftovers(w, dateISO);
-  if (want.length && cookIdx >= 0 && cookIdx < 4) { const hit = pool.filter(r => fridgeMatches(r).some(n => want.includes(n))); if (hit.length) pool = hit; }
+  if (want.length && cookIdx >= 0 && cookIdx < 4) {
+    let hit = pool.filter(r => fridgeMatches(r).some(n => want.includes(n)));
+    if (!hit.length && S.settings.useUpOverride) hit = S.recipes.filter(r => r.k === 'main' && !r.hide && !isSeafood(r) && !used.has(r.id) && (r.i||[]).length && !/^how to /i.test(r.n) && !(S.settings.redMode === 'avoid' && r.red) && fridgeMatches(r).some(n => want.includes(n)));
+    if (hit.length) pool = hit;
+  }
   const fresh = pool.filter(r => !recent.has(r.id));
   if (fresh.length) pool = fresh;
   if (!pool.length) return null;
@@ -808,28 +815,32 @@ function generateWeek(w, opts = {}){
   const used = new Set(Object.values(w.days).map(d => d.rid).filter(Boolean));
   let open = new Set(uncoveredLeftovers(w).map(n => n.toLowerCase()));
   const covered = [];
-  for (const k of cookDays.filter(k => free.includes(k)).slice(0, 4)) {
+  for (const k of cookDays.filter(k => free.includes(k)).slice(0, S.settings.useUpOverride ? 4 : 7)) {
     if (!open.size) break;
     const d = w.days[k]; let best = null, bestScore = 0, bestHits = [];
     for (const r of S.recipes) {
       if (r.k !== 'main' || r.hide || isSeafood(r) || used.has(r.id) || /^how to /i.test(r.n) || !(r.i || []).length || (S.settings.redMode === 'avoid' && r.red)) continue;
+      if (!S.settings.useUpOverride && d.cat && !inCat(r, d.cat)) continue;
       const hits = fridgeMatches(r).filter(x => open.has(x.toLowerCase()));
       if (!hits.length) continue;
       const sc = hits.length * 10 + (d.cat && inCat(r, d.cat) ? 12 : 0) - (/\bfor 1\b/i.test(r.n) ? 5 : 0) + (r.r || 0) * 0.6 + (isQuick(r) ? 0.5 : 0) + (r.kr === 1 ? 3 : r.kr === -1 ? -8 : 0) - (d.busy && !isBusyOk(r) ? 9 : 0) - (recent.has(r.id) ? 6 : 0) - (prev[k] === r.id ? 6 : 0) + Math.random() * 3;
       if (sc > bestScore) { bestScore = sc; best = r; bestHits = hits; }
     }
-    if (!best) break;
+    if (!best) { if (S.settings.useUpOverride) break; else continue; }
     d.rid = best.id; d.useUp = bestHits; used.add(best.id); covered.push(...bestHits);
     bestHits.forEach(x => open.delete(x.toLowerCase()));
   }
   for (const k of free) { const d = w.days[k]; if (!d.rid) d.rid = pick(d.cat, w, k, Math.random, prev[k]) ?? (opts.unlockedOnly ? prev[k] : null); }
   return {covered, missed: [...open]};
 }
+function overrideBox(){
+  return `<label class="mini override"><input type="checkbox" class="check" data-useup-override ${S.settings.useUpOverride ? 'checked' : ''}><span class="grow"><b>Leftovers can change a night's category</b><br><span class="muted">Checked: using up the fridge comes first, even if Grill night gets pasta. Unchecked: leftovers only go on nights where a recipe in that category uses them.</span></span></label>`;
+}
 function useUpToast(res){
   const n = (S.fridge.items || []).length; if (!n) return;
   if (res.covered.length && !res.missed.length) toast(`Planned around ${res.covered.join(', ')}`);
-  else if (res.covered.length) toast(`Used ${res.covered.join(', ')}. No recipe uses ${res.missed.join(', ')}.`);
-  else if (res.missed.length) toast(`No unlocked night could use ${res.missed.join(', ')}. Try unlocking a night.`);
+  else if (res.covered.length) toast(`Used ${res.covered.join(', ')}. ${S.settings.useUpOverride ? 'No recipe uses' : "Nothing in this week's categories uses"} ${res.missed.join(', ')}.`);
+  else if (res.missed.length) toast(S.settings.useUpOverride ? `No unlocked night could use ${res.missed.join(', ')}. Try unlocking a night.` : `No recipe in this week's categories uses ${res.missed.join(', ')}. Check "Leftovers can change a night's category" to fit them in.`);
 }
 function viewSetup(start, w, label, dates){
   const fr = S.fridge.items || [];
@@ -842,6 +853,7 @@ function viewSetup(start, w, label, dates){
       <section class="panel"><div class="label">Step 1</div><h3>What needs to be used up?</h3>
         <p class="muted" style="margin:0 0 4px;font-size:14px">Add leftover or half-used ingredients from the fridge. The first meals of the week will be planned around them.</p>
         <div class="addrow"><input type="text" id="fridge-in" placeholder="e.g. spinach, sour cream, ham" aria-label="Ingredient to use up" value="${esc(S.fridgeDraft)}"><button class="btn" data-act="addfridge">${I.plus}Add</button></div>
+        ${overrideBox()}
         <div class="chips" style="margin-top:10px">${fr.length ? fr.map(f => `<span class="chip fridge" style="font-size:13px;padding:4px 6px 4px 10px">${esc(f.name)}<button class="btn ghost sm icon" style="padding:2px" data-act="usedfridge" data-id="${f.id}" aria-label="Remove ${esc(f.name)}">${I.x}</button></span>`).join('') : '<span class="muted" style="font-size:14px">Nothing yet. Skip this step if the fridge is clear.</span>'}</div>
         ${(() => { const q = recentFresh(); return q.length ? `<div class="label" style="margin:14px 0 6px">Left from last week's meals? Tap to add</div><div class="chips">${q.map(k => `<button class="chipbtn" data-act="quickfridge" data-name="${esc(k)}">+ ${esc(k)}</button>`).join('')}</div>` : ''; })()}</section>
       <section class="panel"><div class="label">Step 2</div><h3>What kind of night is each day?</h3>
@@ -874,6 +886,7 @@ function useUpPanel(){
   return `<details class="useup" data-useup ${S.useupOpen ? 'open' : ''}>
     <summary><span class="useup-t">${I.fridge}Use up first</span><span class="useup-c">${fr.length ? esc(fr.map(f => f.name).join(', ')) : 'Nothing listed'}</span><span class="useup-x">${S.useupOpen ? 'Close' : fr.length ? 'Edit' : 'Add'}</span></summary>
     <div class="useup-b">
+      ${overrideBox()}
       <div class="addrow" style="margin:0"><input type="text" id="fridge-in" placeholder="Add a leftover, e.g. sour cream" aria-label="Add a leftover ingredient" value="${esc(S.fridgeDraft)}"><button class="btn" data-act="addfridge">${I.plus}Add</button></div>
       ${fr.length ? `<div class="chips">${fr.map(f => `<span class="chip fridge chip-x">${esc(f.name)}<button class="btn ghost sm icon" data-act="usedfridge" data-id="${f.id}" aria-label="Used up ${esc(f.name)}">${I.x}</button></span>`).join('')}</div>` : ''}
       ${sugg.length ? `<div class="label">Recipes that use them</div><div class="sugg">${sugg.map(({r,m}) => `<div class="srow">${thumbHTML(r)}<div class="grow"><button class="meal-name" data-open="${r.id}">${esc(r.n)}</button><div class="meal-meta"><span class="chip fridge">${esc(m.join(', '))}</span>${r.t?`<span class="chip">${fmtMin(r.t)}</span>`:''}</div></div><select data-plan="${r.id}" aria-label="Plan ${esc(r.n)}"><option value="">Plan…</option>${dayOpts}</select></div>`).join('')}</div>` : ''}
@@ -1459,6 +1472,7 @@ document.addEventListener('change', e => {
   const t = e.target;
   if (t.dataset.cooking) { S.modal.done[t.dataset.cooking] = t.checked; return; }
   if (t.dataset.scale) { const id = t.dataset.scale; editWeek(w => { w.days[id].scale = +t.value; }); return; }
+  if (t.matches('[data-useup-override]')) { S.settings.useUpOverride = t.checked; saveSettings(); return render(); }
   if (t.dataset.draftcat) { const w = getWeek(curStart()); w.days[t.dataset.draftcat].cat = t.value; return; }
   if (t.dataset.cat) { const id = t.dataset.cat; const v = t.value; editWeek(w => { const d = w.days[id]; d.cat = v; d.locked = false; d.rid = NOCOOK.some(n=>n[0]===v) || !v ? null : pick(v, w, id); }); return; }
   if (t.dataset.check) { const k = t.dataset.check; editWeek(w => { w.checked ||= {}; if (t.checked) w.checked[k] = true; else delete w.checked[k]; }); return; }
