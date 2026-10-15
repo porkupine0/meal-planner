@@ -395,7 +395,7 @@ const DEFAULT_PANTRY = [
  ['baking powder',1],['baking soda',1],['vanilla extract',1],['cornstarch',1],['soy sauce',1],['worcestershire sauce',1],['honey',1],['maple syrup',1],
  ['dijon mustard',1],['yellow mustard',1],['ketchup',1],['mayonnaise',1],['apple cider vinegar',1],['white vinegar',1],['red wine vinegar',1],['rice vinegar',1],
  ['balsamic vinegar',1],['sesame oil',1],['sesame seeds',1],['poppy seeds',1],['hot sauce',1],['sriracha',1],['water',1],['ice',1],['dried minced onion',1],
- ['avocado oil',1],['cooking wine',1],
+ ['avocado oil',1],['cooking wine',1],['flaky salt',1],['chili garlic sauce',1],['balsamic glaze',1],['dried sage',1],
  ['butter',0],['garlic',1],['eggs',0],['milk',0],['grated parmesan cheese',0],['chicken broth',0],['beef broth',0],['long grain white rice',0],['taco seasoning',0],['ranch seasoning',1],
 ];
 const DEFAULT_STAPLES = [['Milk',1],['Eggs',1],['Sandwich bread',1],['Bananas',1],['Apples',1],['Yogurt',1],['Shredded cheese',0],['Coffee',0]];
@@ -526,7 +526,7 @@ function mk(name, qty, unit, raw){
   let k2 = key, prev; do { prev = k2; k2 = k2.replace(MOD_RE,''); } while (k2 !== prev);
   return {name, key, core:k2, qty, unit, raw};
 }
-const PANTRY_ALIAS = {'salt & pepper':'salt', 'salt and pepper':'salt', 'salt & black pepper':'salt', pepper:'black pepper', 'black pepper':'black pepper', oil:'vegetable oil', 'canola oil':'vegetable oil', flour:'all-purpose flour', 'all purpose flour':'all-purpose flour', 'kosher salt':'salt', 'sea salt':'salt', 'salt':'salt', 'egg':'eggs', 'large egg':'eggs', 'evoo':'olive oil', 'extra virgin olive oil':'olive oil', 'garlic clove':'garlic', 'clove garlic':'garlic', 'parmesan cheese':'grated parmesan cheese', 'parmesan':'grated parmesan cheese', 'bay leave':'bay leaf', 'cinnamon':'ground cinnamon', 'cumin':'ground cumin', 'oregano':'dried oregano', 'nutmeg':'ground nutmeg', 'turmeric':'ground turmeric', 'granulated sugar':'sugar', 'white sugar':'sugar', 'mayo':'mayonnaise', 'pure vanilla extract':'vanilla extract', 'vanilla':'vanilla extract', 'unsalted butter':'butter', 'pinch of salt':'salt', mustard:'yellow mustard', 'toasted sesame oil':'sesame oil', 'sesame seed':'sesame seeds', 'toasted sesame seed':'sesame seeds', 'neutral oil':'vegetable oil', 'extra-virgin olive oil':'olive oil', 'dry white wine':'cooking wine', 'white wine':'cooking wine', 'dry red wine':'cooking wine', 'red wine':'cooking wine', 'ranch seasoning mix':'ranch seasoning', 'ranch dressing mix':'ranch seasoning', 'dry ranch seasoning':'ranch seasoning', 'salted butter':'butter', 'whole milk':'milk', 'water':'water', 'cold water':'water', 'hot water':'water', 'warm water':'water', 'boiling water':'water', 'ice water':'water'};
+const PANTRY_ALIAS = {'salt & pepper':'salt', 'salt and pepper':'salt', 'salt & black pepper':'salt', pepper:'black pepper', 'black pepper':'black pepper', oil:'vegetable oil', 'canola oil':'vegetable oil', flour:'all-purpose flour', 'all purpose flour':'all-purpose flour', 'kosher salt':'salt', 'sea salt':'salt', 'salt':'salt', 'egg':'eggs', 'large egg':'eggs', 'evoo':'olive oil', 'extra virgin olive oil':'olive oil', 'garlic clove':'garlic', 'clove garlic':'garlic', 'parmesan cheese':'grated parmesan cheese', 'parmesan':'grated parmesan cheese', 'bay leave':'bay leaf', 'cinnamon':'ground cinnamon', 'cumin':'ground cumin', 'oregano':'dried oregano', 'nutmeg':'ground nutmeg', 'turmeric':'ground turmeric', 'granulated sugar':'sugar', 'white sugar':'sugar', 'mayo':'mayonnaise', 'pure vanilla extract':'vanilla extract', 'vanilla':'vanilla extract', 'unsalted butter':'butter', 'pinch of salt':'salt', 'maldon salt':'flaky salt', 'flaky sea salt':'flaky salt', 'reduced-sodium soy sauce':'soy sauce', 'low-sodium soy sauce':'soy sauce', 'lite soy sauce':'soy sauce', sage:'dried sage', 'sage leave':'dried sage', 'ground sage':'dried sage', mustard:'yellow mustard', 'toasted sesame oil':'sesame oil', 'sesame seed':'sesame seeds', 'toasted sesame seed':'sesame seeds', 'neutral oil':'vegetable oil', 'extra-virgin olive oil':'olive oil', 'dry white wine':'cooking wine', 'white wine':'cooking wine', 'dry red wine':'cooking wine', 'red wine':'cooking wine', 'ranch seasoning mix':'ranch seasoning', 'ranch dressing mix':'ranch seasoning', 'dry ranch seasoning':'ranch seasoning', 'salted butter':'butter', 'whole milk':'milk', 'water':'water', 'cold water':'water', 'hot water':'water', 'warm water':'water', 'boiling water':'water', 'ice water':'water'};
 function pantryKey(it, map){
   const cands = [it.name, it.key, it.core];
   for (const c of cands) { const a = PANTRY_ALIAS[c] || c; if (map && map.has(a)) return a; }
@@ -738,7 +738,8 @@ function upgradeSettings(){
   const v = S.settings.pantryV || (S.settings.garlicPantry ? 1 : 0);
   if (v < 1) setOn('garlic', true);
   if (v < 2) { ['olive oil','avocado oil','cooking wine','ranch seasoning','sesame oil','sesame seeds','yellow mustard','dijon mustard'].forEach(n => setOn(n, true)); const tp = p.find(x => x.name === 'tomato paste'); if (tp) tp.on = false; }
-  S.settings.pantryV = 2;
+  if (v < 3) ['flaky salt','chili garlic sauce','balsamic glaze','dried sage','soy sauce'].forEach(n => setOn(n, true));
+  S.settings.pantryV = 3;
 }
 const saveFridge = () => persist('app/fridge', S.fridge);
 const saveWalmart = () => persist('app/walmart', S.walmart);
@@ -1112,10 +1113,11 @@ const WM_DEFAULTS = [
   [/flour tortillas?|(?<!corn )\btortillas?\b(?!.*(chip|strip))/i, "953466267", "Great Value Soft Taco Flour Tortillas, 10 ct"],
   [/hawaiian (sweet )?rolls?|sweet rolls?|slider buns?/i, "10421729", "King's Hawaiian Original Sweet Rolls, 12 ct"],
   [/rotisserie chicken|shredded chicken|^cooked chicken/i, "682789099", "Freshness Guaranteed Rotisserie Chicken (chilled)"],
+  [/chicken cutlets?|thin[- ]?sliced chicken/i, "338508084", "Freshness Guaranteed Thin-Sliced Chicken Breasts"],
   [/chicken breasts?|chicken tenderloins?/i, "36179444", "Great Value Boneless Skinless Chicken Breasts, 5 lb (frozen)"],
   [/chicken thighs?/i, "778091348", "Freshness Guaranteed Boneless Skinless Chicken Thighs (tray)"],
   [/ground beef|ground chuck|hamburger meat/i, "15136791", "80/20 Ground Beef Chuck, 1 lb roll"],
-  [/^(?!.*ravioli).*(italian sausage|ground sausage)/i, "40711369", "Marketside Mild Ground Italian Sausage, 1 lb"],
+  [/^(?!.*ravioli).*(italian.*sausage|ground sausage)/i, "40711369", "Marketside Mild Ground Italian Sausage, 1 lb"],
   [/(?<!(turkey|canadian) )\bbacon\b(?!.*bits)|prosciutto|pancetta/i, "10293911", "Great Value Hickory Smoked Bacon, 16 oz"],
   [/smoked sausage|kielbasa/i, "5440505153", "Great Value Chicken Smoked Sausage, 14 oz"],
   [/\bham\b/i, "47394318", "Great Value Thin Sliced Honey Ham, 16 oz"],
@@ -1154,14 +1156,15 @@ const WM_DEFAULTS = [
   [/green onions?|scallions?/i, "51259361", "Fresh Green Onions, 1 bunch"],
   [/celery/i, "51259411", "Fresh Celery, 1 stalk"],
   [/russet potato|baking potato/i, "10447839", "Fresh Idaho Russet Potatoes, 5 lb bag"],
-  [/^(?!.*(sweet|mashed|chip|flake|tot|hash|soup|starch|flesh|pierog|russet)).*(yukon gold|gold potato|yellow potato|baby potato|red potato|new potato|\bpotato(es)?\b)/i, "42700530", "Fresh Yellow Potatoes, 3 lb bag"],
+  [/^(?!.*(sweet|instant|chip|flake|tot|hash|soup|starch|flesh|pierog|russet)).*(yukon gold|gold potato|yellow potato|baby potato|red potato|new potato|\bpotato(es)?\b)/i, "42700530", "Fresh Yellow Potatoes, 3 lb bag"],
   [/broccoli(?!.*(frozen|slaw))/i, "51259378", "Fresh Broccoli Crowns, each"],
   [/spinach(?!.*frozen)/i, "13893738", "Marketside Fresh Spinach, 10 oz"],
   [/romaine|^(?!.*(iceberg|butter|shredded|wrap|cup)).*\blettuce\b/i, "10532755", "Fresh Romaine Hearts, 3 ct"],
   [/shredded (iceberg )?lettuce|iceberg/i, "13893731", "Marketside Shredded Iceberg Lettuce, 8 oz"],
   [/grape tomato|cherry tomato/i, "10451313", "Fresh Grape Tomatoes, 10 oz"],
-  [/avocado(?!.*(oil|crema|ghee))/i, "44390949", "Fresh Hass Avocado, each"],
+  [/avocado(?!.*(oil|crema|ghee))|guacamole/i, "44390949", "Fresh Hass Avocado, each"],
   [/lemon(?![-\w]*\s*(curd|schmear|pepper|vinegar))(?!.*(curd|schmear|vinegar))/i, "41752773", "Fresh Lemon, each"],
+  [/pickled jalape|jarred jalape|jalape[nñ]o slices/i, "10416458", "Great Value Sliced Jalape\u00f1os, 12 oz jar"],
   [/(?<!pickled )jalape[nñ]o(?!.*(seasoning|pickled|onions))/i, "919484438", "Fresh Jalape\u00f1o Peppers, 8 oz"],
   [/tortilla chips|corn chips|tostadas? chips/i, "12335104", "Great Value Restaurant Style White Corn Tortilla Chips, 13 oz"],
   [/mushroom(?!.*(soup|cream of))/i, "10449184", "Freshness Guaranteed Sliced White Mushrooms, 8 oz"],
@@ -1190,6 +1193,7 @@ const WM_DEFAULTS = [
   [/cauliflower/i, "10402652", "Fresh Cauliflower, each"],
   [/strawberr/i, "44391605", "Fresh Strawberries, 1 lb"],
   [/cranberr(?!.*(sauce|juice))/i, "46460961", "Great Value Sweetened Dried Cranberries, 24 oz"],
+  [/orange juice/i, "403284742", "Great Value 100% Orange Juice, No Pulp, 52 fl oz"],
   [/\boranges?\b(?!.*(juice|marmalade|chicken|sauce|bell|pepper))/i, "162577028", "Fresh Navel Orange, each"],
   [/tomato paste/i, "10415519", "Great Value Tomato Paste, 6 oz"],
   [/pork chops?|pork loin chops?/i, "20627151", "Pork Center Cut Loin Chops, Boneless, Family Pack"],
@@ -1198,6 +1202,7 @@ const WM_DEFAULTS = [
   [/chuck roast|pot roast/i, "39944474", "Choice Angus Chuck Roast, 2.25-3.38 lb"],
   [/flank steak/i, "178881423", "Choice Angus Flank Steak, 1 per tray"],
   [/skirt steak/i, "44391260", "Beef Inside Skirt Steak, 1 per tray"],
+  [/shaved (beef|steak|sirloin)|philly|sandwich steaks?|quick ?steak|quik ?steak/i, "792848558", "Gary's QuickSteak Thin Sirloin, 10.8 oz (frozen)"],
   [/sirloin/i, "44391338", "Choice Angus Top Sirloin Steak, 1 per tray"],
   [/chicken sausage/i, "10317798", "Aidells Chicken & Apple Smoked Chicken Sausage, 12 oz"],
   [/salami/i, "47934607", "Prima Della Genoa Salami, deli sliced (0.5 lb)"],
@@ -1211,6 +1216,20 @@ const WM_DEFAULTS = [
   [/^(?!.*(taco|tostada)).*\bshells?\b/i, "10534077", "Great Value Shells, 16 oz"],
   [/tortellini/i, "10294974", "Buitoni Mixed Cheese Tortellini, 20 oz"],
   [/green beans?/i, "14053328", "Marketside Fresh Green Beans, 12 oz"],
+  [/tomato sauce/i, "10415500", "Great Value Tomato Sauce, 15 oz"],
+  [/marinara|pasta sauce|spaghetti sauce/i, "952045923", "Great Value Marinara Pasta Sauce, 24 oz"],
+  [/teriyaki/i, "23598506", "Great Value Teriyaki Sauce, 15 fl oz"],
+  [/buffalo(?!.*seasoning)|wing sauce/i, "481607513", "Great Value Medium Wing Sauce, 12 fl oz"],
+  [/^(?!.*(ground|powder|ale|paste|dried|crystallized|dressing)).*\bginger\b/i, "44391005", "Fresh Ginger Root (about \u00bc lb)"],
+  [/pesto/i, "1416793108", "Great Value Traditional Basil Pesto, 6.7 oz"],
+  [/caesar/i, "10452406", "Great Value Creamy Caesar Dressing, 16 fl oz"],
+  [/queso(?!.*(fresco|cotija))/i, "166847455", "Great Value Queso Blanco Cheese Dip, 15 oz"],
+  [/arugula/i, "998269547", "Marketside Organic Baby Arugula, 5 oz"],
+  [/snap peas?|snow peas?/i, "242103463", "Marketside Organic Sugar Snap Peas, 8 oz"],
+  [/radish/i, "42353640", "Fresh Red Radishes, 1 bag"],
+  [/\bapples?\b(?!.*(cider|juice|sauce|vinegar|butter|pie|jack))/i, "44390953", "Fresh Gala Apple, each"],
+  [/sun-? ?dried tomato/i, "149411733", "California Sun Dry Sun-Dried Tomatoes in Oil, 8 oz"],
+  [/breakfast sausage|sausage patt|sausage roll|^(hot |mild |spicy )?(ground )?(pork )?sausage$/i, "46575468", "Great Value Original Sausage Roll, 16 oz"],
 ].map(([re, id, label]) => ({re, id, label}));
 const wmDefault = name => { const n = String(name || '').toLowerCase(); const d = n && WM_DEFAULTS.find(x => x.re.test(n)); return d ? {id: d.id, qty: 1, label: d.label, auto: true} : null; };
 // The product used for an item: your own pick, else the default (unless you turned it off).
