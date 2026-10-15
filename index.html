@@ -561,11 +561,31 @@ function inCat(r, cat){
     default: return (r.c || []).includes(cat);
   }
 }
+// Leftovers are typed loosely ("1 cup of heavy cream", "Baby spinach"), so match on the
+// ingredient itself: drop amounts and words like "baby" or "leftover".
+const FRIDGE_STRIP = /^(?:baby|fresh|frozen|shredded|grated|sliced|diced|chopped|leftover|left over|cooked|opened|large|small|half(?: a)?|a|an|some|bag of|block of|container of|package of|tub of|can of|jar of|box of|of)\s+/;
+const fridgeRe = new Map();
+function fridgeKey(name){
+  const it = parseIngredient(String(name))[0];
+  let k = (it ? it.key : String(name).toLowerCase()).trim(), prev;
+  do { prev = k; k = k.replace(FRIDGE_STRIP, ''); } while (k !== prev);
+  return k;
+}
+function fridgeRegex(name){
+  if (!fridgeRe.has(name)) { const k = fridgeKey(name); fridgeRe.set(name, k ? new RegExp('\\b' + k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + '(e?s)?\\b') : null); }
+  return fridgeRe.get(name);
+}
 function fridgeMatches(r){
   const items = S.fridge.items || [];
   if (!items.length) return [];
   const text = ' ' + ingOf(r).map(x => x.name).join(' | ') + ' ' + r.n.toLowerCase() + ' ';
-  return items.filter(f => { const w = f.name.toLowerCase().trim().replace(/s$/,''); return w && new RegExp('\\b' + w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + '(e?s)?\\b').test(text); }).map(f => f.name);
+  return items.filter(f => { const re = fridgeRegex(f.name); return re && re.test(text); }).map(f => f.name);
+}
+// Leftovers not already used by another night of the week.
+function uncoveredLeftovers(w, exceptDay){
+  const covered = new Set();
+  for (const [k, d] of Object.entries(w.days)) { const r = k !== exceptDay && d.rid && !NOCOOK.some(n => n[0] === d.cat) && S.byId[d.rid]; if (r) fridgeMatches(r).forEach(n => covered.add(n)); }
+  return (S.fridge.items || []).map(f => f.name).filter(n => !covered.has(n));
 }
 function thumbHTML(r, cls='thumb'){
   if (r.img && S.thumbs[r.id]) return `<img class="${cls}" src="${S.thumbs[r.id]}" alt="" loading="lazy">`;
@@ -721,6 +741,9 @@ function pick(cat, w, dateISO, rand=Math.random, exclude=null){
   const dayIdx = Object.keys(w.days).sort().indexOf(dateISO);
   let pool = S.recipes.filter(r => inCat(r, cat) && !r.hide && !isSeafood(r) && !used.has(r.id) && !(S.settings.redMode === 'avoid' && r.red) && (r.i||[]).length && !/^how to /i.test(r.n));
   if (w.days[dateISO]?.busy) { const easy = pool.filter(isBusyOk); if (easy.length) pool = easy; }
+  const cookIdx = Object.keys(w.days).sort().filter(k => !NOCOOK.some(n => n[0] === w.days[k].cat)).indexOf(dateISO);
+  const want = uncoveredLeftovers(w, dateISO);
+  if (want.length && cookIdx >= 0 && cookIdx < 4) { const hit = pool.filter(r => fridgeMatches(r).some(n => want.includes(n))); if (hit.length) pool = hit; }
   const fresh = pool.filter(r => !recent.has(r.id));
   if (fresh.length) pool = fresh;
   if (!pool.length) return null;
@@ -775,26 +798,38 @@ function catOptions(sel){
   <optgroup label="Cook">${CATS.map(([k,l]) => `<option value="${k}" ${sel===k?'selected':''}>${esc(l)}</option>`).join('')}</optgroup>
   <optgroup label="No cooking">${NOCOOK.map(([k,l]) => `<option value="${k}" ${sel===k?'selected':''}>${esc(l)}</option>`).join('')}</optgroup>`;
 }
-function generateWeek(w){
+function generateWeek(w, opts = {}){
   const keys = Object.keys(w.days).sort();
-  const cookDays = keys.filter(k => !NOCOOK.some(n => n[0] === w.days[k].cat));
-  const recent = recentIds(w.start); const used = new Set();
-  let open = new Set((S.fridge.items || []).map(f => f.name.toLowerCase()));
-  for (const k of cookDays.slice(0, 3)) {
+  const cookDays = keys.filter(k => !NOCOOK.some(n => n[0] === w.days[k].cat) && w.days[k].cat);
+  const free = opts.unlockedOnly ? cookDays.filter(k => !w.days[k].locked) : cookDays;
+  const prev = {};
+  for (const k of free) { prev[k] = w.days[k].rid; w.days[k].rid = null; w.days[k].useUp = null; }
+  const recent = recentIds(w.start);
+  const used = new Set(Object.values(w.days).map(d => d.rid).filter(Boolean));
+  let open = new Set(uncoveredLeftovers(w).map(n => n.toLowerCase()));
+  const covered = [];
+  for (const k of cookDays.filter(k => free.includes(k)).slice(0, 4)) {
     if (!open.size) break;
     const d = w.days[k]; let best = null, bestScore = 0, bestHits = [];
     for (const r of S.recipes) {
       if (r.k !== 'main' || r.hide || isSeafood(r) || used.has(r.id) || /^how to /i.test(r.n) || !(r.i || []).length || (S.settings.redMode === 'avoid' && r.red)) continue;
       const hits = fridgeMatches(r).filter(x => open.has(x.toLowerCase()));
       if (!hits.length) continue;
-      const sc = hits.length * 10 + (d.cat && inCat(r, d.cat) ? 12 : 0) - (/\bfor 1\b/i.test(r.n) ? 5 : 0) + (r.r || 0) * 0.6 + (isQuick(r) ? 0.5 : 0) + (r.kr === 1 ? 3 : r.kr === -1 ? -8 : 0) - (d.busy && !isBusyOk(r) ? 9 : 0) - (recent.has(r.id) ? 6 : 0) + Math.random();
+      const sc = hits.length * 10 + (d.cat && inCat(r, d.cat) ? 12 : 0) - (/\bfor 1\b/i.test(r.n) ? 5 : 0) + (r.r || 0) * 0.6 + (isQuick(r) ? 0.5 : 0) + (r.kr === 1 ? 3 : r.kr === -1 ? -8 : 0) - (d.busy && !isBusyOk(r) ? 9 : 0) - (recent.has(r.id) ? 6 : 0) - (prev[k] === r.id ? 6 : 0) + Math.random() * 3;
       if (sc > bestScore) { bestScore = sc; best = r; bestHits = hits; }
     }
     if (!best) break;
-    d.rid = best.id; d.useUp = bestHits; if (!d.cat) d.cat = 'any'; used.add(best.id);
+    d.rid = best.id; d.useUp = bestHits; used.add(best.id); covered.push(...bestHits);
     bestHits.forEach(x => open.delete(x.toLowerCase()));
   }
-  for (const k of cookDays) { const d = w.days[k]; if (!d.rid && d.cat) d.rid = pick(d.cat, w, k); }
+  for (const k of free) { const d = w.days[k]; if (!d.rid) d.rid = pick(d.cat, w, k, Math.random, prev[k]) ?? (opts.unlockedOnly ? prev[k] : null); }
+  return {covered, missed: [...open]};
+}
+function useUpToast(res){
+  const n = (S.fridge.items || []).length; if (!n) return;
+  if (res.covered.length && !res.missed.length) toast(`Planned around ${res.covered.join(', ')}`);
+  else if (res.covered.length) toast(`Used ${res.covered.join(', ')}. No recipe uses ${res.missed.join(', ')}.`);
+  else if (res.missed.length) toast(`No unlocked night could use ${res.missed.join(', ')}. Try unlocking a night.`);
 }
 function viewSetup(start, w, label, dates){
   const fr = S.fridge.items || [];
@@ -908,7 +943,7 @@ function viewPlan(){
         ${S.weekOffset!==0?`<button class="btn" data-act="wk0">This week</button>`:''}
         ${openDays ? `<button class="btn primary" data-act="fill">${I.wand}Fill open days</button>` : ''}
         <details class="more"><summary class="btn icon" aria-label="More week actions">${I.dots}</summary><div class="menu">
-          <button class="btn ghost" data-act="rerollall">${I.reroll}Reroll unlocked nights</button>
+          <button class="btn ghost" data-act="rerollall">${I.reroll}Reroll unlocked nights (uses leftovers)</button>
           <button class="btn ghost" data-act="sharemenu">${I.share}Send this week's menu</button>
           <button class="btn ghost" data-act="savepattern">${I.plan}Save as my usual week</button>
           <button class="btn ghost" data-act="replan">${I.trash}Start this week over</button></div></details>
@@ -1355,11 +1390,11 @@ document.addEventListener('click', async e => {
     case 'close': return closeModal();
     case 'wk': S.weekOffset += +t.dataset.n; return render();
     case 'wk0': S.weekOffset = 0; return render();
-    case 'generate': editWeek(w => generateWeek(w)); window.scrollTo(0,0); toast('Your week is planned'); return;
+    case 'generate': { let res; editWeek(w => { res = generateWeek(w); }); window.scrollTo(0,0); if ((S.fridge.items||[]).length) useUpToast(res); else toast('Your week is planned'); return; }
     case 'planhand': editWeek(()=>{}); return;
     case 'replan': { if (!t.dataset.sure) { t.dataset.sure = 1; t.textContent = 'Tap again to clear this week'; return; } const id = iso(curStart()); const old = S.weeks[id]; delete S.weeks[id]; removeDoc('weeks/' + id); S.drafts[id] = buildDraft(curStart()); if (old) for (const [k,d] of Object.entries(old.days||{})) if (S.drafts[id].days[k]) S.drafts[id].days[k].cat = d.cat; render(); toast('Week cleared'); return; }
     case 'fill': editWeek(w => { for (const k of Object.keys(w.days).sort()) { const d = w.days[k]; if (d.cat && !d.rid && !NOCOOK.some(n=>n[0]===d.cat)) d.rid = pick(d.cat, w, k); } }); toast('Open days filled'); return;
-    case 'rerollall': editWeek(w => { for (const k of Object.keys(w.days).sort()) { const d = w.days[k]; if (!d.locked && d.cat && !NOCOOK.some(n=>n[0]===d.cat)) d.rid = pick(d.cat, w, k, Math.random, d.rid) ?? d.rid; } }); return;
+    case 'rerollall': { let res; editWeek(w => { res = generateWeek(w, {unlockedOnly: true}); }); const locked = Object.values(getWeek(curStart()).days).filter(d => d.locked).length; if ((S.fridge.items||[]).length) useUpToast(res); else toast(locked ? `Rerolled. ${locked} locked night${locked>1?'s':''} kept.` : 'Rerolled'); return; }
     case 'savepattern': { const w = getWeek(curStart()); const p = {}; for (const [k,d] of Object.entries(w.days)) p[parseISO(k).getDay()] = d.cat || ''; S.settings.pattern = p; saveSettings(); toast('Saved as your usual week'); return; }
     case 'reroll': editWeek(w => { const d = w.days[day]; const n = pick(d.cat, w, day, Math.random, d.rid); if (n) { d.rid = n; d.locked = false; } else toast('No other recipes in this category'); }); return;
     case 'lock': editWeek(w => { w.days[day].locked = !w.days[day].locked; }); return;
