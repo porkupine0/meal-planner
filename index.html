@@ -246,6 +246,7 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,va
 .chip.buyn{background:var(--sun-soft);color:var(--ink);font-weight:700}
 .adjust{background:var(--accent-soft);border-radius:var(--r);padding:12px}
 .adjust .label svg{width:14px;height:14px;vertical-align:-2px}
+.update-bar{position:fixed;left:12px;right:12px;margin:0 auto;width:fit-content;justify-content:space-between;top:calc(10px + env(safe-area-inset-top,0px));z-index:70;display:flex;align-items:center;gap:10px;background:var(--ink);color:var(--bg);padding:8px 8px 8px 14px;border-radius:14px;box-shadow:var(--shadow);font-weight:600;font-size:14px;max-width:calc(100% - 24px)}
 .linkbtn{background:none;border:0;padding:0;font:inherit;color:var(--accent,inherit);text-decoration:underline;cursor:pointer}
 .wm-btn{border:1px dashed var(--line);background:transparent;color:var(--muted);border-radius:99px;padding:3px 9px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}
 .wm-btn:hover{border-color:var(--sky);color:var(--sky)}
@@ -2286,6 +2287,26 @@ async function boot(){
   else if (FB_CONFIG.apiKey) startFirebase();
 }
 boot();
+// ---------- updates (GitHub Pages) ----------
+// Home-screen apps keep running an old copy, so check for a newer version when the app is opened or brought back.
+const APP_VERSION = '2026-10-22.1';
+let updateShown = false;
+async function checkForUpdate(){
+  if (IN_CLAUDE || updateShown || !/^https?:/.test(location.protocol)) return;
+  try {
+    const html = await (await fetch(location.pathname + '?v=' + Date.now(), {cache: 'no-store'})).text();
+    const v = (html.match(/const APP_VERSION = '([^']+)'/) || [])[1];
+    if (v && v !== APP_VERSION) {
+      updateShown = true;
+      const bar = document.createElement('div'); bar.className = 'update-bar';
+      bar.innerHTML = '<span>A new version of Supper Board is ready.</span><button class="btn primary sm">Update</button>';
+      bar.querySelector('button').onclick = () => location.reload();
+      document.body.appendChild(bar);
+    }
+  } catch {}
+}
+setTimeout(checkForUpdate, 4000);
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') checkForUpdate(); });
 })();
 </script>
 
