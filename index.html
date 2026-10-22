@@ -507,8 +507,9 @@ function parseIngredient(line){
   }
   let name = cleanName(s);
   // Canned tomatoes lose "diced"/"crushed" when the name is cleaned, so name them from the original line.
-  const tm = line.match(/\b(crushed|diced|stewed|whole peeled|petite(?:[- ]diced)?|fire[- ]roasted(?: diced)?)\s+tomato/i);
+  const tm = line.match(/\b(crushed|diced|stewed|whole peeled(?: san marzano)?|petite(?:[- ]diced)?|fire[- ]roasted(?: diced)?)\s+tomato/i);
   if (tm && /\b(cans?|tins?|oz|ounces?)\b/i.test(line)) name = /crushed/i.test(tm[1]) ? 'crushed tomatoes' : /whole/i.test(tm[1]) ? 'canned whole tomatoes' : 'canned diced tomatoes';
+  if (/\bgreen chil(?:e|i)e?s\b/i.test(line) && /\b(cans?|oz|ounces?)\b/i.test(line) && /roasted|peeled|diced|chopped/i.test(line)) name = 'green chiles';
   if (!name) return [];
   const it = mk(name, qty, unit, line); it.size = size; return [it];
 }
@@ -524,7 +525,7 @@ function cleanName(s){
   s = s.split(/,|;| – | — |\s-\s/)[0];
   { const mm = s.match(/^(.*?)\s+(?:or|\/)\s+(.*)$/i);
     if (mm) { const first = mm[1].trim(), second = mm[2].trim().split(/\s+/); const last = second[second.length-1];
-      const fw = first.split(/\s+/); s = (second.length > 1 && (fw.length < second.length || (fw.length === second.length && /^(broth|stock|chicken|beef|pork|cheese|beans|pasta|noodles|tortillas|bread|rolls|buns)$/i.test(last))) && !fw.includes(last)) ? first + ' ' + last : first; } }
+      const fw = first.split(/\s+/); s = (second.length > 1 && (fw.length < second.length || (fw.length === second.length && /^(broth|stock|chicken|beef|pork|cheese|beans|pasta|noodles|tortillas|bread|rolls|buns|wontons|dumplings)$/i.test(last))) && !fw.includes(last)) ? first + ' ' + last : first; } }
   s = s.replace(/\b(for (serving|topping|dipping|garnish|frying)|to taste|optional|divided|plus more.*|if desired|as needed|at room temperature|room temperature)\b.*$/i,'');
   s = s.replace(/[*•]/g,'').replace(/\s+/g,' ').trim().toLowerCase();
   s = s.replace(/^top with\s+/,'').replace(/\s+(?:(?:finely|thinly|roughly|coarsely)\s+)?(?:chopped|diced|minced|sliced|grated|crushed|cubed|halved|peeled|torn|fried|softened|melted|beaten|whisked|light|lightly)\b.*$/,'');
@@ -538,7 +539,7 @@ function mk(name, qty, unit, raw){
   let k2 = key, prev; do { prev = k2; k2 = k2.replace(MOD_RE,''); } while (k2 !== prev);
   return {name, key, core:k2, qty, unit, raw};
 }
-const PANTRY_ALIAS = {'salt & pepper':'salt', 'salt and pepper':'salt', 'salt & black pepper':'salt', pepper:'black pepper', 'black pepper':'black pepper', oil:'vegetable oil', 'canola oil':'vegetable oil', flour:'all-purpose flour', 'all purpose flour':'all-purpose flour', 'kosher salt':'salt', 'sea salt':'salt', 'salt':'salt', 'egg':'eggs', 'large egg':'eggs', 'evoo':'olive oil', 'extra virgin olive oil':'olive oil', 'garlic clove':'garlic', 'clove garlic':'garlic', 'parmesan cheese':'grated parmesan cheese', 'parmesan':'grated parmesan cheese', 'bay leave':'bay leaf', 'cinnamon':'ground cinnamon', 'cumin':'ground cumin', 'oregano':'dried oregano', 'nutmeg':'ground nutmeg', 'turmeric':'ground turmeric', 'granulated sugar':'sugar', 'white sugar':'sugar', 'mayo':'mayonnaise', 'pure vanilla extract':'vanilla extract', 'vanilla':'vanilla extract', 'unsalted butter':'butter', 'pinch of salt':'salt', 'red pepper flakes for heat':'red pepper flakes', 'chilli flake':'red pepper flakes', 'chili flake':'red pepper flakes', 'chili flakes for extra heat':'red pepper flakes', 'grain sea salt':'salt', 'fine grain sea salt':'salt', 'cumin powder':'ground cumin', 'mccormick ground black pepper':'black pepper', 'bay leaves dried':'bay leaf', 'bay leaf dried':'bay leaf', 'chilli powder':'chili powder', 'chipotle chili powder':'ground chipotle', 'chipotle chile powder':'ground chipotle', 'cajun spice blend':'cajun seasoning', 'crumbled dried mexican oregano':'dried oregano', peppercorn:'black pepper', 'whole peppercorn':'black pepper', 'arrowroot powder':'cornstarch', 'arrowroot powder acts like cornstarch':'cornstarch', 'granulated onion':'onion powder', 'dried onion':'dried minced onion', 'olive oil spray':'cooking spray', 'avocado oil spray':'cooking spray', 'white sesame seed':'sesame seeds', 'worcestershire umami':'worcestershire sauce', 'garlic pressed':'garlic', 'garlic about 3 garlic clove':'garlic', 'garlic bulb cut the narrow top off':'garlic', 'chicken boullion':'bouillon', 'beef bouillion':'bouillon', 'beef bouillon concentrate':'bouillon', 'hot pepper sauce':'hot sauce', 'sugar free ketchup':'ketchup', 'japanese mayo aka kewpie mayo':'mayonnaise', 'chipotle mayo':'mayonnaise', 'spicy mustard':'dijon mustard', 'spicy brown mustard':'dijon mustard', 'stone-ground mustard':'dijon mustard', 'marsala wine':'cooking wine', 'full-bodied red wine':'cooking wine', 'white wine —':'cooking wine', 'gluten-free flour':'all-purpose flour', 'bread flour':'all-purpose flour', 'c bread flour':'all-purpose flour', 'olive oil dividend':'olive oil', 't olive oil':'olive oil', 'drizzle of olive oil and pinch of maldon':'olive oil', 'drizzle of avocado oil':'avocado oil', 'avocado oil ghee':'avocado oil', 'coconut frying':'vegetable oil', 'extra salt and pepper':'salt', 'salt and fresh-ground black pepper':'salt', 'unsweetened cocoa powder':'cocoa powder', 'packet dry ranch dressing mix':'ranch seasoning', '¼ teaspoon baking soda':'baking soda', ': ⅓ tsp baking soda':'baking soda', 'cardamom':'ground cardamom', 'ground cardamom':'ground cardamom', allspice:'ground allspice', 'ground allspice':'ground allspice', 'garam masala':'garam masala', 'ancho chili powder':'ancho chili powder', 'aleppo pepper':'red pepper flakes', 'clove':'whole cloves', 'file powder':'file powder', vinegar:'white vinegar', 'distilled white vinegar':'white vinegar', 'cider vinegar':'apple cider vinegar', 'rice wine vinegar':'rice vinegar', 'red chili flake':'red pepper flakes', 'red chili pepper flake':'red pepper flakes', 'red pepper flake':'red pepper flakes', 'crushed red pepper flake':'red pepper flakes', worcestershire:'worcestershire sauce', 'worchestershire sauce':'worcestershire sauce', 'worcestershire sauce':'worcestershire sauce', 'soy sauce low-sodium':'soy sauce', 'reduced sodium soy sauce':'soy sauce', 'low sodium soy sauce':'soy sauce', 'cayenne powder':'cayenne pepper', cayenne:'cayenne pepper', 'garlic granule':'garlic powder', 'granulated garlic':'garlic powder', 'parsley flake':'dried parsley', 'mustard powder':'dry mustard', 'ground mustard':'dry mustard', 'nonstick spray':'cooking spray', 'nonstick cooking spray':'cooking spray', 'fleur de sel':'flaky salt', 'maldon flaky sea salt':'flaky salt', 'maldon flaky salt':'flaky salt', 'mineral-rich salt':'salt', 'flour-all purpose':'all-purpose flour', 'pasta water':'water', 'reserved pasta water':'water', 'pasta cooking water':'water', 'salt for pasta':'salt', 'fennel seed':'fennel seeds', chipotle:'ground chipotle', 'chipotle powder':'ground chipotle', marjoram:'dried marjoram', 'beef bouillon':'bouillon', 'cubes beef bouillon':'bouillon', 'chicken bouillon':'bouillon', 'bouillon cube':'bouillon', 'mexican oregano':'dried oregano', sriacha:'sriracha', 'sriracha sauce':'sriracha', 'dried mexican oregano':'dried oregano', 'maldon salt':'flaky salt', 'flaky sea salt':'flaky salt', 'reduced-sodium soy sauce':'soy sauce', 'low-sodium soy sauce':'soy sauce', 'lite soy sauce':'soy sauce', sage:'dried sage', 'sage leave':'dried sage', 'ground sage':'dried sage', mustard:'yellow mustard', 'toasted sesame oil':'sesame oil', 'sesame seed':'sesame seeds', 'toasted sesame seed':'sesame seeds', 'neutral oil':'vegetable oil', 'extra-virgin olive oil':'olive oil', 'dry white wine':'cooking wine', 'white wine':'cooking wine', 'dry red wine':'cooking wine', 'red wine':'cooking wine', 'ranch seasoning mix':'ranch seasoning', 'ranch dressing mix':'ranch seasoning', 'dry ranch seasoning':'ranch seasoning', 'salted butter':'butter', 'whole milk':'milk', 'water':'water', 'cold water':'water', 'hot water':'water', 'warm water':'water', 'boiling water':'water', 'ice water':'water'};
+const PANTRY_ALIAS = {'salt & pepper':'salt', 'salt and pepper':'salt', 'salt & black pepper':'salt', pepper:'black pepper', 'black pepper':'black pepper', oil:'vegetable oil', 'canola oil':'vegetable oil', flour:'all-purpose flour', 'all purpose flour':'all-purpose flour', 'kosher salt':'salt', 'sea salt':'salt', 'salt':'salt', 'egg':'eggs', 'large egg':'eggs', 'evoo':'olive oil', 'extra virgin olive oil':'olive oil', 'garlic clove':'garlic', 'clove garlic':'garlic', 'parmesan cheese':'grated parmesan cheese', 'parmesan':'grated parmesan cheese', 'bay leave':'bay leaf', 'cinnamon':'ground cinnamon', 'cumin':'ground cumin', 'oregano':'dried oregano', 'nutmeg':'ground nutmeg', 'turmeric':'ground turmeric', 'granulated sugar':'sugar', 'white sugar':'sugar', 'mayo':'mayonnaise', 'pure vanilla extract':'vanilla extract', 'vanilla':'vanilla extract', 'unsalted butter':'butter', 'pinch of salt':'salt', 'red pepper flakes for heat':'red pepper flakes', 'chilli flake':'red pepper flakes', 'chili flake':'red pepper flakes', 'chili flakes for extra heat':'red pepper flakes', 'grain sea salt':'salt', 'fine grain sea salt':'salt', 'cumin powder':'ground cumin', 'mccormick ground black pepper':'black pepper', 'bay leaves dried':'bay leaf', 'bay leaf dried':'bay leaf', 'chilli powder':'chili powder', 'chipotle chili powder':'ground chipotle', 'chipotle chile powder':'ground chipotle', 'cajun spice blend':'cajun seasoning', 'crumbled dried mexican oregano':'dried oregano', peppercorn:'black pepper', 'whole peppercorn':'black pepper', 'arrowroot powder':'cornstarch', 'arrowroot powder acts like cornstarch':'cornstarch', 'granulated onion':'onion powder', 'dried onion':'dried minced onion', 'olive oil spray':'cooking spray', 'avocado oil spray':'cooking spray', 'white sesame seed':'sesame seeds', 'worcestershire umami':'worcestershire sauce', 'garlic pressed':'garlic', 'garlic about 3 garlic clove':'garlic', 'garlic bulb cut the narrow top off':'garlic', 'chicken boullion':'bouillon', 'beef bouillion':'bouillon', 'beef bouillon concentrate':'bouillon', 'hot pepper sauce':'hot sauce', 'sugar free ketchup':'ketchup', 'japanese mayo aka kewpie mayo':'mayonnaise', 'chipotle mayo':'mayonnaise', 'spicy mustard':'dijon mustard', 'spicy brown mustard':'dijon mustard', 'stone-ground mustard':'dijon mustard', 'marsala wine':'cooking wine', 'marsala wine broth':'cooking wine', 'full-bodied red wine':'cooking wine', 'white wine —':'cooking wine', 'gluten-free flour':'all-purpose flour', 'bread flour':'all-purpose flour', 'c bread flour':'all-purpose flour', 'olive oil dividend':'olive oil', 't olive oil':'olive oil', 'drizzle of olive oil and pinch of maldon':'olive oil', 'drizzle of avocado oil':'avocado oil', 'avocado oil ghee':'avocado oil', 'coconut frying':'vegetable oil', 'extra salt and pepper':'salt', 'salt and fresh-ground black pepper':'salt', 'unsweetened cocoa powder':'cocoa powder', 'packet dry ranch dressing mix':'ranch seasoning', '¼ teaspoon baking soda':'baking soda', ': ⅓ tsp baking soda':'baking soda', 'cardamom':'ground cardamom', 'ground cardamom':'ground cardamom', allspice:'ground allspice', 'ground allspice':'ground allspice', 'garam masala':'garam masala', 'ancho chili powder':'ancho chili powder', 'aleppo pepper':'red pepper flakes', 'clove':'whole cloves', 'file powder':'file powder', vinegar:'white vinegar', 'distilled white vinegar':'white vinegar', 'cider vinegar':'apple cider vinegar', 'rice wine vinegar':'rice vinegar', 'red chili flake':'red pepper flakes', 'red chili pepper flake':'red pepper flakes', 'red pepper flake':'red pepper flakes', 'crushed red pepper flake':'red pepper flakes', worcestershire:'worcestershire sauce', 'worchestershire sauce':'worcestershire sauce', 'worcestershire sauce':'worcestershire sauce', 'soy sauce low-sodium':'soy sauce', 'reduced sodium soy sauce':'soy sauce', 'low sodium soy sauce':'soy sauce', 'cayenne powder':'cayenne pepper', cayenne:'cayenne pepper', 'garlic granule':'garlic powder', 'granulated garlic':'garlic powder', 'parsley flake':'dried parsley', 'mustard powder':'dry mustard', 'ground mustard':'dry mustard', 'nonstick spray':'cooking spray', 'nonstick cooking spray':'cooking spray', 'fleur de sel':'flaky salt', 'maldon flaky sea salt':'flaky salt', 'maldon flaky salt':'flaky salt', 'mineral-rich salt':'salt', 'flour-all purpose':'all-purpose flour', 'pasta water':'water', 'reserved pasta water':'water', 'pasta cooking water':'water', 'salt for pasta':'salt', 'fennel seed':'fennel seeds', chipotle:'ground chipotle', 'chipotle powder':'ground chipotle', marjoram:'dried marjoram', 'beef bouillon':'bouillon', 'cubes beef bouillon':'bouillon', 'chicken bouillon':'bouillon', 'bouillon cube':'bouillon', 'mexican oregano':'dried oregano', sriacha:'sriracha', 'sriracha sauce':'sriracha', 'dried mexican oregano':'dried oregano', 'maldon salt':'flaky salt', 'flaky sea salt':'flaky salt', 'reduced-sodium soy sauce':'soy sauce', 'low-sodium soy sauce':'soy sauce', 'lite soy sauce':'soy sauce', sage:'dried sage', 'sage leave':'dried sage', 'ground sage':'dried sage', mustard:'yellow mustard', 'toasted sesame oil':'sesame oil', 'sesame seed':'sesame seeds', 'toasted sesame seed':'sesame seeds', 'neutral oil':'vegetable oil', 'extra-virgin olive oil':'olive oil', 'dry white wine':'cooking wine', 'white wine':'cooking wine', 'dry red wine':'cooking wine', 'red wine':'cooking wine', 'ranch seasoning mix':'ranch seasoning', 'ranch dressing mix':'ranch seasoning', 'dry ranch seasoning':'ranch seasoning', 'salted butter':'butter', 'whole milk':'milk', 'water':'water', 'cold water':'water', 'hot water':'water', 'warm water':'water', 'boiling water':'water', 'ice water':'water'};
 function pantryKey(it, map){
   const cands = [it.name, it.key, it.core];
   for (const c of cands) { const a = PANTRY_ALIAS[c] || c; if (map && map.has(a)) return a; }
@@ -1241,6 +1242,8 @@ const WM_DEFAULTS = [
   [/pecorino|romano cheese|^romano$/i, "181548595", "Great Value Grated Parmesan & Romano, 8 oz"],
   [/parmesan|parmigiano/i, "10315402", "Great Value Grated Parmesan, 8 oz"],
   [/ricotta/i, "10315688", "Great Value Whole Milk Ricotta, 15 oz"],
+  [/burrata|bocconcini|mozzarella pearls?|fresh mozzarella|mozzarella balls?/i, "15754144", "BelGioioso Fresh Mozzarella, 8 oz"],
+  [/string cheese|mozzarella (cheese )?sticks?/i, "46195021", "Great Value Mozzarella String Cheese, 24 ct"],
   [/mozzarella(?!.*(pearl|fresh|ball|stick|slice))|fontina|italian (blend )?cheese/i, "10452421", "Great Value Shredded Mozzarella, 16 oz"],
   [/monterey jack|pepper ?jack|colby jack/i, "106764433", "Great Value Shredded Monterey Jack, 8 oz"],
   [/cottage cheese/i, "10315022", "Great Value Small Curd Cottage Cheese 4%, 24 oz"],
@@ -1298,7 +1301,7 @@ const WM_DEFAULTS = [
   [/(?<!(cauliflower|right|brown|arborio|mexican|precooked) )\brice\b(?!.*(vinegar|noodle|krispie|chex|cake|cauliflower))/i, "10315394", "Great Value Long Grain White Rice, 2 lb"],
   [/penne|ziti|rigatoni|protein pasta/i, "10534084", "Great Value Penne Pasta, 16 oz"],
   [/spaghetti|linguine|angel hair/i, "10534115", "Great Value Spaghetti, 16 oz"],
-  [/elbow|macaroni(?!.*salad)/i, "10534107", "Great Value Elbow Macaroni, 16 oz"],
+  [/elbow|macaroni(?!.*salad)|ditalini|acini di pepe|small pasta/i, "10534107", "Great Value Elbow Macaroni, 16 oz"],
   [/farfalle|bow ?ties?|^(dry |dried )?pasta$|pasta shapes?/i, "10534079", "Great Value Bowties, 12 oz"],
   [/rotini|cavatappi/i, "10534080", "Great Value Rotini, 16 oz"],
   [/lasagna/i, "10534110", "Great Value Lasagna Noodles, 16 oz"],
@@ -1321,7 +1324,8 @@ const WM_DEFAULTS = [
   [/lemon(?![-\w]*\s*(curd|schmear|pepper|vinegar))(?!.*(curd|schmear|vinegar))/i, "41752773", "Fresh Lemon, each"],
   [/pickled jalape|jarred jalape|jalape[nñ]o slices|pickled peppers?/i, "10416458", "Great Value Sliced Jalape\u00f1os, 12 oz jar"],
   [/jalape[nñ]o garlic seasoning/i, "984024974", "Heath Riles Garlic Jalape\u00f1o Seasoning, 12 oz"],
-  [/(?<!pickled )jalape[nñ]o(?!.*(seasoning|pickled|onions))|^(green )?chile peppers?$|^chili peppers?$/i, "919484438", "Fresh Jalape\u00f1o Peppers, 8 oz"],
+  [/anaheim|green chile peppers?/i, "44391184", "Anaheim Pepper, each"],
+  [/(?<!pickled )jalape[nñ]o(?!.*(seasoning|pickled|onions))|^chile peppers?$|^chili peppers?$/i, "919484438", "Fresh Jalape\u00f1o Peppers, 8 oz"],
   [/potato chips?|crinkle-cut chips|kettle chips/i, "33282303", "Lay's Classic Potato Chips, 8 oz"],
   [/tortilla chips|corn chips|tostadas? chips/i, "12335104", "Great Value Restaurant Style White Corn Tortilla Chips, 13 oz"],
   [/mushroom(?!.*(soup|cream of))/i, "10449184", "Freshness Guaranteed Sliced White Mushrooms, 8 oz"],
@@ -1373,7 +1377,7 @@ const WM_DEFAULTS = [
   [/quinoa/i, "51258806", "Great Value Organic White Quinoa, 32 oz"],
   [/brown rice/i, "10898755", "Great Value Natural Brown Long Grain Rice, 32 oz"],
   [/chick ?peas?|garbanzo/i, "10534041", "Great Value Garbanzos Chick Peas, 15.5 oz"],
-  [/^(?!.*(taco|tostada)).*\bshells?\b/i, "10534077", "Great Value Shells, 16 oz"],
+  [/^(?!.*(taco|tostada)).*\bshells?\b|orecchiette/i, "10534077", "Great Value Shells, 16 oz"],
   [/tortellini/i, "10294974", "Buitoni Mixed Cheese Tortellini, 20 oz"],
   [/green beans?/i, "14053328", "Marketside Fresh Green Beans, 12 oz"],
   [/tomato sauce/i, "10415500", "Great Value Tomato Sauce, 15 oz"],
@@ -1430,7 +1434,90 @@ const WM_DEFAULTS = [
   [/chorizo/i, "11027816", "Cacique Pork Chorizo, 9 oz"],
   [/serrano/i, "592682060", "Fresh Serrano Peppers, 4 oz bag"],
   [/waffles?\b(?!.*(fries|cone))/i, "46791801", "Great Value Homestyle Waffles, 10 ct (frozen)"],
-  [/chipotles?( peppers?)? in adobo|adobo sauce/i, "13424766", "La Coste\u00f1a Chipotle Peppers in Adobo, 7 oz"],
+  [/chipotles?( peppers?)? in adobo|adobo sauce|chipotle chiles?( peppers?)? in adobo|pureed chipotle/i, "13424766", "La Coste\u00f1a Chipotle Peppers in Adobo, 7 oz"],
+  [/nutritional yeast/i, "226488899", "Great Value Nutritional Yeast Flakes, 5 oz"],
+  [/tahini/i, "106064031", "Ziyad Tahini, 16 oz"],
+  [/smoked gouda|\bgouda\b/i, "137020708", "Yancey's Fancy Smoked Gouda, 7.6 oz"],
+  [/\bbrie\b/i, "10293707", "President Brie, 8 oz"],
+  [/boursin/i, "11046065", "Boursin Garlic & Fine Herbs, 5.2 oz"],
+  [/cotija/i, "10324529", "FUD Cotija Cheese, 8 oz"],
+  [/muenster/i, "153135050", "Great Value Sliced Muenster, 8 oz"],
+  [/asparagus/i, "135312287", "Fresh Organic Asparagus, 1 bunch"],
+  [/tomatillos?/i, "43923235", "Fresh Tomatillos (by weight)"],
+  [/butternut squash/i, "44391159", "Fresh Butternut Squash, each"],
+  [/\bmangos?\b|\bmangoes\b/i, "994998279", "Fresh Mango, each"],
+  [/blackberr(?!.*(jam|jelly|preserve))/i, "119752152", "Fresh Organic Blackberries, 6 oz"],
+  [/bok choy/i, "356250509", "Fresh Baby Bok Choy, 1 bunch"],
+  [/butter lettuce|bibb lettuce|boston lettuce/i, "5161049924", "Little Leaf Farms Baby Butter Lettuce, 8 oz"],
+  [/\bmint\b(?!.*(jelly|extract|chip))/i, "46491767", "Fresh Mint, 0.5 oz"],
+  [/guajillo|chiles? de [aá]rbol|new mexico chiles?/i, "488904511", "Dried Guajillo Chiles, 4 oz"],
+  [/ancho chiles?(?! powder)/i, "649417996", "Dried Ancho Chiles, 4 oz"],
+  [/kidney beans?/i, "10534045", "Great Value Dark Red Kidney Beans, 15.5 oz"],
+  [/butter beans?|lima beans?/i, "10306775", "Bush's Large Butter Beans, 16 oz"],
+  [/red enchilada sauce|^(c )?enchilada sauce$/i, "1840673347", "Great Value Red Enchilada Sauce, Mild, 10 oz"],
+  [/\bnaan\b|flatbreads?|\bpitas?\b|pita (bread|rounds?)/i, "10532949", "Stonefire Original Naan, 2 ct (for naan, flatbread and pita)"],
+  [/english muffins?/i, "13033158", "Great Value English Muffins, 6 ct"],
+  [/bagels?(?!.*(seasoning|chips))/i, "10535153", "Thomas' Plain Bagels, 6 ct"],
+  [/croissants?/i, "747667210", "Marketside All Butter Croissants, 4 ct"],
+  [/garlic bread|texas toast|brioche/i, "10416519", "Great Value Garlic Texas Toast, 8 ct (frozen)"],
+  [/\brye bread/i, "10403552", "Arnold Seeded Rye Bread, 16 oz"],
+  [/croutons?/i, "159107262", "Great Value Seasoned Croutons, 5 oz"],
+  [/saltines?/i, "10315375", "Great Value Saltine Crackers, 16 oz"],
+  [/stuffing mix/i, "10292574", "Stove Top Stuffing Mix for Chicken, 6 oz"],
+  [/pancake mix|waffle mix|bisquick/i, "10314919", "Great Value Pancake & Waffle Mix, 32 oz"],
+  [/gravy mix|^gravy$/i, "10314968", "Great Value Brown Gravy Mix, 0.87 oz"],
+  [/chili seasoning/i, "871036105", "Great Value Chili Seasoning Mix, 1.25 oz"],
+  [/fajita seasoning|carne asada seasoning/i, "149215159", "Great Value Fajita Seasoning Mix, 1.25 oz"],
+  [/italian dressing mix|italian (salad )?dressing (and|&) recipe mix/i, "221818463", "Great Value Italian Dressing & Recipe Mix, 0.7 oz"],
+  [/frank.?s red ?hot|^franks red hot/i, "14089344", "Frank's RedHot Original, 12 fl oz"],
+  [/cavender/i, "5188955019", "Cavender's Greek Seasoning, 8 oz"],
+  [/blackstone/i, "746785399", "Blackstone All Purpose Seasoning, 7.3 oz"],
+  [/sesame ginger|ginger sesame|asian sesame dressing/i, "125498057", "Great Value Asian Ginger Sesame Dressing, 16 fl oz"],
+  [/poppy ?seed dressing/i, "728744565", "Great Value Creamy Poppyseed Dressing, 16 oz"],
+  [/raspberry vinaigrette/i, "16618890", "Great Value Light Raspberry Vinaigrette, 16 fl oz"],
+  [/balsamic (vinaigrette|dressing)/i, "16618889", "Great Value Light Balsamic Vinaigrette, 16 fl oz"],
+  [/greek (salad )?dressing/i, "10307560", "Ken's Steak House Greek Dressing, 16 fl oz"],
+  [/^(pancake |maple |table )?syrup$|pancake syrup/i, "10315480", "Great Value Original Syrup, 24 fl oz"],
+  [/lo mein/i, "562723596", "Simply Asia Lo Mein Noodles, 14 oz"],
+  [/yaki-?soba/i, "10450909", "Maruchan Yakisoba, 4 oz"],
+  [/ramen/i, "10450904", "Maruchan Ramen Chicken, 12 ct"],
+  [/couscous/i, "489819378", "Near East Original Couscous, 10 oz"],
+  [/arborio/i, "10403515", "RiceSelect Arborio Rice, 2 lb"],
+  [/ravioli/i, "10316630", "Great Value Cheese Ravioli, 25 oz (frozen)"],
+  [/wonton strips?/i, "15424362418", "Fresh Gourmet Wonton Strips, 3.5 oz"],
+  [/dumplings?|potstickers?|wontons?(?! strips)/i, "616687907", "Bibigo Pork & Vegetable Dumplings, 6.59 oz (frozen)"],
+  [/burger patt(y|ies)|hamburger patt/i, "10315961", "Great Value Beef Burgers 85/15, 12 ct (frozen)"],
+  [/brats?\b|bratwursts?|knockwurst/i, "10316091", "Johnsonville Original Brats, 5 ct"],
+  [/sausage links?|breakfast links?/i, "22089972", "Great Value Pork Sausage Links, 24 oz"],
+  [/short ribs?/i, "55434785", "Bone-in Beef Short Ribs, 1.1-2.3 lb"],
+  [/spare ?ribs|st\.? louis|baby back|pork ribs?|back ribs/i, "46500419", "Smithfield St. Louis-Style Spareribs"],
+  [/pork belly/i, "751139209", "Fresh Pork Belly, 1.2-1.85 lb"],
+  [/pork loin(?! chops?)|roast pork/i, "21553595", "Tyson Boneless Pork Loin Roast"],
+  [/stew meat|beef stew/i, "39944478", "Lean Beef Stew Meat, 1-1.5 lb"],
+  [/cube[d]? steaks?/i, "50733185", "Beef Cubed Steak, 0.65-1.15 lb"],
+  [/strip steaks?|ny strip|new york strip|ribeye steaks?/i, "39944456", "Choice Angus New York Strip, 2 ct"],
+  [/^(?!.*relish).*\b(dill )?pickles?\b(?!.*juice)|pickle (slices?|spears?|chips?)/i, "10533388", "Great Value Kosher Dill Spears, 24 fl oz"],
+  [/relish/i, "3784861216", "Great Value Dill Relish, 10 fl oz"],
+  [/capers?/i, "502907592", "Great Value Capers, 3.5 oz"],
+  [/kalamata/i, "871158621", "Great Value Pitted Kalamata Olives, 6.35 oz"],
+  [/green olives?|manzanilla|pimento olives?|^olives?$/i, "10315438", "Great Value Stuffed Manzanilla Olives, 7 oz"],
+  [/giardiniera/i, "43737966", "Mezzetta Mild Giardiniera, 32 fl oz"],
+  [/tostadas?/i, "49933261", "Mission Baked Tostadas, 22 ct"],
+  [/doritos?/i, "786004155", "Doritos Nacho Cheese, 9.25 oz"],
+  [/cashews?/i, "238699391", "Great Value Roasted Salted Cashews, 14 oz"],
+  [/pecans?/i, "287905711", "Great Value Chopped Pecans, 4 oz"],
+  [/walnuts?/i, "881603053", "Great Value Walnuts, 8 oz"],
+  [/^(?!.*(butter|oil|sauce)).*\bpeanuts?\b/i, "10448531", "Great Value Dry Roasted Peanuts, 16 oz"],
+  [/peanut oil/i, "44391266", "Great Value Peanut Oil, 1 gal"],
+  [/coconut oil/i, "55504318", "Great Value Refined Coconut Oil, 56 fl oz"],
+  [/^(?!.*greek).*(plain|low[- ]?fat|nonfat).*yogurt/i, "10450107", "Great Value Plain Nonfat Yogurt, 32 oz"],
+  [/almond milk/i, "46491750", "Great Value Unsweetened Almond Milk, 64 fl oz"],
+  [/pineapple juice/i, "527621123", "Dole 100% Pineapple Juice, 46 fl oz"],
+  [/apple (juice|cider)(?! vinegar)/i, "16935731", "Great Value 100% Apple Juice, 64 fl oz"],
+  [/tzatziki/i, "886189683", "Marketside Tzatziki Dip, 16 oz"],
+  [/hoisin/i, "38438962", "Lee Kum Kee Hoisin Sauce, 20 oz"],
+  [/gochujang/i, "154626587", "Mother-in-Law's Gochujang, 10 oz"],
+  [/pastrami/i, "34379637", "Hillshire Farm Thin Sliced Pastrami, 7 oz"],
 ].map(([re, id, label]) => ({re, id, label}));
 const wmDefault = name => { const n = String(name || '').toLowerCase(); const d = n && WM_DEFAULTS.find(x => x.re.test(n)); return d ? {id: d.id, qty: 1, label: d.label, auto: true} : null; };
 // The product used for an item: your own pick, else the default (unless you turned it off).
