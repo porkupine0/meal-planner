@@ -48,7 +48,7 @@ It opens full screen with the Supper Board bowl icon.
 
 ## Walmart and Sam's Club
 
-Each item on the grocery list has a store menu (Walmart or Sam's Club). The choice is remembered for that item every week. Filter the list by store, send just the Sam's Club items with **Send Sam's list**, and the full list ends with a Sam's Club section. The Walmart cart button only includes Walmart items.
+Each item on the grocery list has a store menu (Walmart or Sam's Club). Recipe ingredients also have **In my pantry**: it adds the ingredient to your pantry list in Settings, so it stays off the list every week (tap **Need it** under "Left off: in your pantry" when you run low). The choice is remembered for that item every week. Filter the list by store, send just the Sam's Club items with **Send Sam's list**, and the full list ends with a Sam's Club section. The Walmart cart button only includes Walmart items.
 
 ### Walmart pickup
 

@@ -1608,7 +1608,9 @@ function viewGrocery(){
   const edit = !!S.wmEdit; const done = [];
   const li = (k, name, qty, sub, extra='') => `<li class="${ch[k]?'done':''}"><input type="checkbox" class="check" id="ck-${hashStr(k)}" data-check="${esc(k)}" ${ch[k]?'checked':''} aria-label="${esc(name)}"><label class="it-b" for="ck-${hashStr(k)}"><div class="it-name">${qty?`<span class="it-qty">${esc(qty)}</span> `:''}${esc(name)}</div>${sub?`<div class="it-for">${sub}</div>`:''}</label>${extra}</li>`;
   const view = S.storeView || 'all';
-  const storeSel = (key, name) => { const st = storeOf(key); return `<select class="store-sel ${st}" data-store="${esc(key)}" aria-label="Store for ${esc(name)}">${STORES.map(([v,l]) => `<option value="${v}" ${st === v ? 'selected' : ''}>${l}</option>`).join('')}</select>`; };
+  // Recipe ingredients also get "Pantry": we already have it, so it joins the pantry list and drops off the list.
+  const storeSel = (key, name) => { const st = storeOf(key); const pan = key.startsWith('i:') ? key.slice(2) : '';
+    return `<select class="store-sel ${st}" data-store="${esc(key)}" ${pan ? `data-pantry="${esc(pan)}"` : ''} aria-label="Store for ${esc(name)}">${STORES.map(([v,l]) => `<option value="${v}" ${st === v ? 'selected' : ''}>${l}</option>`).join('')}${pan ? '<option value="pantry">In my pantry</option>' : ''}</select>`; };
   const row = (k, name, qty, sub, extra, wmKey) => {
     if (view !== 'all' && storeOf(wmKey) !== view) return '';
     const html = li(k, name, qty, sub, `<span class="it-x row">${edit && storeOf(wmKey) === 'walmart' ? wmBtn(wmKey, name) : ''}${storeSel(wmKey, name)}${extra}</span>`);
@@ -2200,6 +2202,13 @@ document.addEventListener('change', e => {
   if (t.dataset.cooking) { S.modal.done[t.dataset.cooking] = t.checked; return; }
   if (t.dataset.scale) { const id = t.dataset.scale; editWeek(w => { w.days[id].scale = +t.value; }); return; }
   if (t.matches('[data-useup-override]')) { S.settings.useUpOverride = t.checked; saveSettings(); return render(); }
+  if (t.dataset.store && t.value === 'pantry') {
+    const name = t.dataset.pantry; const p = S.settings.pantry || (S.settings.pantry = []);
+    const hit = p.find(x => x.name === name); if (hit) hit.on = true; else S.settings.pantry = [{name, on:true}, ...p];
+    saveSettings();
+    const w = getWeek(curStart()); if ((w.need || []).includes(name)) editWeek(w => { w.need = w.need.filter(x => x !== name); });
+    render(); toast(`Added ${name} to your pantry. It'll stay off the list.`); return;
+  }
   if (t.dataset.store) { const stores = {...(S.walmart.stores || {})}; if (t.value === 'walmart') delete stores[t.dataset.store]; else stores[t.dataset.store] = t.value; S.walmart = {...S.walmart, stores}; saveWalmart(); render(); toast(t.value === 'sams' ? "Moved to Sam's Club. It'll stay there every week." : 'Moved to Walmart'); return; }
   if (t.dataset.draftcat) { const w = getWeek(curStart()); w.days[t.dataset.draftcat].cat = t.value; return; }
   if (t.dataset.cat) { const id = t.dataset.cat; const v = t.value; editWeek(w => { const d = w.days[id]; d.cat = v; d.locked = false; d.rid = NOCOOK.some(n=>n[0]===v) || !v ? null : pick(v, w, id); }); return; }
