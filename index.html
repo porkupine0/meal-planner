@@ -184,6 +184,10 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,va
 .progress span{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .3s}
 .wm-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;margin-bottom:16px}
 .wm-bar .grow{flex:1;min-width:180px}
+.wm-check{background:var(--sky-soft);border-radius:var(--r);padding:10px 12px;margin:-8px 0 16px}
+.wm-check summary{cursor:pointer;color:var(--sky);font-size:14px}
+.wm-check[open] summary{margin-bottom:8px}
+.wm-check .it-name{font-weight:600;font-size:14px}
 .wm-bar.editing{border-color:var(--sky);background:var(--sky-soft)}
 .it-for{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .items li .it-x{gap:4px;flex-wrap:nowrap}
@@ -1262,7 +1266,7 @@ const WM_DEFAULTS = [
   [/pretzel buns?|pretzle buns?/i, "144090573", "Pretzilla Soft Pretzel Buns, 4 ct"],
   [/hamburger buns?|burger buns?|sandwich buns?|(?<!(pretzel|pretzle|hoagie|hot dog|slider) )\bbuns?\b/i, "12444464", "Great Value Hamburger Buns, 8 ct"],
   [/corn tortillas?/i, "624686238", "Great Value White Corn Tortillas, 30 ct"],
-  [/flour tortillas?|(?<!corn )\btortillas?\b(?!.*(chip|strip))|\bwraps?\b(?!.*(lettuce|bacon|plastic|foil))/i, "953466267", "Great Value Soft Taco Flour Tortillas, 10 ct"],
+  [/flour tortillas?|(?<!corn )\btortillas?\b(?!.*(chip|strip))|\bwraps?\b(?!.*(lettuce|bacon|plastic|foil))/i, "463895077", "Great Value Medium Flour Tortillas, 16 oz, 10 ct"],
   [/hawaiian (sweet )?rolls?|sweet rolls?|slider buns?/i, "10421729", "King's Hawaiian Original Sweet Rolls, 12 ct"],
   [/rotisserie chicken|shredded chicken|^cooked chicken|^grilled breast$|^or shredded grilled$|^rotisserie$/i, "682789099", "Freshness Guaranteed Rotisserie Chicken (chilled)"],
   [/chicken cutlets?|thin[- ]?sliced chicken/i, "338508084", "Freshness Guaranteed Thin-Sliced Chicken Breasts"],
@@ -1632,8 +1636,13 @@ function viewGrocery(){
     <div class="wm-bar ${edit ? 'editing' : ''}">
       ${edit ? `<div class="grow"><b>Linking Walmart products</b><div class="muted" style="font-size:13px">Common items already use a Great Value product. Tap a button next to an item to change it, or <b>+ Walmart</b> to link one that has no default. You only do this once per item.</div></div><button class="btn primary" data-act="wmedit">Done</button>`
         : `<div class="grow"><b>Walmart pickup</b><div class="muted" style="font-size:13px">${n ? `${n} of ${n + wm.missing.length} items are linked to a Walmart product.` : 'Link items to Walmart products once, then add them all to your cart in one tap.'} ${n ? 'Common items use Great Value by default.' : ''}</div></div>
-           <button class="btn ${n ? '' : 'primary'}" data-act="wmedit">${n ? 'Link more' : 'Set up'}</button>${n ? `<a class="btn primary" href="${esc(wm.url)}" target="_blank" rel="noopener">${I.cart}Add ${n} to cart</a>` : ''}`}
+           <button class="btn ${n ? '' : 'primary'}" data-act="wmedit">${n ? 'Link more' : 'Set up'}</button>${n ? `<a class="btn primary" href="${esc(wm.url)}" target="_blank" rel="noopener" data-wmcart>${I.cart}Add ${n} to cart</a>` : ''}`}
     </div>
+    ${!edit && (n || wm.missing.length) ? `<details class="wm-check" ${S.wmSent ? 'open' : ''}><summary><b>${S.wmSent ? 'Did everything make it into the cart?' : 'What gets sent to Walmart'}</b> <span class="muted">${n} sent${wm.missing.length ? ` · ${wm.missing.length} not linked` : ''}</span></summary>
+      <p class="muted" style="margin:0 0 8px;font-size:13px">Walmart quietly skips anything it can't add for your store, with no warning. Compare this list to your cart and tap <b>Open</b> on anything that's missing to add it by hand.</p>
+      ${n ? `<ul class="items">${wm.mapped.map(x => `<li><div class="it-b"><div class="it-name"><span class="it-qty">${x.n} ×</span> ${esc(x.p.label || ('Item #' + x.p.id))}</div><div class="it-for">for ${esc(x.name)}</div></div><a class="btn sm it-x" href="https://www.walmart.com/ip/${esc(x.p.id)}" target="_blank" rel="noopener">Open</a></li>`).join('')}</ul>` : ''}
+      ${wm.missing.length ? `<p style="margin:10px 0 4px;font-size:13.5px"><b>Not sent</b> <span class="muted">(no Walmart product linked)</span></p><ul class="items">${wm.missing.map(x => `<li><div class="it-b"><div class="it-name">${esc(x.name)}</div></div><a class="btn sm it-x" href="${esc(wmSearch(x.name))}" target="_blank" rel="noopener">Search</a></li>`).join('')}</ul>` : ''}
+    </details>` : ''}
     ${(() => { const ents = groceryEntries(m).filter(e => !e.checked); const nS = ents.filter(e => e.store === 'sams').length, nW = ents.length - nS;
       return `<div class="chips store-tabs" role="group" aria-label="Show items for">${[['all','All',ents.length],['walmart','Walmart',nW],['sams',"Sam's Club",nS]].map(([v,l,c]) => `<button class="chipbtn" data-act="storeview" data-v="${v}" aria-pressed="${view === v}">${l} <span class="muted">${c}</span></button>`).join('')}</div>
       ${nS ? `<div class="sams-bar"><div class="grow"><b>Sam's Club</b><div class="muted" style="font-size:13px">${nS} item${nS>1?'s':''} to get at Sam's Club. Sam's doesn't support adding to a cart from a link, so send yourself the list.</div></div><button class="btn" data-act="sendsams">${I.share}Send Sam's list</button><a class="btn" href="https://www.samsclub.com" target="_blank" rel="noopener">Open Sam's Club</a></div>` : ''}`; })()}
@@ -2074,6 +2083,7 @@ function renderModal(){
 }
 
 // ---------- events ----------
+document.addEventListener('click', e => { if (e.target.closest('a[data-wmcart]')) { S.wmSent = true; setTimeout(render, 300); } });
 document.addEventListener('click', async e => {
   const t = e.target.closest('[data-view],[data-act],[data-open],[data-tag],[data-toggle],[data-rate],[data-rtag],[data-course],[data-choose],[data-scrim]');
   if (!t) return;
@@ -2289,7 +2299,7 @@ async function boot(){
 boot();
 // ---------- updates (GitHub Pages) ----------
 // Home-screen apps keep running an old copy, so check for a newer version when the app is opened or brought back.
-const APP_VERSION = '2026-10-22.1';
+const APP_VERSION = '2026-10-28.1';
 let updateShown = false;
 async function checkForUpdate(){
   if (IN_CLAUDE || updateShown || !/^https?:/.test(location.protocol)) return;
