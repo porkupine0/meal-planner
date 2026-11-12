@@ -37,7 +37,10 @@ A weekly family meal planner. It runs entirely in the browser: open `index.html`
 
 ## Saving
 
-On GitHub Pages, plans and lists are saved in the browser you use (localStorage), so each device keeps its own copy. The claude.ai version of the app syncs across devices.
+- **Family sync (GitHub Pages):** sign in under Settings → Family sync and the plan, grocery list, check-offs, ratings and settings are shared through Firebase, so everyone in the house sees the same board live. Changes made offline are kept and sent when the phone reconnects.
+- **Not signed in:** everything is saved in that browser only (localStorage), so each device keeps its own copy until you sign in.
+- **claude.ai copy:** the artifact version saves to its own shared storage and syncs across devices on its own.
+- **Backup or move:** Settings → Copy my data copies your settings, weeks, Walmart links and recipe edits as text; paste it back in with Load pasted data.
 
 ## Running locally
 
@@ -91,3 +94,7 @@ In **Authentication → Settings → Authorized domains**, add the GitHub Pages 
 ## Editing and adjusting recipes
 
 Open any recipe and tap **Edit or adjust**. Change the name, servings, ingredients (one per line) or directions and tap **Save changes**. The grocery list uses the edited version. **Adjust with Claude** rewrites the recipe for a change you describe (white sauce instead of red, healthier, quicker, slow cooker, use the fridge leftovers, or anything you type); review what it filled in, then save or tap **Undo**. **Restore original** puts back the imported version of one of your recipes.
+
+## Tests
+
+`node tests/grocery.js` runs every ingredient line in `recipes.json` through the app's parser and Walmart matcher and compares the result to `tests/grocery-golden.json`. After an intended change to the grocery engine or the catalog, review the differences it prints and accept them with `node tests/grocery.js --update`. Needs Playwright.
