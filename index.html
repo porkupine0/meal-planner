@@ -590,7 +590,7 @@ function isHeader(line){
   if (/^(print|gather your ingredients?|ingredients|[½1-4]x(\s+[½1-4]x)*)$/i.test(l) || /\*\*$/.test(l)) return true;
   if (/^[A-Z][A-Z &+\/-]*$/.test(l)) return true; // ALL-CAPS section headers like "CHICKEN"
 
-  if (/\d/.test(l)) return /^ingredients\b/i.test(l);
+  if (/[\d½¼¾⅓⅔⅛⅜⅝⅞]/.test(l)) return /^ingredients\b/i.test(l);
   const words = l.split(/\s+/);
   return words.length <= 5 && /(^ingredients|sauce$|seasoning$|filling$|dough$|topping$|toppings$|glaze.*|marinade$|^base$|^for the|aromatics.*|^pork$|^salsa ingredients|^chicken \+ marinade|street corn mix.*|builders$|^pasta & sauce$)/i.test(l);
 }
@@ -737,7 +737,9 @@ function rebuildRecipes(){
   // merged duplicates: plans that used an old copy show the one that was kept
   for (const [old, keep] of Object.entries(MERGED)) if (!S.byId[old] && S.byId[keep]) S.byId[old] = S.byId[keep];
 }
-const MERGED = {'D7BD1B5C-D2F4-4327-BB5F-75E7E3F4DE50':'C2ED474D-4A71-4242-9253-2C45C3930474', '32BD41A4-1AC7-456C-9B6C-84F071B630D3':'C2ED474D-4A71-4242-9253-2C45C3930474'};
+const MERGED = {'D7BD1B5C-D2F4-4327-BB5F-75E7E3F4DE50':'C2ED474D-4A71-4242-9253-2C45C3930474', '32BD41A4-1AC7-456C-9B6C-84F071B630D3':'C2ED474D-4A71-4242-9253-2C45C3930474',
+  // removed in the chef review as near-duplicates
+  'new-967c0dd33c':'new-aac366498c', 'new-4cbba9fac7':'add-italian-sausage-tortellini-skillet', 'new-4b67679981':'7FF20F05-5BF1-4B8F-B21B-5F7533FE39E2', 'new-09965df03e':'new-39723be239'};
 // Recipes that need a marinade, a long rise or an overnight chill aren't "quick", whatever their cook time says.
 const isQuick = r => r.q === 'y' ? true : r.q === 'n' ? false : !!(r.t && r.t <= 30 && (r.h ?? r.t) <= 20) && !reminder(r);
 // Good enough to put on a family dinner plan: has real ingredients and directions and isn't a single serving.
@@ -1632,7 +1634,8 @@ const WM_DEFAULTS = [
   [/sweetened condensed milk|condensed milk/i, "10534165", "Great Value Sweetened Condensed Milk, 14 oz"],
   [/chocolate chips?|semi-?sweet (chocolate )?chips/i, "42306176", "Great Value Semi-Sweet Chocolate Chips, 12 oz"],
   [/marshmallows?/i, "10293831", "Jet-Puffed Mini Marshmallows, 1 lb"],
-  [/vanilla wafers?|nilla/i, "21905233", "Great Value Vanilla Wafers, 11 oz"],
+  [/vanilla extract|pure vanilla|^vanilla$/i, "10314950", "Great Value Pure Vanilla Extract, 2 fl oz"],
+  [/vanilla wafers?|\bnilla\b/i, "21905233", "Great Value Vanilla Wafers, 11 oz"],
   [/^(?!.*(pancake|waffle)).*cake mix/i, "136669086", "Great Value Deluxe Moist Yellow Cake Mix, 15.25 oz"],
   [/pie filling/i, "10314928", "Great Value Cherry Pie Filling, 21 oz"],
   [/^(?!.*(ricotta|mozzarella|cheese|yogurt|cottage|powder|chocolate|half)).*(?<!(coconut|almond|oat|evaporated|condensed|soy|with) )\bmilk\b/i, "10450114", "Great Value Whole Vitamin D Milk, 1 gal"],
@@ -1677,7 +1680,10 @@ const WM_DEFAULTS = [
   [/chicken thighs?/i, "778091348", "Freshness Guaranteed Boneless Skinless Chicken Thighs (tray)"],
   [/ground beef|ground chuck|hamburger meat|beef mince|minced beef/i, "15136791", "80/20 Ground Beef Chuck, 1 lb roll"],
   [/andouille/i, "22301275", "Johnsonville Andouille Smoked Rope Sausage, 13.5 oz"],
-  [/^(?!.*ravioli).*(italian.*sausage|ground sausage)|^(ground )?pork$/i, "40711369", "Marketside Mild Ground Italian Sausage, 1 lb"],
+  [/italian.*turkey sausage|turkey italian sausage/i, "720186971", "Jennie-O Italian Style Ground Turkey Sausage, 1 lb"],
+  [/^(?!.*(smoked|kielbasa|link)).*turkey sausage/i, "16672793", "Jennie-O Lean Ground Turkey Sausage, 1 lb"],
+  [/^(?:lean )?(?:ground )?pork$|^ground pork\b/i, "168039751", "Smithfield All Natural Fresh Ground Pork, 1.5 lb"],
+  [/^(?!.*(ravioli|turkey|chicken)).*(italian.*sausage|ground sausage)/i, "40711369", "Marketside Mild Ground Italian Sausage, 1 lb"],
   [/turkey bacon/i, "5490588995", "Great Value Uncured Turkey Bacon, 10 oz"],
   [/bacon (bits|pieces|crumbles)/i, "10315616", "Great Value Real Bacon Pieces, 2.5 oz"],
   [/(?<!(turkey|canadian) )\bbacon\b(?!.*bits)|prosciutto|pancetta/i, "10293911", "Great Value Hickory Smoked Bacon, 16 oz"],
@@ -1728,7 +1734,8 @@ const WM_DEFAULTS = [
   [/green onions?|scallions?/i, "51259361", "Fresh Green Onions, 1 bunch"],
   [/celery(?! seed)/i, "51259411", "Fresh Celery, 1 stalk"],
   [/russet potato|baking potato/i, "10447839", "Fresh Idaho Russet Potatoes, 5 lb bag"],
-  [/^(?!.*(sweet|instant|chip|flake|tot|hash|soup|starch|flesh|pierog|russet)).*(yukon gold|gold potato|yellow potato|baby potato|red potato|new potato|\bpotato(es)?\b)/i, "42700530", "Fresh Yellow Potatoes, 3 lb bag"],
+  [/(refrigerated|prepared|store-bought) mashed potato/i, "47770098", "Bob Evans Family Size Original Mashed Potatoes, 32 oz (refrigerated)"],
+  [/^(?!.*(sweet|instant|chip|flake|tot|hash|soup|starch|flesh|pierog|russet|gnocchi|refrigerated|prepared|store-bought)).*(yukon gold|gold potato|yellow potato|baby potato|red potato|new potato|\bpotato(es)?\b)/i, "42700530", "Fresh Yellow Potatoes, 3 lb bag"],
   [/broccoli(?!.*(frozen|slaw))/i, "51259378", "Fresh Broccoli Crowns, each"],
   [/frozen.*spinach|chopped spinach/i, "431513547", "Great Value Chopped Spinach, 12 oz (frozen)"],
   [/^(?!.*frozen).*spinach/i, "13893738", "Marketside Fresh Spinach, 10 oz"],
@@ -1831,7 +1838,8 @@ const WM_DEFAULTS = [
   [/\bbananas?\b(?!.*(pepper|bread|chip))/i, "44390948", "Fresh Banana, each (bunch of 6)"],
   [/cole ?slaw/i, "16785076", "Marketside Tri-Color Cole Slaw, 16 oz"],
   [/spring mix|mixed greens?|salad greens|baby greens|mesclun/i, "934855418", "Marketside Spring Mix, 5 oz"],
-  [/pizza (dough|crust)/i, "10319374", "Pillsbury Classic Pizza Crust, 13.8 oz"],
+  [/refrigerated pizza (dough|crust)|pizza crust|canned pizza/i, "10319374", "Pillsbury Classic Pizza Crust, 13.8 oz"],
+  [/pizza dough/i, "10448680", "Pizza Buddy Fresh Pizza Dough, 16 oz (bakery)"],
   [/ritz/i, "34632324", "Ritz Original Crackers, 13.7 oz"],
   [/corn ?flakes?/i, "730184952", "Great Value Toasted Corn Flakes, 18 oz"],
   [/onion soup mix|onion (recipe )?soup (and|&) dip mix/i, "115324221", "Great Value Onion Soup & Dip Mix, 2 oz"],
@@ -2851,7 +2859,7 @@ if (/[?&]debug\b/.test(location.search)) window.__T = {S, parseIngredient, ingOf
 boot();
 // ---------- updates (GitHub Pages) ----------
 // Home-screen apps keep running an old copy, so check for a newer version when the app is opened or brought back.
-const APP_VERSION = '2026-11-12.3';
+const APP_VERSION = '2026-11-12.4';
 let updateShown = false;
 let lastCheck = 0;
 async function checkForUpdate(){

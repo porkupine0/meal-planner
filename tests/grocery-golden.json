@@ -235,7 +235,10 @@
  "1 1/2 cups chopped yellow onion": [
   "yellow onion | 1.5 cup | Produce | Fresh Whole Yellow Onion, each"
  ],
- "1 1/2 cups crushed cornflakes or panko": [
+ "1 1/2 cups cottage cheese": [
+  "cottage cheese | 1.5 cup | Dairy & Refrigerated | Great Value Small Curd Cottage Cheese 4%, 24 oz"
+ ],
+ "1 1/2 cups crushed cornflakes": [
   "cornflakes | 1.5 cup | Pantry & Canned | Great Value Toasted Corn Flakes, 18 oz"
  ],
  "1 1/2 cups diced chicken breast": [
@@ -262,6 +265,9 @@
  "1 1/2 cups frozen peas and carrots": [
   "frozen peas and carrots | 1.5 cup | Frozen | Great Value Frozen Peas & Carrots, 12 oz"
  ],
+ "1 1/2 cups graham cracker crumbs": [
+  "graham cracker crumbs | 1.5 cup | Pantry & Canned | "
+ ],
  "1 1/2 cups grated parmesan cheese": [
   "parmesan cheese | 1.5 cup | Dairy & Refrigerated | Great Value Grated Parmesan, 8 oz"
  ],
@@ -273,6 +279,9 @@
  ],
  "1 1/2 cups hot chicken broth": [
   "hot chicken broth | 1.5 cup | Pantry & Canned | Great Value Chicken Broth, 32 oz"
+ ],
+ "1 1/2 cups jasmine rice": [
+  "jasmine rice | 1.5 cup | Pasta, Rice & Grains | Great Value Jasmine Rice, 2 lb"
  ],
  "1 1/2 cups long grain white rice": [
   "long grain white rice | 1.5 cup | Pasta, Rice & Grains | Great Value Long Grain White Rice, 2 lb"
@@ -286,11 +295,17 @@
  "1 1/2 cups milk": [
   "milk | 1.5 cup | Dairy & Refrigerated | Great Value Whole Vitamin D Milk, 1 gal"
  ],
+ "1 1/2 cups old-fashioned oats": [
+  "old-fashioned oats | 1.5 cup | Spices & Baking | "
+ ],
  "1 1/2 cups orzo pasta": [
   "orzo pasta | 1.5 cup | Pasta, Rice & Grains | Great Value Orzo, 16 oz"
  ],
  "1 1/2 cups panko breadcrumbs": [
   "panko breadcrumbs | 1.5 cup | Spices & Baking | Great Value Plain Panko Bread Crumbs, 8 oz"
+ ],
+ "1 1/2 cups plain Greek yogurt": [
+  "plain greek yogurt | 1.5 cup | Dairy & Refrigerated | Great Value Plain Nonfat Greek Yogurt, 32 oz"
  ],
  "1 1/2 cups powdered sugar": [
   "powdered sugar | 1.5 cup | Spices & Baking | Great Value Powdered Sugar, 2 lb"
@@ -313,6 +328,9 @@
  "1 1/2 cups shredded Monterey Jack cheese": [
   "monterey jack cheese | 1.5 cup | Dairy & Refrigerated | Great Value Shredded Monterey Jack, 8 oz"
  ],
+ "1 1/2 cups shredded Swiss cheese": [
+  "swiss cheese | 1.5 cup | Dairy & Refrigerated | Great Value Thin Sliced Swiss, 8 oz"
+ ],
  "1 1/2 cups shredded cheddar cheese": [
   "cheddar cheese | 1.5 cup | Dairy & Refrigerated | Great Value Finely Shredded Sharp Cheddar, 8 oz"
  ],
@@ -321,6 +339,9 @@
  ],
  "1 1/2 cups shredded mozzarella, divided": [
   "mozzarella | 1.5 cup | Dairy & Refrigerated | Great Value Shredded Mozzarella, 16 oz"
+ ],
+ "1 1/2 cups shredded sharp cheddar cheese": [
+  "sharp cheddar cheese | 1.5 cup | Dairy & Refrigerated | Great Value Finely Shredded Sharp Cheddar, 8 oz"
  ],
  "1 1/2 cups whole milk (+ 1/4 cup – see notes)": [
   "milk | 1.5 cup | Dairy & Refrigerated | Great Value Whole Vitamin D Milk, 1 gal"
@@ -339,6 +360,9 @@
  ],
  "1 1/2 lb Yukon gold potatoes, diced small": [
   "yukon gold potatoes | 1.5 lb | Produce | Fresh Yellow Potatoes, 3 lb bag"
+ ],
+ "1 1/2 lb baby potatoes, cut into 3/4-inch pieces": [
+  "baby potatoes | 1.5 lb | Produce | Fresh Yellow Potatoes, 3 lb bag"
  ],
  "1 1/2 lb baby potatoes, halved": [
   "baby potatoes | 1.5 lb | Produce | Fresh Yellow Potatoes, 3 lb bag"
@@ -397,14 +421,17 @@
  "1 1/2 lb cremini mushrooms, sliced": [
   "cremini mushrooms | 1.5 lb | Produce | Freshness Guaranteed Sliced White Mushrooms, 8 oz"
  ],
- "1 1/2 lb flank steak": [
-  "flank steak | 1.5 lb | Meat & Deli | Choice Angus Flank Steak, 1 per tray"
+ "1 1/2 lb diced ham": [
+  "ham | 1.5 lb | Meat & Deli | Great Value Thin Sliced Honey Ham, 16 oz"
  ],
- "1 1/2 lb flank steak or chuck, thinly sliced": [
+ "1 1/2 lb flank steak": [
   "flank steak | 1.5 lb | Meat & Deli | Choice Angus Flank Steak, 1 per tray"
  ],
  "1 1/2 lb flank steak, thinly sliced against the grain": [
   "flank steak | 1.5 lb | Meat & Deli | Choice Angus Flank Steak, 1 per tray"
+ ],
+ "1 1/2 lb frozen Italian-style meatballs": [
+  "frozen italian-style meatballs | 1.5 lb | Frozen | Great Value Homestyle Meatballs, 32 oz (frozen)"
  ],
  "1 1/2 lb ground beef": [
   "ground beef | 1.5 lb | Meat & Deli | 80/20 Ground Beef Chuck, 1 lb roll"
@@ -413,21 +440,33 @@
   "ground beef | 1.5 lb | Meat & Deli | 80/20 Ground Beef Chuck, 1 lb roll"
  ],
  "1 1/2 lb ground pork": [
-  "ground pork | 1.5 lb | Meat & Deli | Marketside Mild Ground Italian Sausage, 1 lb"
+  "ground pork | 1.5 lb | Meat & Deli | Smithfield All Natural Fresh Ground Pork, 1.5 lb"
  ],
  "1 1/2 lb ground turkey": [
   "ground turkey | 1.5 lb | Meat & Deli | Shady Brook Farms 93/7 Ground Turkey, 1 lb tray"
  ],
+ "1 1/2 lb ground turkey (93/7)": [
+  "ground turkey | 1.5 lb | Meat & Deli | Shady Brook Farms 93/7 Ground Turkey, 1 lb tray"
+ ],
+ "1 1/2 lb lean ground beef (90/10)": [
+  "ground beef | 1.5 lb | Meat & Deli | 80/20 Ground Beef Chuck, 1 lb roll"
+ ],
  "1 1/2 lb sirloin steak": [
   "sirloin steak | 1.5 lb | Meat & Deli | Choice Angus Top Sirloin Steak, 1 per tray"
  ],
- "1 1/2 lb sirloin steak, cubed": [
+ "1 1/2 lb sirloin steak, about 1 inch thick": [
+  "sirloin steak | 1.5 lb | Meat & Deli | Choice Angus Top Sirloin Steak, 1 per tray"
+ ],
+ "1 1/2 lb sirloin steak, cut into 1 1/2-inch cubes": [
   "sirloin steak | 1.5 lb | Meat & Deli | Choice Angus Top Sirloin Steak, 1 per tray"
  ],
  "1 1/2 lb sirloin steak, cut into 1-inch cubes": [
   "sirloin steak | 1.5 lb | Meat & Deli | Choice Angus Top Sirloin Steak, 1 per tray"
  ],
- "1 1/2 lb skirt or flank steak": [
+ "1 1/2 lb sirloin steak, cut into 1/2-inch pieces": [
+  "sirloin steak | 1.5 lb | Meat & Deli | Choice Angus Top Sirloin Steak, 1 per tray"
+ ],
+ "1 1/2 lb skirt steak": [
   "skirt steak | 1.5 lb | Meat & Deli | Beef Inside Skirt Steak, 1 per tray"
  ],
  "1 1/2 lb thin-sliced glazed ham": [
@@ -490,6 +529,9 @@
  "1 1/2 tsp kosher salt": [
   "kosher salt | 1.5 tsp | Spices & Baking | "
  ],
+ "1 1/2 tsp salt": [
+  "salt | 1.5 tsp | Spices & Baking | "
+ ],
  "1 1/2 tsp seasoned salt": [
   "seasoned salt | 1.5 tsp | Spices & Baking | "
  ],
@@ -497,7 +539,7 @@
   "kosher salt | 1.5 tsp | Spices & Baking | "
  ],
  "1 1/2 tsp. pure vanilla extract": [
-  "pure vanilla extract | 1.5 tsp | Spices & Baking | Great Value Vanilla Wafers, 11 oz"
+  "pure vanilla extract | 1.5 tsp | Spices & Baking | Great Value Pure Vanilla Extract, 2 fl oz"
  ],
  "1 1/3 C + 2 Tbs (350g) Water 80f (26c) **See note on Hydration": [
   "water | 1.333 cup | Pantry & Canned | "
@@ -569,6 +611,9 @@
  "1 3/4 cups (250 grams) Unbleached Bread Flour": [
   "unbleached bread flour | 1.75 cup | Bakery | "
  ],
+ "1 3/4 cups all-purpose flour": [
+  "all-purpose flour | 1.75 cup | Spices & Baking | "
+ ],
  "1 3/4 cups milk": [
   "milk | 1.75 cup | Dairy & Refrigerated | Great Value Whole Vitamin D Milk, 1 gal"
  ],
@@ -597,6 +642,9 @@
   "english cucumber | 1 | Produce | Fresh Long English Cucumber, each"
  ],
  "1 English cucumber, sliced": [
+  "english cucumber | 1 | Produce | Fresh Long English Cucumber, each"
+ ],
+ "1 English cucumber, thinly sliced": [
   "english cucumber | 1 | Produce | Fresh Long English Cucumber, each"
  ],
  "1 Italian loaf, cut into 4 pieces and split": [
@@ -822,6 +870,9 @@
  "1 apple, peeled and diced": [
   "apple | 1 | Produce | Fresh Gala Apple, each"
  ],
+ "1 apple, peeled and grated": [
+  "apple | 1 | Produce | Fresh Gala Apple, each"
+ ],
  "1 apple, thinly sliced": [
   "apple | 1 | Produce | Fresh Gala Apple, each"
  ],
@@ -843,6 +894,9 @@
  "1 avocado, thinly sliced, for serving": [
   "avocado | 1 | Produce | Fresh Hass Avocado, each"
  ],
+ "1 bag (12 oz) frozen cut green beans": [
+  "frozen cut green beans | 1 bag | Frozen | Marketside Fresh Green Beans, 12 oz"
+ ],
  "1 bag (12 oz) frozen mixed vegetables": [
   "frozen mixed vegetables | 1 bag | Frozen | Great Value Frozen Mixed Vegetables, 12 oz"
  ],
@@ -855,7 +909,7 @@
  "1 bag (16 oz) mini marshmallows": [
   "mini marshmallows | 1 bag | Snacks & Nuts | Jet-Puffed Mini Marshmallows, 1 lb"
  ],
- "1 bag (20 oz) frozen pork or chicken wontons": [
+ "1 bag (20 oz) frozen pork wontons": [
   "frozen pork wontons | 1 bag | Frozen | Bibigo Pork & Vegetable Dumplings, 6.59 oz (frozen)"
  ],
  "1 bag (24 oz) frozen breaded chicken tenders": [
@@ -867,8 +921,14 @@
  "1 bag (24 oz) frozen meatballs": [
   "frozen meatballs | 1 bag | Frozen | Great Value Homestyle Meatballs, 32 oz (frozen)"
  ],
+ "1 bag (25 oz) frozen breaded chicken tenders": [
+  "frozen breaded chicken tenders | 1 bag | Frozen | Great Value Fully Cooked Breaded Chicken Strips, 25 oz"
+ ],
  "1 bag (30 oz) frozen diced hash brown potatoes": [
   "frozen hash brown potatoes | 1 bag | Frozen | Great Value Shredded Hash Browns, 26 oz"
+ ],
+ "1 bag (30 oz) frozen shredded hash browns": [
+  "frozen shredded hash browns | 1 bag | Frozen | Great Value Shredded Hash Browns, 26 oz"
  ],
  "1 bag (30 oz) frozen shredded hash browns, thawed": [
   "frozen shredded hash browns | 1 bag | Frozen | Great Value Shredded Hash Browns, 26 oz"
@@ -883,7 +943,7 @@
   "burrata | 1 ball | Dairy & Refrigerated | BelGioioso Burrata, 8 oz (two 4 oz balls)"
  ],
  "1 ball of pizza dough (about 12 oz)": [
-  "pizza dough | 1 ball | Dairy & Refrigerated | Pillsbury Classic Pizza Crust, 13.8 oz"
+  "pizza dough | 1 ball | Dairy & Refrigerated | Pizza Buddy Fresh Pizza Dough, 16 oz (bakery)"
  ],
  "1 bay leaf": [
   "bay leaf | 1 | Spices & Baking | "
@@ -896,6 +956,9 @@
  ],
  "1 bone-in prime rib roast (3 bones, about 6 lb)": [
   "prime rib roast | 1 | Meat & Deli | "
+ ],
+ "1 bone-in turkey breast (5 to 6 lb), thawed": [
+  "turkey breast | 1 | Meat & Deli | Shady Brook Farms Bone-In Turkey Breast, 3-9 lb (frozen)"
  ],
  "1 bone-in turkey breast (6 to 7 lb)": [
   "turkey breast | 1 | Meat & Deli | Shady Brook Farms Bone-In Turkey Breast, 3-9 lb (frozen)"
@@ -919,7 +982,7 @@
   "frozen potato and cheese pierogies | 1 box | Frozen | "
  ],
  "1 box (5.1 oz) instant vanilla pudding": [
-  "instant vanilla pudding | 1 box | Spices & Baking | Great Value Vanilla Wafers, 11 oz"
+  "instant vanilla pudding | 1 box | Spices & Baking | "
  ],
  "1 box (6 oz) stuffing mix": [
   "stuffing mix | 1 box | Spices & Baking | Stove Top Stuffing Mix for Chicken, 6 oz"
@@ -999,8 +1062,8 @@
  "1 can (11 oz) mandarin oranges, drained": [
   "mandarin oranges | 1 can | Pantry & Canned | Fresh Navel Orange, each"
  ],
- "1 can (12 oz) lemon-lime soda or beer": [
-  "lemon-lime soda | 1 can | Pantry & Canned | Fresh Lemon, each"
+ "1 can (12 oz) ginger ale": [
+  "ginger ale | 1 can | Pantry & Canned | "
  ],
  "1 can (13.5 oz) coconut milk": [
   "coconut milk | 1 can | Dairy & Refrigerated | Great Value Coconut Milk, 13.5 fl oz"
@@ -1023,11 +1086,14 @@
  "1 can (15 oz) black beans, drained and warmed": [
   "black beans | 1 can | Pantry & Canned | Great Value Black Beans, 15 oz can"
  ],
+ "1 can (15 oz) black beans, drained, rinsed and patted dry": [
+  "black beans | 1 can | Pantry & Canned | Great Value Black Beans, 15 oz can"
+ ],
  "1 can (15 oz) black beans, warmed": [
   "black beans | 1 can | Pantry & Canned | Great Value Black Beans, 15 oz can"
  ],
- "1 can (15 oz) pinto beans": [
-  "pinto beans | 1 can | Pantry & Canned | Great Value Pinto Beans, 15.5 oz can"
+ "1 can (15 oz) chickpeas, drained": [
+  "chickpeas | 1 can | Pantry & Canned | Great Value Garbanzos Chick Peas, 15.5 oz"
  ],
  "1 can (16 ounces) refried beans": [
   "refried beans | 1 can | Pantry & Canned | Great Value Traditional Refried Beans, 16 oz"
@@ -1056,14 +1122,23 @@
  "1 can (20 oz) pineapple chunks, with juice": [
   "pineapple chunks | 1 can | Pantry & Canned | Great Value Pineapple Chunks in Juice, 20 oz"
  ],
+ "1 can (20 oz) pineapple rings, drained": [
+  "pineapple rings | 1 can | Pantry & Canned | Great Value Pineapple Chunks in Juice, 20 oz"
+ ],
  "1 can (28 oz) green enchilada sauce": [
   "green enchilada sauce | 1 can | Sauces & Condiments | Great Value Green Chile Enchilada Sauce, Mild, 10 oz"
  ],
  "1 can (4 oz) diced green chiles": [
   "green chiles | 1 can | Pantry & Canned | Great Value Diced Green Chiles, 4 oz"
  ],
- "1 can (4 oz) diced green chiles (optional)": [
+ "1 can (4 oz) diced green chiles, drained": [
   "green chiles | 1 can | Pantry & Canned | Great Value Diced Green Chiles, 4 oz"
+ ],
+ "1 can (7 oz) chipotle peppers in adobo sauce": [
+  "chipotle peppers in adobo sauce | 1 can | Sauces & Condiments | La Costeña Chipotle Peppers in Adobo, 7 oz"
+ ],
+ "1 can (8 oz) crushed pineapple, drained": [
+  "pineapple | 1 can | Pantry & Canned | Great Value Pineapple Chunks in Juice, 20 oz"
  ],
  "1 can (8 oz) crushed pineapple, with juice": [
   "pineapple | 1 can | Pantry & Canned | Great Value Pineapple Chunks in Juice, 20 oz"
@@ -1132,6 +1207,9 @@
  "1 clove garlic, smashed and peeled": [
   "garlic | 1 clove | Produce | "
  ],
+ "1 container (8 oz) French onion dip": [
+  "french onion dip | 1 container | Produce | "
+ ],
  "1 cube Frozen Crushed Ginger (or 1\" piece fresh)": [
   "cube frozen | 1 | Frozen | "
  ],
@@ -1186,17 +1264,11 @@
  "1 cup bagel chips": [
   "bagel chips | 1 cup | Snacks & Nuts | "
  ],
- "1 cup bean sprouts or shredded carrots": [
-  "bean sprouts | 1 cup | Pantry & Canned | "
- ],
  "1 cup beef broth": [
   "beef broth | 1 cup | Pantry & Canned | Great Value Beef Broth, 32 oz"
  ],
  "1 cup blueberries": [
   "blueberries | 1 cup | Pantry & Canned | Fresh Blueberries, 1 pint"
- ],
- "1 cup blueberries or chocolate chips": [
-  "blueberries chips | 1 cup | Snacks & Nuts | Fresh Blueberries, 1 pint"
  ],
  "1 cup broccoli florets": [
   "broccoli florets | 1 cup | Produce | Fresh Broccoli Crowns, each"
@@ -1231,7 +1303,7 @@
  "1 cup cherry tomatoes, halved": [
   "cherry tomatoes | 1 cup | Produce | Fresh Grape Tomatoes, 10 oz"
  ],
- "1 cup cherry tomatoes, halved (optional)": [
+ "1 cup cherry tomatoes, quartered": [
   "cherry tomatoes | 1 cup | Produce | Fresh Grape Tomatoes, 10 oz"
  ],
  "1 cup chicken broth": [
@@ -1246,7 +1318,7 @@
  "1 cup chopped Meal-Prep Sheet-Pan Chicken Thighs": [
   "meal-prep sheet-pan chicken thighs | 1 cup | Meat & Deli | Freshness Guaranteed Boneless Skinless Chicken Thighs (tray)"
  ],
- "1 cup chopped broccoli or spinach": [
+ "1 cup chopped broccoli": [
   "broccoli | 1 cup | Produce | Fresh Broccoli Crowns, each"
  ],
  "1 cup chopped onion": [
@@ -1276,9 +1348,6 @@
  "1 cup cooked rice": [
   "rice | 1 cup | Pasta, Rice & Grains | Great Value Long Grain White Rice, 2 lb"
  ],
- "1 cup corn salsa or pico de gallo": [
-  "corn salsa gallo | 1 cup | Sauces & Condiments | Great Value Thick & Chunky Salsa, Medium, 16 oz"
- ],
  "1 cup cottage cheese": [
   "cottage cheese | 1 cup | Dairy & Refrigerated | Great Value Small Curd Cottage Cheese 4%, 24 oz"
  ],
@@ -1287,6 +1356,9 @@
  ],
  "1 cup crispy fried onions": [
   "crispy onions | 1 cup | Produce | French's Crispy Fried Onions, 6 oz"
+ ],
+ "1 cup croutons": [
+  "croutons | 1 cup | Snacks & Nuts | Great Value Seasoned Croutons, 5 oz"
  ],
  "1 cup crumbled feta cheese": [
   "crumbled feta cheese | 1 cup | Dairy & Refrigerated | President Crumbled Feta, 6 oz"
@@ -1312,13 +1384,13 @@
  "1 cup diced celery (about 3 stalks)": [
   "celery | 1 cup | Produce | Fresh Celery, 1 stalk"
  ],
+ "1 cup diced cucumber": [
+  "cucumber | 1 cup | Produce | Fresh Cucumber, each"
+ ],
  "1 cup diced fresh or canned pineapple": [
   "canned pineapple | 1 cup | Pantry & Canned | Great Value Pineapple Chunks in Juice, 20 oz"
  ],
  "1 cup diced ham": [
-  "ham | 1 cup | Meat & Deli | Great Value Thin Sliced Honey Ham, 16 oz"
- ],
- "1 cup diced ham or pepperoni": [
   "ham | 1 cup | Meat & Deli | Great Value Thin Sliced Honey Ham, 16 oz"
  ],
  "1 cup diced or shredded grilled or baked chicken breast** (see notes for the perfect marinade)": [
@@ -1326,6 +1398,9 @@
  ],
  "1 cup diced pancetta (or guanciale)": [
   "pancetta | 1 cup | Meat & Deli | Great Value Hickory Smoked Bacon, 16 oz"
+ ],
+ "1 cup dill pickle chips": [
+  "dill pickle chips | 1 cup | Produce | Great Value Kosher Dill Spears, 24 fl oz"
  ],
  "1 cup dry ditalini pasta": [
   "dry ditalini pasta | 1 cup | Pasta, Rice & Grains | Great Value Elbow Macaroni, 16 oz"
@@ -1347,6 +1422,9 @@
  ],
  "1 cup flour": [
   "flour | 1 cup | Spices & Baking | "
+ ],
+ "1 cup fresh berries, for serving": [
+  "berries | 1 cup | Produce | "
  ],
  "1 cup fresh cilantro, plus more for topping": [
   "cilantro | 1 cup | Produce | Fresh Cilantro, 1 bunch"
@@ -1381,6 +1459,9 @@
  "1 cup frozen peas, thawed": [
   "frozen peas | 1 cup | Frozen | Great Value Frozen Sweet Peas, 12 oz"
  ],
+ "1 cup frozen shelled edamame, thawed": [
+  "frozen shelled edamame | 1 cup | Frozen | Great Value Frozen Edamame, 12 oz"
+ ],
  "1 cup frozen shelled edamame, thawed (about 6 ounces)": [
   "frozen shelled edamame | 1 cup | Frozen | Great Value Frozen Edamame, 12 oz"
  ],
@@ -1404,6 +1485,9 @@
  ],
  "1 cup grated parmesan, divided": [
   "parmesan | 1 cup | Dairy & Refrigerated | Great Value Grated Parmesan, 8 oz"
+ ],
+ "1 cup guacamole": [
+  "guacamole | 1 cup | Dairy & Refrigerated | Fresh Hass Avocado, each"
  ],
  "1 cup half and half": [
   "half and half | 1 cup | Dairy & Refrigerated | Great Value Half & Half, 32 oz"
@@ -1474,9 +1558,6 @@
  "1 cup mixed nuts": [
   "mixed nuts | 1 cup | Snacks & Nuts | "
  ],
- "1 cup nacho cheese sauce or queso dip": [
-  "nacho cheese sauce | 1 cup | Dairy & Refrigerated | Great Value Queso Blanco Cheese Dip, 15 oz"
- ],
  "1 cup of cottage cheese": [
   "cottage cheese | 1 cup | Dairy & Refrigerated | Great Value Small Curd Cottage Cheese 4%, 24 oz"
  ],
@@ -1492,7 +1573,10 @@
  "1 cup panko breadcrumbs": [
   "panko breadcrumbs | 1 cup | Spices & Baking | Great Value Plain Panko Bread Crumbs, 8 oz"
  ],
- "1 cup pico de gallo or corn salsa": [
+ "1 cup part-skim ricotta cheese": [
+  "ricotta cheese | 1 cup | Dairy & Refrigerated | Great Value Whole Milk Ricotta, 15 oz"
+ ],
+ "1 cup pico de gallo": [
   "pico de gallo | 1 cup | Dairy & Refrigerated | Marketside Mild Pico de Gallo, 10 oz"
  ],
  "1 cup pineapple chunks": [
@@ -1503,6 +1587,9 @@
  ],
  "1 cup pitted green olives": [
   "pitted green olives | 1 cup | Pantry & Canned | Great Value Stuffed Manzanilla Olives, 7 oz"
+ ],
+ "1 cup pizza sauce": [
+  "pizza sauce | 1 cup | Sauces & Condiments | Great Value Pizza Sauce, 14 oz"
  ],
  "1 cup plain Greek yogurt": [
   "plain greek yogurt | 1 cup | Dairy & Refrigerated | Great Value Plain Nonfat Greek Yogurt, 32 oz"
@@ -1515,6 +1602,18 @@
  ],
  "1 cup pretzels": [
   "pretzels | 1 cup | Snacks & Nuts | "
+ ],
+ "1 cup queso dip": [
+  "queso dip | 1 cup | Dairy & Refrigerated | Great Value Queso Blanco Cheese Dip, 15 oz"
+ ],
+ "1 cup queso dip, for dipping": [
+  "queso dip | 1 cup | Dairy & Refrigerated | Great Value Queso Blanco Cheese Dip, 15 oz"
+ ],
+ "1 cup queso dip, warmed": [
+  "queso dip | 1 cup | Dairy & Refrigerated | Great Value Queso Blanco Cheese Dip, 15 oz"
+ ],
+ "1 cup quick grits": [
+  "quick grits | 1 cup | Pantry & Canned | "
  ],
  "1 cup quinoa": [
   "quinoa | 1 cup | Pasta, Rice & Grains | Great Value Organic White Quinoa, 32 oz"
@@ -1645,6 +1744,9 @@
  "1 cup store-bought or homemade red salsa, plus more for serving": [
   "red salsa | 1 cup | Sauces & Condiments | Great Value Thick & Chunky Salsa, Medium, 16 oz"
  ],
+ "1 cup strawberries, diced": [
+  "strawberries | 1 cup | Pantry & Canned | Fresh Strawberries, 1 lb"
+ ],
  "1 cup strawberries, sliced": [
   "strawberries | 1 cup | Pantry & Canned | Fresh Strawberries, 1 lb"
  ],
@@ -1659,6 +1761,9 @@
  ],
  "1 cup thinly sliced yellow onion": [
   "yellow onion | 1 cup | Produce | Fresh Whole Yellow Onion, each"
+ ],
+ "1 cup tortilla chips, crushed": [
+  "tortilla chips | 1 cup | Snacks & Nuts | Great Value Restaurant Style White Corn Tortilla Chips, 13 oz"
  ],
  "1 cup tzatziki sauce": [
   "tzatziki sauce | 1 cup | Dairy & Refrigerated | Marketside Tzatziki Dip, 16 oz"
@@ -1695,9 +1800,6 @@
  ],
  "1 finely diced yellow onion": [
   "yellow onion | 1 | Produce | Fresh Whole Yellow Onion, each"
- ],
- "1 fresh pineapple, cut into spears, or 1 can pineapple rings": [
-  "pineapple | 1 | Produce | Great Value Pineapple Chunks in Juice, 20 oz"
  ],
  "1 full rack St. Louis-style pork ribs, separated (2 1/2 to 3 pounds)": [
   "full rack st. louis-style pork ribs | 1 | Meat & Deli | Smithfield St. Louis-Style Spareribs"
@@ -1744,6 +1846,9 @@
  "1 green bell pepper, sliced thin": [
   "green bell pepper | 1 | Produce | Fresh Green Bell Pepper, each"
  ],
+ "1 green bell pepper, thinly sliced": [
+  "green bell pepper | 1 | Produce | Fresh Green Bell Pepper, each"
+ ],
  "1 green onion": [
   "green onion | 1 | Produce | Fresh Green Onions, 1 bunch"
  ],
@@ -1752,6 +1857,9 @@
  ],
  "1 head butter lettuce": [
   "butter lettuce | 1 head | Produce | Little Leaf Farms Baby Butter Lettuce, 8 oz"
+ ],
+ "1 head iceberg lettuce, chopped": [
+  "iceberg lettuce | 1 head | Produce | Marketside Shredded Iceberg Lettuce, 8 oz"
  ],
  "1 head romaine lettuce, chopped": [
   "romaine lettuce | 1 head | Produce | Fresh Romaine Hearts, 3 ct"
@@ -1773,6 +1881,9 @@
  ],
  "1 jalapeño, seeds removed, finely chopped": [
   "jalapeño | 1 | Produce | Fresh Jalapeño Peppers, 8 oz"
+ ],
+ "1 jar (12 oz) roasted red peppers, drained and sliced": [
+  "roasted red peppers | 1 jar | Pantry & Canned | "
  ],
  "1 jar (15 oz) Alfredo sauce": [
   "alfredo sauce | 1 jar | Sauces & Condiments | Great Value Alfredo Pasta Sauce, 16 oz"
@@ -1912,6 +2023,9 @@
  "1 lb bacon": [
   "bacon | 1 lb | Meat & Deli | Great Value Hickory Smoked Bacon, 16 oz"
  ],
+ "1 lb bacon, chopped": [
+  "bacon | 1 lb | Meat & Deli | Great Value Hickory Smoked Bacon, 16 oz"
+ ],
  "1 lb bacon, cooked and crumbled OR 1/2lb breakfast sausage, browned": [
   "bacon | 1 lb | Meat & Deli | Great Value Hickory Smoked Bacon, 16 oz"
  ],
@@ -1945,14 +2059,14 @@
  "1 lb deli roast beef, thinly sliced": [
   "deli roast beef | 1 lb | Meat & Deli | Great Value Roast Beef Lunchmeat, 7 oz"
  ],
+ "1 lb diced ham": [
+  "ham | 1 lb | Meat & Deli | Great Value Thin Sliced Honey Ham, 16 oz"
+ ],
  "1 lb elbow macaroni": [
   "elbow macaroni | 1 lb | Pasta, Rice & Grains | Great Value Elbow Macaroni, 16 oz"
  ],
  "1 lb fettuccine pasta": [
   "fettuccine pasta | 1 lb | Pasta, Rice & Grains | Great Value Fettuccine, 16 oz"
- ],
- "1 lb frozen mini meatballs or 1 lb ground beef and pork mix": [
-  "frozen mini meatballs mix | 1 lb | Frozen | Great Value Homestyle Meatballs, 32 oz (frozen)"
  ],
  "1 lb gluten-free elbow macaroni (Jovial or Barilla GF hold best)": [
   "gluten-free elbow macaroni | 1 lb | Pasta, Rice & Grains | Great Value Elbow Macaroni, 16 oz"
@@ -1967,9 +2081,6 @@
   "grilled breast | 1 lb | Pantry & Canned | Freshness Guaranteed Rotisserie Chicken (chilled)"
  ],
  "1 lb ground beef": [
-  "ground beef | 1 lb | Meat & Deli | 80/20 Ground Beef Chuck, 1 lb roll"
- ],
- "1 lb ground beef or chicken": [
   "ground beef | 1 lb | Meat & Deli | 80/20 Ground Beef Chuck, 1 lb roll"
  ],
  "1 lb ground chicken": [
@@ -1993,9 +2104,6 @@
  "1 lb mild Italian sausage": [
   "italian sausage | 1 lb | Meat & Deli | Marketside Mild Ground Italian Sausage, 1 lb"
  ],
- "1 lb mild Italian sausage or chicken sausage": [
-  "italian sausage | 1 lb | Meat & Deli | Marketside Mild Ground Italian Sausage, 1 lb"
- ],
  "1 lb of bacon": [
   "bacon | 1 lb | Meat & Deli | Great Value Hickory Smoked Bacon, 16 oz"
  ],
@@ -2012,10 +2120,7 @@
   "penne pasta | 1 lb | Pasta, Rice & Grains | Great Value Penne Pasta, 16 oz"
  ],
  "1 lb pizza dough": [
-  "pizza dough | 1 lb | Dairy & Refrigerated | Pillsbury Classic Pizza Crust, 13.8 oz"
- ],
- "1 lb pizza dough or 1 prebaked pizza crust": [
-  "pizza dough crust | 1 lb | Dairy & Refrigerated | Pillsbury Classic Pizza Crust, 13.8 oz"
+  "pizza dough | 1 lb | Dairy & Refrigerated | Pizza Buddy Fresh Pizza Dough, 16 oz (bakery)"
  ],
  "1 lb rotini pasta": [
   "rotini pasta | 1 lb | Pasta, Rice & Grains | Great Value Rotini, 16 oz"
@@ -2032,8 +2137,14 @@
  "1 lb spaghetti, broken in half": [
   "spaghetti | 1 lb | Pasta, Rice & Grains | Great Value Spaghetti, 16 oz"
  ],
+ "1 lb store-bought pizza dough": [
+  "pizza dough | 1 lb | Dairy & Refrigerated | Pizza Buddy Fresh Pizza Dough, 16 oz (bakery)"
+ ],
  "1 lb store-bought ravioli I recommend spinach and ricotta, but you could use beef or experiment with other flavours.": [
   "ravioli | 1 lb | Dairy & Refrigerated | Great Value Cheese Ravioli, 25 oz (frozen)"
+ ],
+ "1 lb strawberries, diced": [
+  "strawberries | 1 lb | Pantry & Canned | Fresh Strawberries, 1 lb"
  ],
  "1 lb sweet ground Italian sausage": [
   "italian sausage | 1 lb | Meat & Deli | Marketside Mild Ground Italian Sausage, 1 lb"
@@ -2090,7 +2201,7 @@
   "ground fresh chorizo | 1 lb | Meat & Deli | Cacique Pork Chorizo, 9 oz"
  ],
  "1 lb. ground pork": [
-  "ground pork | 1 lb | Meat & Deli | Marketside Mild Ground Italian Sausage, 1 lb"
+  "ground pork | 1 lb | Meat & Deli | Smithfield All Natural Fresh Ground Pork, 1.5 lb"
  ],
  "1 lb. ground veal": [
   "ground veal | 1 lb | Meat & Deli | "
@@ -2128,6 +2239,9 @@
  "1 lemon, juiced": [
   "lemon | 1 | Produce | Fresh Lemon, each"
  ],
+ "1 lemon, zested": [
+  "lemon | 1 | Produce | Fresh Lemon, each"
+ ],
  "1 lemon, zested and juiced": [
   "lemon | 1 | Produce | Fresh Lemon, each"
  ],
@@ -2149,11 +2263,8 @@
  "1 liter water 4 cups": [
   "water | 1 liter | Pantry & Canned | "
  ],
- "1 loaf (16 oz) French bread or brioche, cubed": [
+ "1 loaf (16 oz) French bread, cubed": [
   "french bread | 1 loaf | Bakery | Freshness Guaranteed French Bread Loaf, 14 oz"
- ],
- "1 loaf (16 oz) sandwich bread or French bread, cubed and dried": [
-  "sandwich bread | 1 loaf | Bakery | Great Value White Sandwich Bread, 20 oz"
  ],
  "1 loaf French bread, halved lengthwise": [
   "french bread | 1 loaf | Bakery | Freshness Guaranteed French Bread Loaf, 14 oz"
@@ -2263,11 +2374,26 @@
  "1 oz. Parmesan, finely grated (about 1/2 cup)": [
   "parmesan | 1 oz | Dairy & Refrigerated | Great Value Grated Parmesan, 8 oz"
  ],
+ "1 package (12 oz) fully cooked pork sausage links": [
+  "pork sausage links | 1 package | Meat & Deli | Great Value Pork Sausage Links, 24 oz"
+ ],
  "1 package (14 oz) little smoked sausages": [
   "little smoked sausages | 1 package | Pantry & Canned | "
  ],
+ "1 package (14 oz) smoked turkey sausage, sliced": [
+  "smoked turkey sausage | 1 package | Meat & Deli | "
+ ],
+ "1 package (15 oz) fully cooked pork roast, shredded": [
+  "pork roast | 1 package | Meat & Deli | "
+ ],
+ "1 package (16 oz) refrigerated BBQ pulled pork": [
+  "refrigerated bbq pulled pork | 1 package | Dairy & Refrigerated | "
+ ],
  "1 package (20 oz) refrigerated cheese tortellini": [
   "refrigerated cheese tortellini | 1 package | Dairy & Refrigerated | Buitoni Mixed Cheese Tortellini, 20 oz"
+ ],
+ "1 package (24 oz) fully cooked pork sausage links": [
+  "pork sausage links | 1 package | Meat & Deli | Great Value Pork Sausage Links, 24 oz"
  ],
  "1 package 8 ounces cream cheese, softened and cut into small cubes": [
   "cream cheese | 1 package | Dairy & Refrigerated | Great Value Cream Cheese Brick, 8 oz"
@@ -2277,6 +2403,12 @@
  ],
  "1 package chicken sausages (12 ounces – I used Bilinski mild Italian with bell pepper)": [
   "chicken sausages | 1 package | Meat & Deli | Aidells Chicken & Apple Smoked Chicken Sausage, 12 oz"
+ ],
+ "1 packet (0.87 oz) brown gravy mix": [
+  "brown gravy mix | 1 packet | Pantry & Canned | Great Value Brown Gravy Mix, 0.87 oz"
+ ],
+ "1 packet (1 oz) ranch seasoning mix": [
+  "ranch seasoning mix | 1 packet | Spices & Baking | "
  ],
  "1 packet Right Rice*": [
   "right rice | 1 packet | Pasta, Rice & Grains | "
@@ -2310,9 +2442,6 @@
  ],
  "1 part": [
   "part | 1 | Pantry & Canned | "
- ],
- "1 pear or apple, grated (optional)": [
-  "pear | 1 | Pantry & Canned | "
  ],
  "1 pinch each salt & pepper": [
   "salt & pepper | 1 pinch | Produce | "
@@ -2450,7 +2579,7 @@
   "heavy cream | 1 quart | Dairy & Refrigerated | Great Value Heavy Whipping Cream, 16 oz"
  ],
  "1 recipe Homemade Pizza Dough (sourdough discard pizza crust)": [
-  "recipe homemade pizza dough | 1 | Dairy & Refrigerated | Pillsbury Classic Pizza Crust, 13.8 oz"
+  "recipe homemade pizza dough | 1 | Dairy & Refrigerated | Pizza Buddy Fresh Pizza Dough, 16 oz (bakery)"
  ],
  "1 red bell pepper": [
   "red bell pepper | 1 | Produce | Fresh Red Bell Pepper, each"
@@ -2476,10 +2605,16 @@
  "1 red bell pepper, sliced into strips": [
   "red bell pepper | 1 | Produce | Fresh Red Bell Pepper, each"
  ],
+ "1 red bell pepper, thinly sliced": [
+  "red bell pepper | 1 | Produce | Fresh Red Bell Pepper, each"
+ ],
  "1 red onion, chunked": [
   "red onion | 1 | Produce | Fresh Whole Red Onion, each"
  ],
  "1 red onion, diced": [
+  "red onion | 1 | Produce | Fresh Whole Red Onion, each"
+ ],
+ "1 red onion, thinly sliced": [
   "red onion | 1 | Produce | Fresh Whole Red Onion, each"
  ],
  "1 red pepper": [
@@ -2531,7 +2666,7 @@
   "scallion | 1 | Produce | Fresh Green Onions, 1 bunch"
  ],
  "1 scoop vanilla whey isolate protein powder": [
-  "vanilla whey isolate protein powder | 1 scoop | Spices & Baking | Great Value Vanilla Wafers, 11 oz"
+  "vanilla whey isolate protein powder | 1 scoop | Spices & Baking | "
  ],
  "1 serrano pepper chopped (optional, for spicier)": [
   "serrano pepper | 1 | Produce | Fresh Serrano Peppers, 4 oz bag"
@@ -2881,6 +3016,9 @@
  "1 tbsp chili crisp": [
   "chili crisp | 1 tbsp | Pantry & Canned | "
  ],
+ "1 tbsp chili powder": [
+  "chili powder | 1 tbsp | Spices & Baking | "
+ ],
  "1 tbsp chopped fresh chives": [
   "chives | 1 tbsp | Produce | Fresh Chives, 0.5 oz clamshell"
  ],
@@ -2888,9 +3026,6 @@
   "chives | 1 tbsp | Produce | Fresh Chives, 0.5 oz clamshell"
  ],
  "1 tbsp chopped fresh parsley": [
-  "parsley | 1 tbsp | Produce | Fresh Curly Parsley, 1 bunch"
- ],
- "1 tbsp chopped fresh parsley or chives": [
   "parsley | 1 tbsp | Produce | Fresh Curly Parsley, 1 bunch"
  ],
  "1 tbsp chopped green onion": [
@@ -2903,9 +3038,6 @@
   "parsley | 1 tbsp | Produce | Fresh Curly Parsley, 1 bunch"
  ],
  "1 tbsp cornstarch": [
-  "cornstarch | 1 tbsp | Spices & Baking | "
- ],
- "1 tbsp cornstarch plus 1 tbsp for the sauce": [
   "cornstarch | 1 tbsp | Spices & Baking | "
  ],
  "1 tbsp dill pickle relish": [
@@ -2944,11 +3076,17 @@
  "1 tbsp ground cumin": [
   "ground cumin | 1 tbsp | Spices & Baking | "
  ],
+ "1 tbsp hoisin sauce": [
+  "hoisin sauce | 1 tbsp | Sauces & Condiments | Lee Kum Kee Hoisin Sauce, 20 oz"
+ ],
  "1 tbsp honey": [
   "honey | 1 tbsp | Sauces & Condiments | "
  ],
  "1 tbsp ketchup": [
   "ketchup | 1 tbsp | Sauces & Condiments | "
+ ],
+ "1 tbsp kosher salt": [
+  "kosher salt | 1 tbsp | Spices & Baking | "
  ],
  "1 tbsp lemon juice": [
   "lemon juice | 1 tbsp | Pantry & Canned | Fresh Lemon, each"
@@ -2961,6 +3099,9 @@
  ],
  "1 tbsp lime juice (~1 small lime)": [
   "lime juice | 1 tbsp | Pantry & Canned | Fresh Lime, each"
+ ],
+ "1 tbsp liquid smoke": [
+  "liquid smoke | 1 tbsp | Pantry & Canned | "
  ],
  "1 tbsp maple syrup": [
   "maple syrup | 1 tbsp | Sauces & Condiments | Great Value Original Syrup, 24 fl oz"
@@ -2986,12 +3127,6 @@
  "1 tbsp oregano": [
   "oregano | 1 tbsp | Spices & Baking | "
  ],
- "1 tbsp oyster sauce or extra soy sauce": [
-  "oyster sauce | 1 tbsp | Sauces & Condiments | "
- ],
- "1 tbsp oyster sauce or hoisin substitute": [
-  "oyster sauce | 1 tbsp | Sauces & Condiments | "
- ],
  "1 tbsp packed cilantro or parsley, finely chopped": [
   "cilantro | 1 tbsp | Produce | Fresh Cilantro, 1 bunch"
  ],
@@ -3003,6 +3138,9 @@
  ],
  "1 tbsp ranch seasoning": [
   "ranch seasoning | 1 tbsp | Spices & Baking | "
+ ],
+ "1 tbsp ranch seasoning mix": [
+  "ranch seasoning mix | 1 tbsp | Spices & Baking | "
  ],
  "1 tbsp rice vinegar": [
   "rice vinegar | 1 tbsp | Sauces & Condiments | "
@@ -3034,7 +3172,7 @@
  "1 tbsp sugar": [
   "sugar | 1 tbsp | Spices & Baking | "
  ],
- "1 tbsp sweetened condensed milk or honey": [
+ "1 tbsp sweetened condensed milk": [
   "sweetened condensed milk | 1 tbsp | Dairy & Refrigerated | Great Value Sweetened Condensed Milk, 14 oz"
  ],
  "1 tbsp tomato paste": [
@@ -3068,7 +3206,7 @@
   "yellow mustard | 1 tbsp | Sauces & Condiments | "
  ],
  "1 teaspoon (5 g) vanilla extract": [
-  "vanilla extract | 1 tsp | Spices & Baking | Great Value Vanilla Wafers, 11 oz"
+  "vanilla extract | 1 tsp | Spices & Baking | Great Value Pure Vanilla Extract, 2 fl oz"
  ],
  "1 teaspoon (5 milliliters) dried oregano": [
   "dried oregano | 1 tsp | Spices & Baking | "
@@ -3212,7 +3350,7 @@
   "sugar | 1 tsp | Spices & Baking | "
  ],
  "1 teaspoon vanilla": [
-  "vanilla | 1 tsp | Spices & Baking | Great Value Vanilla Wafers, 11 oz"
+  "vanilla | 1 tsp | Spices & Baking | Great Value Pure Vanilla Extract, 2 fl oz"
  ],
  "1 teaspoon white sugar": [
   "white sugar | 1 tsp | Spices & Baking | "
@@ -3265,6 +3403,9 @@
  "1 tsp Worcestershire sauce": [
   "worcestershire sauce | 1 tsp | Sauces & Condiments | "
  ],
+ "1 tsp apple cider vinegar": [
+  "apple cider vinegar | 1 tsp | Produce | "
+ ],
  "1 tsp baking soda": [
   "baking soda | 1 tsp | Spices & Baking | "
  ],
@@ -3316,9 +3457,6 @@
  "1 tsp each onion powder , dried oregano, salt": [
   "onion powder | 1 tsp | Spices & Baking | "
  ],
- "1 tsp everything bagel seasoning (optional)": [
-  "everything bagel seasoning | 1 tsp | Bakery | "
- ],
  "1 tsp fennel seeds (optional but 🔥 with sausage)": [
   "fennel seeds | 1 tsp | Produce | "
  ],
@@ -3336,6 +3474,9 @@
  ],
  "1 tsp ground cinnamon": [
   "ground cinnamon | 1 tsp | Spices & Baking | "
+ ],
+ "1 tsp ground coriander": [
+  "ground coriander | 1 tsp | Pantry & Canned | "
  ],
  "1 tsp ground cumin": [
   "ground cumin | 1 tsp | Spices & Baking | "
@@ -3358,11 +3499,17 @@
  "1 tsp lemon zest": [
   "lemon | 1 tsp | Produce | Fresh Lemon, each"
  ],
+ "1 tsp lime juice": [
+  "lime juice | 1 tsp | Pantry & Canned | Fresh Lime, each"
+ ],
  "1 tsp mexican oregano": [
   "mexican oregano | 1 tsp | Spices & Baking | "
  ],
  "1 tsp mustard powder": [
   "mustard powder | 1 tsp | Spices & Baking | "
+ ],
+ "1 tsp olive oil": [
+  "olive oil | 1 tsp | Sauces & Condiments | "
  ],
  "1 tsp onion powder": [
   "onion powder | 1 tsp | Spices & Baking | "
@@ -3410,7 +3557,7 @@
   "taco seasoning | 1 tsp | Spices & Baking | Great Value Original Taco Seasoning, 1 oz"
  ],
  "1 tsp vanilla extract": [
-  "vanilla extract | 1 tsp | Spices & Baking | Great Value Vanilla Wafers, 11 oz"
+  "vanilla extract | 1 tsp | Spices & Baking | Great Value Pure Vanilla Extract, 2 fl oz"
  ],
  "1 tsp vegetable oil": [
   "vegetable oil | 1 tsp | Sauces & Condiments | "
@@ -3452,7 +3599,7 @@
   "oregano | 1 tsp | Spices & Baking | "
  ],
  "1 tsp. pure vanilla extract": [
-  "pure vanilla extract | 1 tsp | Spices & Baking | Great Value Vanilla Wafers, 11 oz"
+  "pure vanilla extract | 1 tsp | Spices & Baking | Great Value Pure Vanilla Extract, 2 fl oz"
  ],
  "1 tsp. seasoned salt": [
   "seasoned salt | 1 tsp | Spices & Baking | "
@@ -3511,6 +3658,12 @@
  "1 yellow onion, cut in wedges": [
   "yellow onion | 1 | Produce | Fresh Whole Yellow Onion, each"
  ],
+ "1 yellow onion, cut into chunks": [
+  "yellow onion | 1 | Produce | Fresh Whole Yellow Onion, each"
+ ],
+ "1 yellow onion, cut into thick slices": [
+  "yellow onion | 1 | Produce | Fresh Whole Yellow Onion, each"
+ ],
  "1 yellow onion, diced": [
   "yellow onion | 1 | Produce | Fresh Whole Yellow Onion, each"
  ],
@@ -3530,6 +3683,9 @@
   "yellow onion | 1 | Produce | Fresh Whole Yellow Onion, each"
  ],
  "1 yellow onion, sliced thin": [
+  "yellow onion | 1 | Produce | Fresh Whole Yellow Onion, each"
+ ],
+ "1 yellow onion, thinly sliced": [
   "yellow onion | 1 | Produce | Fresh Whole Yellow Onion, each"
  ],
  "1 yellow onions - finely diced": [
@@ -3649,7 +3805,7 @@
  "1-2lbs of chicken thighs": [
   "chicken thighs | 2 lb | Meat & Deli | Freshness Guaranteed Boneless Skinless Chicken Thighs (tray)"
  ],
- "1.25 lbs flank steak or sirloin, thin sliced, marinated (msg, soy sauce, pepper, sriacha, sesame oil, fish sauce, vinegar brine from pickled veggies)": [
+ "1.25 lbs flank steak, thinly sliced and marinated (soy sauce, pepper, sriracha, sesame oil and a splash of pickle brine)": [
   "flank steak | 1.25 lb | Meat & Deli | Choice Angus Flank Steak, 1 per tray"
  ],
  "1.5 cups half-and-half": [
@@ -3757,9 +3913,6 @@
  "1/2 cup BBQ sauce": [
   "bbq sauce | 0.5 cup | Sauces & Condiments | Great Value Original BBQ Sauce, 18 oz"
  ],
- "1/2 cup Caesar dressing": [
-  "caesar dressing | 0.5 cup | Sauces & Condiments | Great Value Creamy Caesar Dressing, 16 fl oz"
- ],
  "1/2 cup Italian breadcrumbs": [
   "italian breadcrumbs | 0.5 cup | Spices & Baking | Great Value Plain Panko Bread Crumbs, 8 oz"
  ],
@@ -3769,17 +3922,26 @@
  "1/2 cup all-purpose flour": [
   "all-purpose flour | 0.5 cup | Spices & Baking | "
  ],
+ "1/2 cup apple cider vinegar": [
+  "apple cider vinegar | 0.5 cup | Produce | "
+ ],
  "1/2 cup balsamic vinegar": [
   "balsamic vinegar | 0.5 cup | Sauces & Condiments | "
  ],
  "1/2 cup basil pesto": [
   "basil pesto | 0.5 cup | Produce | Great Value Traditional Basil Pesto, 6.7 oz"
  ],
+ "1/2 cup beef broth": [
+  "beef broth | 0.5 cup | Pantry & Canned | Great Value Beef Broth, 32 oz"
+ ],
  "1/2 cup beer": [
   "beer | 0.5 cup | Pantry & Canned | "
  ],
  "1/2 cup black beans": [
   "black beans | 0.5 cup | Pantry & Canned | Great Value Black Beans, 15 oz can"
+ ],
+ "1/2 cup blueberries": [
+  "blueberries | 0.5 cup | Pantry & Canned | Fresh Blueberries, 1 pint"
  ],
  "1/2 cup brown sugar": [
   "brown sugar | 0.5 cup | Spices & Baking | "
@@ -3790,7 +3952,7 @@
  "1/2 cup butter, melted": [
   "butter | 0.5 cup | Dairy & Refrigerated | Great Value Salted Butter, 16 oz (4 sticks)"
  ],
- "1/2 cup buttermilk or milk": [
+ "1/2 cup buttermilk": [
   "buttermilk | 0.5 cup | Dairy & Refrigerated | "
  ],
  "1/2 cup candied pecans": [
@@ -3829,14 +3991,14 @@
  "1/2 cup cream cheese": [
   "cream cheese | 0.5 cup | Dairy & Refrigerated | Great Value Cream Cheese Brick, 8 oz"
  ],
+ "1/2 cup creamy peanut butter": [
+  "creamy peanut butter | 0.5 cup | Pantry & Canned | Great Value Creamy Peanut Butter (No Stir), 16 oz"
+ ],
  "1/2 cup crispy wonton strips": [
   "crispy wonton strips | 0.5 cup | Dairy & Refrigerated | Fresh Gourmet Wonton Strips, 3.5 oz"
  ],
  "1/2 cup croutons": [
   "croutons | 0.5 cup | Snacks & Nuts | Great Value Seasoned Croutons, 5 oz"
- ],
- "1/2 cup crumbled blue cheese or shredded cheddar cheese": [
-  "crumbled blue cheese | 0.5 cup | Dairy & Refrigerated | Marketside Blue Cheese Crumbles, 5 oz"
  ],
  "1/2 cup crumbled cotija cheese": [
   "crumbled cotija cheese | 0.5 cup | Dairy & Refrigerated | FUD Cotija Cheese, 8 oz"
@@ -3847,6 +4009,9 @@
  "1/2 cup crumbled feta cheese (about 2 ounces)": [
   "crumbled feta cheese | 0.5 cup | Dairy & Refrigerated | President Crumbled Feta, 6 oz"
  ],
+ "1/2 cup crushed Ritz crackers": [
+  "ritz crackers | 0.5 cup | Snacks & Nuts | Ritz Original Crackers, 13.7 oz"
+ ],
  "1/2 cup crushed chocolate sandwich cookies": [
   "chocolate sandwich cookies | 0.5 cup | Snacks & Nuts | Great Value Twist & Shout Chocolate Sandwich Cookies, 15.35 oz"
  ],
@@ -3855,6 +4020,12 @@
  ],
  "1/2 cup diced cucumber": [
   "cucumber | 0.5 cup | Produce | Fresh Cucumber, each"
+ ],
+ "1/2 cup dill pickle chips": [
+  "dill pickle chips | 0.5 cup | Produce | Great Value Kosher Dill Spears, 24 fl oz"
+ ],
+ "1/2 cup dill pickle chips, chopped": [
+  "dill pickle chips | 0.5 cup | Produce | Great Value Kosher Dill Spears, 24 fl oz"
  ],
  "1/2 cup dried cranberries": [
   "dried cranberries | 0.5 cup | Spices & Baking | Great Value Sweetened Dried Cranberries, 24 oz"
@@ -3937,11 +4108,20 @@
  "1/2 cup honey": [
   "honey | 0.5 cup | Sauces & Condiments | "
  ],
+ "1/2 cup honey mustard, for dipping": [
+  "honey mustard | 0.5 cup | Sauces & Condiments | Great Value Honey Mustard Dressing, 16 fl oz"
+ ],
  "1/2 cup hot fudge sauce": [
   "hot fudge sauce | 0.5 cup | Sauces & Condiments | "
  ],
  "1/2 cup hot sauce, such as Frank's RedHot": [
   "hot sauce | 0.5 cup | Sauces & Condiments | "
+ ],
+ "1/2 cup kalamata olives": [
+  "kalamata olives | 0.5 cup | Pantry & Canned | Great Value Pitted Kalamata Olives, 6.35 oz"
+ ],
+ "1/2 cup kalamata olives, halved": [
+  "kalamata olives | 0.5 cup | Pantry & Canned | Great Value Pitted Kalamata Olives, 6.35 oz"
  ],
  "1/2 cup low-fat cottage cheese": [
   "low-fat cottage cheese | 0.5 cup | Dairy & Refrigerated | Great Value Small Curd Cottage Cheese 4%, 24 oz"
@@ -3955,6 +4135,12 @@
  "1/2 cup low-sodium chicken or vegetable broth": [
   "low-sodium chicken broth | 0.5 cup | Pantry & Canned | Great Value Chicken Broth, 32 oz"
  ],
+ "1/2 cup maple syrup": [
+  "maple syrup | 0.5 cup | Sauces & Condiments | Great Value Original Syrup, 24 fl oz"
+ ],
+ "1/2 cup maple syrup, for serving": [
+  "maple syrup | 0.5 cup | Sauces & Condiments | Great Value Original Syrup, 24 fl oz"
+ ],
  "1/2 cup mayonnaise": [
   "mayonnaise | 0.5 cup | Sauces & Condiments | "
  ],
@@ -3966,6 +4152,9 @@
  ],
  "1/2 cup olive oil": [
   "olive oil | 0.5 cup | Sauces & Condiments | "
+ ],
+ "1/2 cup orange juice": [
+  "orange juice | 0.5 cup | Pantry & Canned | Great Value 100% Orange Juice, No Pulp, 52 fl oz"
  ],
  "1/2 cup packed fresh basil leaves, finely chopped, plus more for serving": [
   "basil leaves | 0.5 cup | Produce | Fresh Basil, 0.5 oz clamshell"
@@ -4021,9 +4210,6 @@
  "1/2 cup ranch dressing": [
   "ranch dressing | 0.5 cup | Sauces & Condiments | Great Value Classic Ranch Dressing, 16 oz"
  ],
- "1/2 cup ranch or blue cheese dressing": [
-  "ranch dressing | 0.5 cup | Sauces & Condiments | Great Value Classic Ranch Dressing, 16 oz"
- ],
  "1/2 cup ricotta cheese": [
   "ricotta cheese | 0.5 cup | Dairy & Refrigerated | Great Value Whole Milk Ricotta, 15 oz"
  ],
@@ -4032,6 +4218,15 @@
  ],
  "1/2 cup salsa verde": [
   "salsa verde | 0.5 cup | Sauces & Condiments | Great Value Salsa Verde, 16 oz"
+ ],
+ "1/2 cup salsa verde, for dipping": [
+  "salsa verde | 0.5 cup | Sauces & Condiments | Great Value Salsa Verde, 16 oz"
+ ],
+ "1/2 cup salsa verde, for serving": [
+  "salsa verde | 0.5 cup | Sauces & Condiments | Great Value Salsa Verde, 16 oz"
+ ],
+ "1/2 cup semi-sweet chocolate chips": [
+  "semi-sweet chocolate chips | 0.5 cup | Snacks & Nuts | Great Value Semi-Sweet Chocolate Chips, 12 oz"
  ],
  "1/2 cup sesame ginger dressing": [
   "sesame ginger dressing | 0.5 cup | Produce | Great Value Asian Ginger Sesame Dressing, 16 fl oz"
@@ -4078,6 +4273,12 @@
  "1/2 cup sour cream, at room temperature": [
   "sour cream | 0.5 cup | Dairy & Refrigerated | Great Value Sour Cream, 16 oz"
  ],
+ "1/2 cup sour cream, for dipping": [
+  "sour cream | 0.5 cup | Dairy & Refrigerated | Great Value Sour Cream, 16 oz"
+ ],
+ "1/2 cup sour cream, for serving": [
+  "sour cream | 0.5 cup | Dairy & Refrigerated | Great Value Sour Cream, 16 oz"
+ ],
  "1/2 cup sourdough starter, bubbly and active (113 grams)": [
   "sourdough starter | 0.5 cup | Bakery | "
  ],
@@ -4092,6 +4293,9 @@
  ],
  "1/2 cup sweet peppers": [
   "sweet peppers | 0.5 cup | Produce | "
+ ],
+ "1/2 cup teriyaki sauce": [
+  "teriyaki sauce | 0.5 cup | Sauces & Condiments | Great Value Teriyaki Sauce, 15 fl oz"
  ],
  "1/2 cup tzatziki sauce": [
   "tzatziki sauce | 0.5 cup | Dairy & Refrigerated | Marketside Tzatziki Dip, 16 oz"
@@ -4135,11 +4339,8 @@
  "1/2 lb ground beef": [
   "ground beef | 0.5 lb | Meat & Deli | 80/20 Ground Beef Chuck, 1 lb roll"
  ],
- "1/2 lb ground beef or ground pork": [
-  "ground beef pork | 0.5 lb | Meat & Deli | 80/20 Ground Beef Chuck, 1 lb roll"
- ],
  "1/2 lb ground pork or Italian sausage": [
-  "ground pork | 0.5 lb | Meat & Deli | Marketside Mild Ground Italian Sausage, 1 lb"
+  "ground pork | 0.5 lb | Meat & Deli | Smithfield All Natural Fresh Ground Pork, 1.5 lb"
  ],
  "1/2 lb mild Italian sausage": [
   "italian sausage | 0.5 lb | Meat & Deli | Marketside Mild Ground Italian Sausage, 1 lb"
@@ -4158,6 +4359,9 @@
  ],
  "1/2 lb. sliced provolone": [
   "provolone | 0.5 lb | Dairy & Refrigerated | Great Value Sliced Provolone, 8 oz"
+ ],
+ "1/2 lemon, juiced": [
+  "lemon | 0.5 | Produce | Fresh Lemon, each"
  ],
  "1/2 medium onion, chopped": [
   "onion | 0.5 | Produce | Fresh Whole Yellow Onion, each"
@@ -4192,6 +4396,9 @@
  "1/2 red onion, finely diced": [
   "red onion | 0.5 | Produce | Fresh Whole Red Onion, each"
  ],
+ "1/2 red onion, sliced into rings": [
+  "red onion | 0.5 | Produce | Fresh Whole Red Onion, each"
+ ],
  "1/2 red onion, thinly sliced": [
   "red onion | 0.5 | Produce | Fresh Whole Red Onion, each"
  ],
@@ -4209,6 +4416,9 @@
  ],
  "1/2 small red onion, thinly sliced, divided": [
   "red onion | 0.5 | Produce | Fresh Whole Red Onion, each"
+ ],
+ "1/2 small yellow onion, minced": [
+  "yellow onion | 0.5 | Produce | Fresh Whole Yellow Onion, each"
  ],
  "1/2 tbsp olive oil": [
   "olive oil | 0.5 tbsp | Sauces & Condiments | "
@@ -4286,10 +4496,10 @@
   "smoked paprika | 0.5 tsp | Spices & Baking | "
  ],
  "1/2 teaspoon vanilla": [
-  "vanilla | 0.5 tsp | Spices & Baking | Great Value Vanilla Wafers, 11 oz"
+  "vanilla | 0.5 tsp | Spices & Baking | Great Value Pure Vanilla Extract, 2 fl oz"
  ],
  "1/2 teaspoon vanilla extract": [
-  "vanilla extract | 0.5 tsp | Spices & Baking | Great Value Vanilla Wafers, 11 oz"
+  "vanilla extract | 0.5 tsp | Spices & Baking | Great Value Pure Vanilla Extract, 2 fl oz"
  ],
  "1/2 teaspoon whole fennel seeds, crushed with a mortar and pestle": [
   "fennel seeds | 0.5 tsp | Produce | "
@@ -4299,6 +4509,9 @@
  ],
  "1/2 tsp Cumin": [
   "cumin | 0.5 tsp | Spices & Baking | "
+ ],
+ "1/2 tsp Dijon mustard": [
+  "dijon mustard | 0.5 tsp | Sauces & Condiments | "
  ],
  "1/2 tsp Italian seasoning": [
   "italian seasoning | 0.5 tsp | Spices & Baking | "
@@ -4314,9 +4527,6 @@
  ],
  "1/2 tsp black pepper": [
   "black pepper | 0.5 tsp | Spices & Baking | "
- ],
- "1/2 tsp celery seed (optional)": [
-  "celery seed | 0.5 tsp | Produce | "
  ],
  "1/2 tsp chili powder": [
   "chili powder | 0.5 tsp | Spices & Baking | "
@@ -4420,6 +4630,9 @@
  "1/2 white onion, finely chopped": [
   "white onion | 0.5 | Produce | Fresh Whole Yellow Onion, each"
  ],
+ "1/2 white onion, finely diced": [
+  "white onion | 0.5 | Produce | Fresh Whole Yellow Onion, each"
+ ],
  "1/2 yellow onion, chopped": [
   "yellow onion | 0.5 | Produce | Fresh Whole Yellow Onion, each"
  ],
@@ -4462,9 +4675,6 @@
  "1/3 cup (80g) Sweet Chili Sauce": [
   "sweet chili sauce | 0.333 cup | Sauces & Condiments | Great Value Thai Style Sweet Chili Sauce, 13.25 oz"
  ],
- "1/3 cup Caesar dressing": [
-  "caesar dressing | 0.333 cup | Sauces & Condiments | Great Value Creamy Caesar Dressing, 16 fl oz"
- ],
  "1/3 cup all-purpose flour": [
   "all-purpose flour | 0.333 cup | Spices & Baking | "
  ],
@@ -4482,9 +4692,6 @@
  ],
  "1/3 cup cherry tomatoes": [
   "cherry tomatoes | 0.333 cup | Produce | Fresh Grape Tomatoes, 10 oz"
- ],
- "1/3 cup chopped peanuts (optional)": [
-  "peanuts | 0.333 cup | Snacks & Nuts | Great Value Dry Roasted Peanuts, 16 oz"
  ],
  "1/3 cup cocoa powder": [
   "cocoa powder | 0.333 cup | Spices & Baking | "
@@ -4507,6 +4714,12 @@
  "1/3 cup grated parmesan cheese": [
   "parmesan cheese | 0.333 cup | Dairy & Refrigerated | Great Value Grated Parmesan, 8 oz"
  ],
+ "1/3 cup heavy cream": [
+  "heavy cream | 0.333 cup | Dairy & Refrigerated | Great Value Heavy Whipping Cream, 16 oz"
+ ],
+ "1/3 cup hoisin sauce": [
+  "hoisin sauce | 0.333 cup | Sauces & Condiments | Lee Kum Kee Hoisin Sauce, 20 oz"
+ ],
  "1/3 cup honey": [
   "honey | 0.333 cup | Sauces & Condiments | "
  ],
@@ -4524,6 +4737,9 @@
  ],
  "1/3 cup milk": [
   "milk | 0.333 cup | Dairy & Refrigerated | Great Value Whole Vitamin D Milk, 1 gal"
+ ],
+ "1/3 cup mini chocolate chips": [
+  "mini chocolate chips | 0.333 cup | Snacks & Nuts | Great Value Semi-Sweet Chocolate Chips, 12 oz"
  ],
  "1/3 cup olive oil": [
   "olive oil | 0.333 cup | Sauces & Condiments | "
@@ -4552,6 +4768,9 @@
  "1/3 cup ranch dressing": [
   "ranch dressing | 0.333 cup | Sauces & Condiments | Great Value Classic Ranch Dressing, 16 oz"
  ],
+ "1/3 cup rice vinegar": [
+  "rice vinegar | 0.333 cup | Sauces & Condiments | "
+ ],
  "1/3 cup sliced almonds": [
   "almonds | 0.333 cup | Snacks & Nuts | Great Value Sliced Almonds, 16 oz"
  ],
@@ -4560,6 +4779,15 @@
  ],
  "1/3 cup sun-dried tomatoes, chopped": [
   "sun-dried tomatoes | 0.333 cup | Spices & Baking | California Sun Dry Sun-Dried Tomatoes in Oil, 8 oz"
+ ],
+ "1/3 cup sweet chili sauce": [
+  "sweet chili sauce | 0.333 cup | Sauces & Condiments | Great Value Thai Style Sweet Chili Sauce, 13.25 oz"
+ ],
+ "1/3 cup unsweetened cocoa powder": [
+  "unsweetened cocoa powder | 0.333 cup | Spices & Baking | "
+ ],
+ "1/3 cup water": [
+  "water | 0.333 cup | Pantry & Canned | "
  ],
  "1/3 cup yellow mustard": [
   "yellow mustard | 0.333 cup | Sauces & Condiments | "
@@ -4648,6 +4876,9 @@
  "1/4 cup butter or margarine": [
   "butter | 0.25 cup | Dairy & Refrigerated | Great Value Salted Butter, 16 oz (4 sticks)"
  ],
+ "1/4 cup butter, melted": [
+  "butter | 0.25 cup | Dairy & Refrigerated | Great Value Salted Butter, 16 oz (4 sticks)"
+ ],
  "1/4 cup cashews": [
   "cashews | 0.25 cup | Snacks & Nuts | Great Value Roasted Salted Cashews, 14 oz"
  ],
@@ -4666,6 +4897,9 @@
  "1/4 cup chopped fresh cilantro, for serving": [
   "cilantro | 0.25 cup | Produce | Fresh Cilantro, 1 bunch"
  ],
+ "1/4 cup chopped fresh parsley": [
+  "parsley | 0.25 cup | Produce | Fresh Curly Parsley, 1 bunch"
+ ],
  "1/4 cup chopped fresh parsley, basil or a combination": [
   "parsley | 0.25 cup | Produce | Fresh Curly Parsley, 1 bunch"
  ],
@@ -4675,8 +4909,14 @@
  "1/4 cup corn": [
   "corn | 0.25 cup | Pantry & Canned | Great Value Frozen Whole Kernel Corn, 12 oz"
  ],
+ "1/4 cup cornstarch": [
+  "cornstarch | 0.25 cup | Spices & Baking | "
+ ],
  "1/4 cup cottage cheese": [
   "cottage cheese | 0.25 cup | Dairy & Refrigerated | Great Value Small Curd Cottage Cheese 4%, 24 oz"
+ ],
+ "1/4 cup creamy peanut butter": [
+  "creamy peanut butter | 0.25 cup | Pantry & Canned | Great Value Creamy Peanut Butter (No Stir), 16 oz"
  ],
  "1/4 cup crumbled feta": [
   "crumbled feta | 0.25 cup | Dairy & Refrigerated | President Crumbled Feta, 6 oz"
@@ -4717,6 +4957,9 @@
  "1/4 cup flour": [
   "flour | 0.25 cup | Spices & Baking | "
  ],
+ "1/4 cup fresh basil leaves": [
+  "basil leaves | 0.25 cup | Produce | Fresh Basil, 0.5 oz clamshell"
+ ],
  "1/4 cup fresh basil leaves, finely chopped, plus whole leaves for serving": [
   "basil leaves | 0.25 cup | Produce | Fresh Basil, 0.5 oz clamshell"
  ],
@@ -4741,6 +4984,9 @@
  "1/4 cup good olive oil": [
   "olive oil | 0.25 cup | Sauces & Condiments | "
  ],
+ "1/4 cup granola": [
+  "granola | 0.25 cup | Snacks & Nuts | "
+ ],
  "1/4 cup grated Parmesan": [
   "parmesan | 0.25 cup | Dairy & Refrigerated | Great Value Grated Parmesan, 8 oz"
  ],
@@ -4756,6 +5002,9 @@
  "1/4 cup honey": [
   "honey | 0.25 cup | Sauces & Condiments | "
  ],
+ "1/4 cup honey mustard, for dipping": [
+  "honey mustard | 0.25 cup | Sauces & Condiments | Great Value Honey Mustard Dressing, 16 fl oz"
+ ],
  "1/4 cup jalapeno garlic seasoning": [
   "jalapeno garlic seasoning | 0.25 cup | Spices & Baking | Heath Riles Garlic Jalapeño Seasoning, 12 oz"
  ],
@@ -4765,8 +5014,14 @@
  "1/4 cup ketchup": [
   "ketchup | 0.25 cup | Sauces & Condiments | "
  ],
+ "1/4 cup ketchup, for dipping": [
+  "ketchup | 0.25 cup | Sauces & Condiments | "
+ ],
  "1/4 cup low-sodium soy sauce": [
   "low-sodium soy sauce | 0.25 cup | Sauces & Condiments | "
+ ],
+ "1/4 cup maple syrup": [
+  "maple syrup | 0.25 cup | Sauces & Condiments | Great Value Original Syrup, 24 fl oz"
  ],
  "1/4 cup mayo": [
   "mayo | 0.25 cup | Sauces & Condiments | "
@@ -4828,6 +5083,9 @@
  "1/4 cup rice vinegar": [
   "rice vinegar | 0.25 cup | Sauces & Condiments | "
  ],
+ "1/4 cup salsa verde": [
+  "salsa verde | 0.25 cup | Sauces & Condiments | Great Value Salsa Verde, 16 oz"
+ ],
  "1/4 cup shaved parmesan cheese": [
   "shaved parmesan cheese | 0.25 cup | Dairy & Refrigerated | Great Value Grated Parmesan, 8 oz"
  ],
@@ -4848,6 +5106,9 @@
  ],
  "1/4 cup spicy mustard": [
   "spicy mustard | 0.25 cup | Sauces & Condiments | "
+ ],
+ "1/4 cup steak sauce": [
+  "steak sauce | 0.25 cup | Sauces & Condiments | "
  ],
  "1/4 cup store-bought basil pesto": [
   "basil pesto | 0.25 cup | Produce | Great Value Traditional Basil Pesto, 6.7 oz"
@@ -5020,6 +5281,9 @@
  "1/8 tsp black pepper": [
   "black pepper | 0.125 tsp | Spices & Baking | "
  ],
+ "1/8 tsp salt": [
+  "salt | 0.125 tsp | Spices & Baking | "
+ ],
  "10 flour tortillas (8-inch)": [
   "flour tortillas | 10 | Bakery | Great Value Medium Flour Tortillas, 16 oz, 10 ct"
  ],
@@ -5068,6 +5332,9 @@
  "10 slices Swiss cheese (.75 lbs)": [
   "swiss cheese | 10 slice | Dairy & Refrigerated | Great Value Thin Sliced Swiss, 8 oz"
  ],
+ "10 slices bacon, chopped": [
+  "bacon | 10 slice | Meat & Deli | Great Value Hickory Smoked Bacon, 16 oz"
+ ],
  "10 slices of provolone (1/2lb)": [
   "provolone | 10 slice | Dairy & Refrigerated | Great Value Sliced Provolone, 8 oz"
  ],
@@ -5113,6 +5380,9 @@
  "113 grams unsalted butter melted, 1/2 cup": [
   "unsalted butter | 113 g | Dairy & Refrigerated | Great Value Salted Butter, 16 oz (4 sticks)"
  ],
+ "12 English muffins, split": [
+  "english muffins | 12 | Bakery | Great Value English Muffins, 6 ct"
+ ],
  "12 Hawaiian sweet rolls": [
   "hawaiian sweet rolls | 12 | Bakery | King's Hawaiian Original Sweet Rolls, 12 ct"
  ],
@@ -5140,8 +5410,14 @@
  "12 eggs": [
   "eggs | 12 | Dairy & Refrigerated | Great Value Large White Eggs, 12 ct"
  ],
- "12 hard taco shells or small flour tortillas": [
-  "hard taco shells tortillas | 12 | Bakery | Great Value Medium Flour Tortillas, 16 oz, 10 ct"
+ "12 flour tortillas, warmed": [
+  "flour tortillas | 12 | Bakery | Great Value Medium Flour Tortillas, 16 oz, 10 ct"
+ ],
+ "12 hard taco shells": [
+  "hard taco shells | 12 | Pasta, Rice & Grains | "
+ ],
+ "12 large eggs": [
+  "eggs | 12 | Dairy & Refrigerated | Great Value Large White Eggs, 12 ct"
  ],
  "12 lasagna noodles": [
   "lasagna noodles | 12 | Pasta, Rice & Grains | Great Value Lasagna Noodles, 16 oz"
@@ -5245,19 +5521,13 @@
  "12 oz deli turkey": [
   "deli turkey | 12 oz | Meat & Deli | Great Value Oven Roasted Turkey Breast Lunchmeat, 16 oz"
  ],
- "12 oz egg noodles or mashed potatoes for serving": [
-  "egg noodles serving | 12 oz | Pasta, Rice & Grains | Great Value Wide Egg Noodles, 16 oz"
- ],
  "12 oz frozen cauliflower, microwaved according to package": [
   "frozen cauliflower | 12 oz | Frozen | Great Value Frozen Cauliflower, 12 oz"
- ],
- "12 oz fully cooked chicken sausage, sliced": [
-  "chicken sausage | 12 oz | Meat & Deli | Aidells Chicken & Apple Smoked Chicken Sausage, 12 oz"
  ],
  "12 oz linguine pasta": [
   "linguine pasta | 12 oz | Pasta, Rice & Grains | Great Value Spaghetti, 16 oz"
  ],
- "12 oz lo mein noodles or spaghetti": [
+ "12 oz lo mein noodles": [
   "lo mein noodles | 12 oz | Pasta, Rice & Grains | Simply Asia Lo Mein Noodles, 14 oz"
  ],
  "12 oz pasta (penne, rigatoni, or gluten-free of choice)": [
@@ -5278,6 +5548,9 @@
  "12 oz rotini pasta": [
   "rotini pasta | 12 oz | Pasta, Rice & Grains | Great Value Rotini, 16 oz"
  ],
+ "12 oz sliced deli ham": [
+  "deli ham | 12 oz | Meat & Deli | Great Value Thin Sliced Honey Ham, 16 oz"
+ ],
  "12 oz spaghetti": [
   "spaghetti | 12 oz | Pasta, Rice & Grains | Great Value Spaghetti, 16 oz"
  ],
@@ -5293,6 +5566,9 @@
  "12 oz. sweet Italian sausage, casings removed": [
   "italian sausage | 12 oz | Meat & Deli | Marketside Mild Ground Italian Sausage, 1 lb"
  ],
+ "12 slices American cheese": [
+  "american cheese | 12 slice | Dairy & Refrigerated | Great Value American Singles, 16 slices"
+ ],
  "12 slices Swiss cheese": [
   "swiss cheese | 12 slice | Dairy & Refrigerated | Great Value Thin Sliced Swiss, 8 oz"
  ],
@@ -5305,14 +5581,8 @@
  "12 slices salami (1/4 lb)": [
   "salami | 12 slice | Meat & Deli | Prima Della Genoa Salami, deli sliced (0.5 lb)"
  ],
- "12 slider buns or 8 brioche buns": [
-  "slider buns | 12 | Bakery | King's Hawaiian Original Sweet Rolls, 12 ct"
- ],
- "12 small corn or flour tortillas": [
-  "corn tortillas | 12 | Bakery | Great Value White Corn Tortillas, 30 ct"
- ],
- "12 small flour or corn tortillas": [
-  "flour tortillas | 12 | Bakery | Great Value Medium Flour Tortillas, 16 oz, 10 ct"
+ "12 slices whole wheat bread": [
+  "wheat bread | 12 slice | Bakery | Great Value White Sandwich Bread, 20 oz"
  ],
  "12 small flour tortillas": [
   "flour tortillas | 12 | Bakery | Great Value Medium Flour Tortillas, 16 oz, 10 ct"
@@ -5331,9 +5601,6 @@
  ],
  "12 to 14 ounces brie cheese, rind removed, cut into small cubes": [
   "brie cheese | 14 oz | Dairy & Refrigerated | President Brie, 8 oz"
- ],
- "12 to 15 ice cream sandwiches": [
-  "ice cream sandwiches | 15 | Pantry & Canned | Great Value Vanilla Ice Cream Sandwiches, 12 ct"
  ],
  "12 whole New Potatoes (or Other Small Round Potatoes)": [
   "new potatoes | 12 | Produce | Fresh Yellow Potatoes, 3 lb bag"
@@ -5367,6 +5634,9 @@
  ],
  "15 grams whole milk 1 .5 Tablespoons": [
   "milk | 15 g | Dairy & Refrigerated | Great Value Whole Vitamin D Milk, 1 gal"
+ ],
+ "15 ice cream sandwiches": [
+  "ice cream sandwiches | 15 | Pantry & Canned | Great Value Vanilla Ice Cream Sandwiches, 12 ct"
  ],
  "15 oz can Black Beans, drained and rinsed": [
   "black beans | 15 oz | Pantry & Canned | Great Value Black Beans, 15 oz can"
@@ -5428,14 +5698,17 @@
  "16 slices center-cut bacon, cut into 1/2-inch thick pieces": [
   "center-cut bacon | 16 slice | Meat & Deli | Great Value Hickory Smoked Bacon, 16 oz"
  ],
+ "16 slices provolone cheese": [
+  "provolone cheese | 16 slice | Dairy & Refrigerated | Great Value Sliced Provolone, 8 oz"
+ ],
  "16 slices white sandwich bread, crusts removed": [
   "white sandwich bread | 16 slice | Bakery | Great Value White Sandwich Bread, 20 oz"
  ],
  "16 slider buns or mini potato rolls (regular buns work better)": [
   "slider buns rolls | 16 | Bakery | King's Hawaiian Original Sweet Rolls, 12 ct"
  ],
- "16 small corn or flour tortillas": [
-  "corn tortillas | 16 | Bakery | Great Value White Corn Tortillas, 30 ct"
+ "16 small flour tortillas": [
+  "flour tortillas | 16 | Bakery | Great Value Medium Flour Tortillas, 16 oz, 10 ct"
  ],
  "16 tablespoons cold unsalted butter, 2 sticks or 227 grams": [
   "unsalted butter | 16 tbsp | Dairy & Refrigerated | Great Value Salted Butter, 16 oz (4 sticks)"
@@ -5599,6 +5872,9 @@
  "2 1/2 lb boneless skinless chicken thighs": [
   "chicken thighs | 2.5 lb | Meat & Deli | Freshness Guaranteed Boneless Skinless Chicken Thighs (tray)"
  ],
+ "2 1/2 lb russet potatoes, sliced 1/8 inch thick": [
+  "russet potatoes | 2.5 lb | Produce | Fresh Idaho Russet Potatoes, 5 lb bag"
+ ],
  "2 1/2 teaspoons Cajun seasoning": [
   "cajun seasoning | 2.5 tsp | Spices & Baking | "
  ],
@@ -5610,6 +5886,9 @@
  ],
  "2 1/4 cups chicken broth": [
   "chicken broth | 2.25 cup | Pantry & Canned | Great Value Chicken Broth, 32 oz"
+ ],
+ "2 1/4 cups milk": [
+  "milk | 2.25 cup | Dairy & Refrigerated | Great Value Whole Vitamin D Milk, 1 gal"
  ],
  "2 14.5 oz cans low-sodium chicken broth": [
   "low-sodium chicken broth | 2 can | Pantry & Canned | Great Value Chicken Broth, 32 oz"
@@ -5902,6 +6181,9 @@
  "2 carrots, chopped": [
   "carrots | 2 | Produce | Fresh Baby Peeled Carrots, 1 lb bag"
  ],
+ "2 carrots, cut into chunks": [
+  "carrots | 2 | Produce | Fresh Baby Peeled Carrots, 1 lb bag"
+ ],
  "2 carrots, diced": [
   "carrots | 2 | Produce | Fresh Baby Peeled Carrots, 1 lb bag"
  ],
@@ -6004,6 +6286,9 @@
  "2 cups baby spinach - roughly chopped": [
   "baby spinach | 2 cup | Produce | Marketside Fresh Spinach, 10 oz"
  ],
+ "2 cups baby spinach, chopped": [
+  "baby spinach | 2 cup | Produce | Marketside Fresh Spinach, 10 oz"
+ ],
  "2 cups basil leaves": [
   "basil leaves | 2 cup | Produce | Fresh Basil, 0.5 oz clamshell"
  ],
@@ -6018,9 +6303,6 @@
  ],
  "2 cups broccoli florets": [
   "broccoli florets | 2 cup | Produce | Fresh Broccoli Crowns, each"
- ],
- "2 cups brown rice": [
-  "brown rice | 2 cup | Pasta, Rice & Grains | Great Value Natural Brown Long Grain Rice, 32 oz"
  ],
  "2 cups buttermilk": [
   "buttermilk | 2 cup | Dairy & Refrigerated | "
@@ -6042,9 +6324,6 @@
  ],
  "2 cups chopped cauliflower": [
   "cauliflower | 2 cup | Produce | Fresh Cauliflower, each"
- ],
- "2 cups chopped frozen spinach, thawed and squeezed dry": [
-  "frozen spinach | 2 cup | Frozen | Great Value Chopped Spinach, 12 oz (frozen)"
  ],
  "2 cups chopped romaine lettuce": [
   "romaine lettuce | 2 cup | Produce | Fresh Romaine Hearts, 3 ct"
@@ -6085,8 +6364,11 @@
  "2 cups cooked white rice": [
   "white rice | 2 cup | Pasta, Rice & Grains | Great Value Long Grain White Rice, 2 lb"
  ],
- "2 cups cornflakes, crushed": [
-  "cornflakes | 2 cup | Pantry & Canned | Great Value Toasted Corn Flakes, 18 oz"
+ "2 cups cottage cheese": [
+  "cottage cheese | 2 cup | Dairy & Refrigerated | Great Value Small Curd Cottage Cheese 4%, 24 oz"
+ ],
+ "2 cups deli coleslaw, for topping": [
+  "deli coleslaw | 2 cup | Produce | Marketside Tri-Color Cole Slaw, 16 oz"
  ],
  "2 cups diced ham": [
   "ham | 2 cup | Meat & Deli | Great Value Thin Sliced Honey Ham, 16 oz"
@@ -6121,10 +6403,10 @@
  "2 cups frozen peas and carrots": [
   "frozen peas and carrots | 2 cup | Frozen | Great Value Frozen Peas & Carrots, 12 oz"
  ],
- "2 cups green beans": [
-  "green beans | 2 cup | Produce | Marketside Fresh Green Beans, 12 oz"
+ "2 cups frozen shredded hash browns": [
+  "frozen shredded hash browns | 2 cup | Frozen | Great Value Shredded Hash Browns, 26 oz"
  ],
- "2 cups green beans or broccoli": [
+ "2 cups green beans": [
   "green beans | 2 cup | Produce | Marketside Fresh Green Beans, 12 oz"
  ],
  "2 cups half and half (or more if you want it saucier)": [
@@ -6144,6 +6426,9 @@
  ],
  "2 cups hot milk": [
   "hot milk | 2 cup | Dairy & Refrigerated | Great Value Whole Vitamin D Milk, 1 gal"
+ ],
+ "2 cups instant brown rice": [
+  "instant brown rice | 2 cup | Pasta, Rice & Grains | Great Value Natural Brown Long Grain Rice, 32 oz"
  ],
  "2 cups jasmine rice": [
   "jasmine rice | 2 cup | Pasta, Rice & Grains | Great Value Jasmine Rice, 2 lb"
@@ -6180,6 +6465,9 @@
  ],
  "2 cups milk of choice (I used 2%)": [
   "milk of choice | 2 cup | Dairy & Refrigerated | Great Value Whole Vitamin D Milk, 1 gal"
+ ],
+ "2 cups mixed berries": [
+  "mixed berries | 2 cup | Produce | "
  ],
  "2 cups mozzarella cheese shredded": [
   "mozzarella cheese shredded | 2 cup | Dairy & Refrigerated | Great Value Shredded Mozzarella, 16 oz"
@@ -6241,9 +6529,6 @@
  "2 cups shredded cabbage": [
   "cabbage | 2 cup | Produce | Fresh Green Cabbage, each"
  ],
- "2 cups shredded cabbage or lettuce": [
-  "cabbage | 2 cup | Produce | Fresh Green Cabbage, each"
- ],
  "2 cups shredded cheddar cheese": [
   "cheddar cheese | 2 cup | Dairy & Refrigerated | Great Value Finely Shredded Sharp Cheddar, 8 oz"
  ],
@@ -6280,18 +6565,12 @@
  "2 cups shredded rotisserie chicken": [
   "rotisserie chicken | 2 cup | Meat & Deli | Freshness Guaranteed Rotisserie Chicken (chilled)"
  ],
- "2 cups shredded rotisserie chicken (optional)": [
-  "rotisserie chicken | 2 cup | Meat & Deli | Freshness Guaranteed Rotisserie Chicken (chilled)"
- ],
  "2 cups shredded rotisserie chicken (skin and bones discarded)": [
   "rotisserie chicken | 2 cup | Meat & Deli | Freshness Guaranteed Rotisserie Chicken (chilled)"
  ],
  "2 cups shredded rotisserie chicken (white and dark meat- seasoned) **or 4 chicken thighs (air fried and seasoned)**": [],
  "2 cups shredded rotisserie chicken breast, skin removed": [
   "rotisserie chicken breast | 2 cup | Meat & Deli | Freshness Guaranteed Rotisserie Chicken (chilled)"
- ],
- "2 cups shredded rotisserie chicken or leftover chili": [
-  "rotisserie chicken | 2 cup | Meat & Deli | Freshness Guaranteed Rotisserie Chicken (chilled)"
  ],
  "2 cups shredded rotisserie chicken, skin removed (about 10 ounces)": [
   "rotisserie chicken | 2 cup | Meat & Deli | Freshness Guaranteed Rotisserie Chicken (chilled)"
@@ -6398,6 +6677,9 @@
  "2 green tomatoes, sliced 1/4-inch thick or 1 green apple": [
   "green tomatoes | 2 | Produce | "
  ],
+ "2 hamburger buns, cut into cubes": [
+  "hamburger buns | 2 | Bakery | Great Value Hamburger Buns, 8 ct"
+ ],
  "2 heads baby bok choy, chopped": [
   "baby bok choy | 2 head | Produce | Fresh Baby Bok Choy, 1 bunch"
  ],
@@ -6488,38 +6770,65 @@
  "2 lb boneless skinless chicken breasts": [
   "chicken breasts | 2 lb | Meat & Deli | Great Value Boneless Skinless Chicken Breasts, 5 lb (frozen)"
  ],
- "2 lb boneless skinless chicken breasts or thighs": [
-  "chicken breasts | 2 lb | Meat & Deli | Great Value Boneless Skinless Chicken Breasts, 5 lb (frozen)"
- ],
  "2 lb boneless skinless chicken thighs": [
+  "chicken thighs | 2 lb | Meat & Deli | Freshness Guaranteed Boneless Skinless Chicken Thighs (tray)"
+ ],
+ "2 lb boneless skinless chicken thighs, thinly sliced": [
   "chicken thighs | 2 lb | Meat & Deli | Freshness Guaranteed Boneless Skinless Chicken Thighs (tray)"
  ],
  "2 lb chicken breasts, pounded even": [
   "chicken breasts | 2 lb | Meat & Deli | Great Value Boneless Skinless Chicken Breasts, 5 lb (frozen)"
  ],
- "2 lb flank or skirt steak": [
-  "flank steak | 2 lb | Meat & Deli | Choice Angus Flank Steak, 1 per tray"
+ "2 lb cube steak": [
+  "cube steak | 2 lb | Meat & Deli | Beef Cubed Steak, 0.65-1.15 lb"
  ],
- "2 lb green beans, trimmed and cut, or 4 cans (14.5 oz) cut green beans, drained": [
-  "green beans | 2 lb | Produce | Marketside Fresh Green Beans, 12 oz"
+ "2 lb flank steak": [
+  "flank steak | 2 lb | Meat & Deli | Choice Angus Flank Steak, 1 per tray"
  ],
  "2 lb ground beef": [
   "ground beef | 2 lb | Meat & Deli | 80/20 Ground Beef Chuck, 1 lb roll"
  ],
+ "2 lb ground beef (85/15)": [
+  "ground beef | 2 lb | Meat & Deli | 80/20 Ground Beef Chuck, 1 lb roll"
+ ],
+ "2 lb ground turkey (93/7)": [
+  "ground turkey | 2 lb | Meat & Deli | Shady Brook Farms 93/7 Ground Turkey, 1 lb tray"
+ ],
  "2 lb kielbasa, sliced": [
   "kielbasa | 2 lb | Meat & Deli | Hillshire Farm Polska Kielbasa, 14 oz"
  ],
- "2 lb russet potatoes, thinly sliced": [
-  "russet potatoes | 2 lb | Produce | Fresh Idaho Russet Potatoes, 5 lb bag"
+ "2 lb lean ground beef (90/10)": [
+  "ground beef | 2 lb | Meat & Deli | 80/20 Ground Beef Chuck, 1 lb roll"
+ ],
+ "2 lb pork tenderloin, cut into 1-inch cubes": [
+  "pork tenderloin | 2 lb | Meat & Deli | Smithfield All Natural Pork Tenderloin, 2 ct"
+ ],
+ "2 lb shaved beef steak": [
+  "shaved beef steak | 2 lb | Meat & Deli | Gary's QuickSteak Thin Sirloin, 10.8 oz (frozen)"
+ ],
+ "2 lb sirloin steak": [
+  "sirloin steak | 2 lb | Meat & Deli | Choice Angus Top Sirloin Steak, 1 per tray"
  ],
  "2 lb sirloin steak tips": [
   "sirloin steak tips | 2 lb | Meat & Deli | Choice Angus Top Sirloin Steak, 1 per tray"
  ],
+ "2 lb sirloin steak, cut into 1-inch cubes": [
+  "sirloin steak | 2 lb | Meat & Deli | Choice Angus Top Sirloin Steak, 1 per tray"
+ ],
+ "2 lb skirt steak": [
+  "skirt steak | 2 lb | Meat & Deli | Beef Inside Skirt Steak, 1 per tray"
+ ],
  "2 lb store-bought pizza dough": [
-  "pizza dough | 2 lb | Dairy & Refrigerated | Pillsbury Classic Pizza Crust, 13.8 oz"
+  "pizza dough | 2 lb | Dairy & Refrigerated | Pizza Buddy Fresh Pizza Dough, 16 oz (bakery)"
  ],
  "2 lb sweet potatoes, peeled and cubed": [
   "sweet potatoes | 2 lb | Produce | Fresh Sweet Potato, each"
+ ],
+ "2 lb thin-cut boneless pork chops": [
+  "thin-cut boneless pork chops | 2 lb | Meat & Deli | Pork Center Cut Loin Chops, Boneless, Family Pack"
+ ],
+ "2 lb turkey tenderloins": [
+  "turkey tenderloins | 2 lb | Meat & Deli | "
  ],
  "2 lb. chuck roast, trimmed and cut into thick slices": [
   "chuck roast | 2 lb | Meat & Deli | Choice Angus Chuck Roast, 2.25-3.38 lb"
@@ -6551,11 +6860,17 @@
  "2 lbs. boneless skinless chicken breast, raw": [
   "chicken breast | 2 lb | Meat & Deli | Great Value Boneless Skinless Chicken Breasts, 5 lb (frozen)"
  ],
+ "2 lemons, cut into wedges": [
+  "lemons | 2 | Produce | Fresh Lemon, each"
+ ],
  "2 lemons, divided": [
   "lemons | 2 | Produce | Fresh Lemon, each"
  ],
  "2 lemons, juiced": [
   "lemons | 2 | Produce | Fresh Lemon, each"
+ ],
+ "2 limes, cut into wedges": [
+  "limes | 2 | Produce | Fresh Lime, each"
  ],
  "2 limes, juiced": [
   "limes | 2 | Produce | Fresh Lime, each"
@@ -6565,6 +6880,9 @@
  ],
  "2 loaves Cuban or French bread, cut into 6 pieces": [
   "cuban bread | 2 loaf | Bakery | Great Value White Sandwich Bread, 20 oz"
+ ],
+ "2 loaves French bread": [
+  "french bread | 2 loaf | Bakery | Freshness Guaranteed French Bread Loaf, 14 oz"
  ],
  "2 loaves sliced bread, white or sourdough": [
   "bread | 2 loaf | Bakery | Great Value White Sandwich Bread, 20 oz"
@@ -6620,14 +6938,23 @@
  "2 oz. extra sharp Cheddar, coarsely grated": [
   "extra sharp cheddar | 2 oz | Dairy & Refrigerated | Great Value Finely Shredded Sharp Cheddar, 8 oz"
  ],
+ "2 packages (12 oz) fully cooked chicken sausage, sliced": [
+  "chicken sausage | 2 package | Meat & Deli | Aidells Chicken & Apple Smoked Chicken Sausage, 12 oz"
+ ],
  "2 packages (16 oz) shelf-stable potato gnocchi": [
-  "shelf-stable potato gnocchi | 2 package | Dairy & Refrigerated | Fresh Yellow Potatoes, 3 lb bag"
+  "shelf-stable potato gnocchi | 2 package | Dairy & Refrigerated | Gia Russa Potato Gnocchi, 16 oz"
  ],
  "2 packages (20 oz) refrigerated cheese tortellini": [
   "refrigerated cheese tortellini | 2 package | Dairy & Refrigerated | Buitoni Mixed Cheese Tortellini, 20 oz"
  ],
  "2 packages (8 oz) cream cheese, softened": [
   "cream cheese | 2 package | Dairy & Refrigerated | Great Value Cream Cheese Brick, 8 oz"
+ ],
+ "2 packages (8 oz) reduced-fat cream cheese, softened": [
+  "reduced-fat cream cheese | 2 package | Dairy & Refrigerated | Great Value Cream Cheese Brick, 8 oz"
+ ],
+ "2 packages (9.6 oz) fully cooked turkey sausage links": [
+  "turkey sausage links | 2 package | Meat & Deli | Great Value Pork Sausage Links, 24 oz"
  ],
  "2 packages of little balls of soft, creamy Mozzarella cheese (Bocconchini)": [
   "soft | 2 package | Pantry & Canned | "
@@ -6727,6 +7054,9 @@
  ],
  "2 sprigs fresh thyme can sub 1/4 teaspoon dried thyme": [
   "thyme | 2 sprigs | Produce | Fresh Thyme, 0.5 oz clamshell"
+ ],
+ "2 stalks celery, cut into chunks": [
+  "celery | 2 stalk | Produce | Fresh Celery, 1 stalk"
  ],
  "2 stalks celery, diced": [
   "celery | 2 stalk | Produce | Fresh Celery, 1 stalk"
@@ -7004,11 +7334,11 @@
  "2 tbsp butter, softened": [
   "butter | 2 tbsp | Dairy & Refrigerated | Great Value Salted Butter, 16 oz (4 sticks)"
  ],
- "2 tbsp capers (optional)": [
-  "capers | 2 tbsp | Pantry & Canned | Great Value Capers, 3.5 oz"
- ],
  "2 tbsp cashews (optional)": [
   "cashews | 2 tbsp | Snacks & Nuts | Great Value Roasted Salted Cashews, 14 oz"
+ ],
+ "2 tbsp chopped fresh chives": [
+  "chives | 2 tbsp | Produce | Fresh Chives, 0.5 oz clamshell"
  ],
  "2 tbsp chopped fresh cilantro": [
   "cilantro | 2 tbsp | Produce | Fresh Cilantro, 1 bunch"
@@ -7022,6 +7352,12 @@
  "2 tbsp cornstarch": [
   "cornstarch | 2 tbsp | Spices & Baking | "
  ],
+ "2 tbsp cornstarch, divided": [
+  "cornstarch | 2 tbsp | Spices & Baking | "
+ ],
+ "2 tbsp dill pickle juice": [
+  "dill pickle juice | 2 tbsp | Sauces & Condiments | "
+ ],
  "2 tbsp favorite seasonkng blend": [
   "favorite seasonkng blend | 2 tbsp | Pantry & Canned | "
  ],
@@ -7033,6 +7369,9 @@
  ],
  "2 tbsp grated parmesan cheese": [
   "parmesan cheese | 2 tbsp | Dairy & Refrigerated | Great Value Grated Parmesan, 8 oz"
+ ],
+ "2 tbsp ground flaxseed": [
+  "ground flaxseed | 2 tbsp | Pantry & Canned | "
  ],
  "2 tbsp hoisin sauce": [
   "hoisin sauce | 2 tbsp | Sauces & Condiments | Lee Kum Kee Hoisin Sauce, 20 oz"
@@ -7073,9 +7412,6 @@
  "2 tbsp olive oil": [
   "olive oil | 2 tbsp | Sauces & Condiments | "
  ],
- "2 tbsp oyster sauce or hoisin sauce": [
-  "oyster sauce | 2 tbsp | Sauces & Condiments | "
- ],
  "2 tbsp ranch dressing": [
   "ranch dressing | 2 tbsp | Sauces & Condiments | Great Value Classic Ranch Dressing, 16 oz"
  ],
@@ -7097,6 +7433,9 @@
  "2 tbsp sugar": [
   "sugar | 2 tbsp | Spices & Baking | "
  ],
+ "2 tbsp sweet chili sauce": [
+  "sweet chili sauce | 2 tbsp | Sauces & Condiments | Great Value Thai Style Sweet Chili Sauce, 13.25 oz"
+ ],
  "2 tbsp tahini": [
   "tahini | 2 tbsp | Pantry & Canned | Ziyad Tahini, 16 oz"
  ],
@@ -7108,6 +7447,9 @@
  ],
  "2 tbsp unsalted butter (for brushing buns)": [
   "unsalted butter | 2 tbsp | Dairy & Refrigerated | Great Value Salted Butter, 16 oz (4 sticks)"
+ ],
+ "2 tbsp unsweetened cocoa powder": [
+  "unsweetened cocoa powder | 2 tbsp | Spices & Baking | "
  ],
  "2 tbsp vegetable oil": [
   "vegetable oil | 2 tbsp | Sauces & Condiments | "
@@ -7209,7 +7551,7 @@
   "thyme leaves | 2 tsp | Produce | Fresh Thyme, 0.5 oz clamshell"
  ],
  "2 teaspoons vanilla extract": [
-  "vanilla extract | 2 tsp | Spices & Baking | Great Value Vanilla Wafers, 11 oz"
+  "vanilla extract | 2 tsp | Spices & Baking | Great Value Pure Vanilla Extract, 2 fl oz"
  ],
  "2 teaspoons water": [
   "water | 2 tsp | Pantry & Canned | "
@@ -7298,6 +7640,9 @@
  "2 tsp onion powder": [
   "onion powder | 2 tsp | Spices & Baking | "
  ],
+ "2 tsp red pepper flakes": [
+  "red pepper flakes | 2 tsp | Spices & Baking | "
+ ],
  "2 tsp salt": [
   "salt | 2 tsp | Spices & Baking | "
  ],
@@ -7311,7 +7656,7 @@
   "sugar | 2 tsp | Spices & Baking | "
  ],
  "2 tsp vanilla extract": [
-  "vanilla extract | 2 tsp | Spices & Baking | Great Value Vanilla Wafers, 11 oz"
+  "vanilla extract | 2 tsp | Spices & Baking | Great Value Pure Vanilla Extract, 2 fl oz"
  ],
  "2 tsp white sugar": [
   "white sugar | 2 tsp | Spices & Baking | "
@@ -7349,10 +7694,16 @@
  "2 x 400gm tins of chopped peeled tomatoes": [
   "tomatoes | 2 can | Pantry & Canned | Fresh Roma Tomato, each"
  ],
+ "2 yellow onions, sliced": [
+  "yellow onions | 2 | Produce | Fresh Whole Yellow Onion, each"
+ ],
  "2 yellow onions, thinly sliced": [
   "yellow onions | 2 | Produce | Fresh Whole Yellow Onion, each"
  ],
  "2 zucchini, cut in half moons": [
+  "zucchini | 2 | Produce | Fresh Zucchini, each"
+ ],
+ "2 zucchini, cut into half moons": [
   "zucchini | 2 | Produce | Fresh Zucchini, each"
  ],
  "2 zucchini, diced": [
@@ -7427,8 +7778,17 @@
  "2/3 cup low-sodium chicken broth": [
   "low-sodium chicken broth | 0.667 cup | Pantry & Canned | Great Value Chicken Broth, 32 oz"
  ],
+ "2/3 cup low-sodium soy sauce": [
+  "low-sodium soy sauce | 0.667 cup | Sauces & Condiments | "
+ ],
  "2/3 cup milk": [
   "milk | 0.667 cup | Dairy & Refrigerated | Great Value Whole Vitamin D Milk, 1 gal"
+ ],
+ "2/3 cup panko breadcrumbs": [
+  "panko breadcrumbs | 0.667 cup | Spices & Baking | Great Value Plain Panko Bread Crumbs, 8 oz"
+ ],
+ "2/3 cup sugar": [
+  "sugar | 0.667 cup | Spices & Baking | "
  ],
  "2/3 cup teriyaki sauce": [
   "teriyaki sauce | 0.667 cup | Sauces & Condiments | Great Value Teriyaki Sauce, 15 fl oz"
@@ -7456,6 +7816,9 @@
  ],
  "230 grams brown sugar about 1 cup packed": [
   "brown sugar | 230 g | Spices & Baking | "
+ ],
+ "24 Hawaiian sweet rolls": [
+  "hawaiian sweet rolls | 24 | Bakery | King's Hawaiian Original Sweet Rolls, 12 ct"
  ],
  "24 frozen Italian meatballs": [
   "frozen italian meatballs | 24 | Frozen | Great Value Homestyle Meatballs, 32 oz (frozen)"
@@ -7607,6 +7970,9 @@
  "3 c. packed baby spinach": [
   "baby spinach | 3 cup | Produce | Marketside Fresh Spinach, 10 oz"
  ],
+ "3 cans (15 oz) great northern beans, drained and rinsed": [
+  "great northern beans | 3 can | Pantry & Canned | Great Value Great Northern Beans, 15.5 oz can"
+ ],
  "3 carrots, diced": [
   "carrots | 3 | Produce | Fresh Baby Peeled Carrots, 1 lb bag"
  ],
@@ -7748,6 +8114,9 @@
  "3 cups diced rotisserie chicken": [
   "rotisserie chicken | 3 cup | Meat & Deli | Freshness Guaranteed Rotisserie Chicken (chilled)"
  ],
+ "3 cups frozen diced hash brown potatoes": [
+  "frozen hash brown potatoes | 3 cup | Frozen | Great Value Shredded Hash Browns, 26 oz"
+ ],
  "3 cups grated mozzarella cheese": [
   "mozzarella cheese | 3 cup | Dairy & Refrigerated | Great Value Shredded Mozzarella, 16 oz"
  ],
@@ -7768,6 +8137,12 @@
  ],
  "3 cups mixed baby greens, slightly packed": [
   "mixed baby greens | 3 cup | Produce | Marketside Spring Mix, 5 oz"
+ ],
+ "3 cups pancake mix": [
+  "pancake mix | 3 cup | Pantry & Canned | Great Value Pancake & Waffle Mix, 32 oz"
+ ],
+ "3 cups plain Greek yogurt": [
+  "plain greek yogurt | 3 cup | Dairy & Refrigerated | Great Value Plain Nonfat Greek Yogurt, 32 oz"
  ],
  "3 cups rotisserie chicken": [
   "rotisserie chicken | 3 cup | Meat & Deli | Freshness Guaranteed Rotisserie Chicken (chilled)"
@@ -7874,6 +8249,12 @@
  "3 lb beef chuck roast, cut into 1 1/2-inch pieces": [
   "beef chuck roast | 3 lb | Meat & Deli | Choice Angus Chuck Roast, 2.25-3.38 lb"
  ],
+ "3 lb beef chuck roast, cut into 2-inch chunks": [
+  "beef chuck roast | 3 lb | Meat & Deli | Choice Angus Chuck Roast, 2.25-3.38 lb"
+ ],
+ "3 lb beef chuck roast, cut into 3 chunks": [
+  "beef chuck roast | 3 lb | Meat & Deli | Choice Angus Chuck Roast, 2.25-3.38 lb"
+ ],
  "3 lb boneless pork loin": [
   "pork loin | 3 lb | Meat & Deli | Tyson Boneless Pork Loin Roast"
  ],
@@ -7887,9 +8268,6 @@
   "pork shoulder | 3 lb | Meat & Deli | Smithfield Boneless Pork Shoulder Butt Roast"
  ],
  "3 lb pork shoulder, cut into chunks": [
-  "pork shoulder | 3 lb | Meat & Deli | Smithfield Boneless Pork Shoulder Butt Roast"
- ],
- "3 lb pork shoulder, cut into large chunks": [
   "pork shoulder | 3 lb | Meat & Deli | Smithfield Boneless Pork Shoulder Butt Roast"
  ],
  "3 lb sweet potatoes": [
@@ -7931,9 +8309,6 @@
  "3 oz. rice noodles": [
   "rice noodles | 3 oz | Pasta, Rice & Grains | Thai Kitchen Stir Fry Rice Noodles, 14 oz"
  ],
- "3 packs (5 oz) yakisoba noodles or ramen noodles": [
-  "packs yakisoba noodles | 3 | Pasta, Rice & Grains | Maruchan Yakisoba, 4 oz"
- ],
  "3 pounds pork shoulder (Boston butt)": [
   "pork shoulder | 3 lb | Meat & Deli | Smithfield Boneless Pork Shoulder Butt Roast"
  ],
@@ -7942,6 +8317,9 @@
  ],
  "3 qts beef bouillion (or homemade veggie broth- see recipe)": [
   "beef bouillion | 3 qts | Meat & Deli | "
+ ],
+ "3 ripe bananas, mashed": [
+  "ripe bananas | 3 | Produce | Fresh Banana, each (bunch of 6)"
  ],
  "3 scallions, sliced thin on bias": [
   "scallions | 3 | Produce | Fresh Green Onions, 1 bunch"
@@ -8117,6 +8495,9 @@
  "3 tbsp pesto (mild, basil-based)": [
   "pesto | 3 tbsp | Sauces & Condiments | Great Value Traditional Basil Pesto, 6.7 oz"
  ],
+ "3 tbsp red wine vinegar": [
+  "red wine vinegar | 3 tbsp | Sauces & Condiments | "
+ ],
  "3 tbsp red wine vinegar (or substitute 2 tbsp lemon juice for brighter citrus)": [
   "red wine vinegar | 3 tbsp | Sauces & Condiments | "
  ],
@@ -8198,12 +8579,6 @@
  "3/4 cup Italian dressing": [
   "italian dressing | 0.75 cup | Sauces & Condiments | Olive Garden Light Italian Dressing, 16 fl oz"
  ],
- "3/4 cup Marsala wine or chicken broth": [
-  "marsala wine broth | 0.75 cup | Pantry & Canned | "
- ],
- "3/4 cup acini di pepe or ditalini pasta": [
-  "acini di pepe | 0.75 cup | Pasta, Rice & Grains | Great Value Elbow Macaroni, 16 oz"
- ],
  "3/4 cup all-purpose flour": [
   "all-purpose flour | 0.75 cup | Spices & Baking | "
  ],
@@ -8222,11 +8597,17 @@
  "3/4 cup chicken broth": [
   "chicken broth | 0.75 cup | Pantry & Canned | Great Value Chicken Broth, 32 oz"
  ],
- "3/4 cup chopped pecans (or 2 cups mini marshmallows)": [
+ "3/4 cup chopped pecans": [
   "pecans | 0.75 cup | Snacks & Nuts | Great Value Chopped Pecans, 4 oz"
  ],
  "3/4 cup crumbled feta cheese": [
   "crumbled feta cheese | 0.75 cup | Dairy & Refrigerated | President Crumbled Feta, 6 oz"
+ ],
+ "3/4 cup ditalini pasta": [
+  "ditalini pasta | 0.75 cup | Pasta, Rice & Grains | Great Value Elbow Macaroni, 16 oz"
+ ],
+ "3/4 cup dry Marsala wine": [
+  "dry marsala wine | 0.75 cup | Pantry & Canned | "
  ],
  "3/4 cup franks red hot": [
   "franks red hot | 0.75 cup | Pantry & Canned | Frank's RedHot Original, 12 fl oz"
@@ -8263,6 +8644,9 @@
  ],
  "3/4 cup pizza sauce": [
   "pizza sauce | 0.75 cup | Sauces & Condiments | Great Value Pizza Sauce, 14 oz"
+ ],
+ "3/4 cup plain Greek yogurt": [
+  "plain greek yogurt | 0.75 cup | Dairy & Refrigerated | Great Value Plain Nonfat Greek Yogurt, 32 oz"
  ],
  "3/4 cup ranch dressing": [
   "ranch dressing | 0.75 cup | Sauces & Condiments | Great Value Classic Ranch Dressing, 16 oz"
@@ -8429,9 +8813,6 @@
  "4 ancho chiles (or use 4 guajillo or New Mexico chiles for a milder flavor), seeds removed": [
   "ancho chiles | 4 | Pantry & Canned | Dried Ancho Chiles, 4 oz"
  ],
- "4 anchovy fillets, rinsed, patted dry, and minced to paste": [
-  "anchovy fillets | 4 | Pantry & Canned | "
- ],
  "4 bananas, sliced": [
   "bananas | 4 | Produce | Fresh Banana, each (bunch of 6)"
  ],
@@ -8476,6 +8857,9 @@
  ],
  "4 c. baby spinach": [
   "baby spinach | 4 cup | Produce | Marketside Fresh Spinach, 10 oz"
+ ],
+ "4 cans (14.5 oz) cut green beans, drained": [
+  "cut green beans | 4 can | Pantry & Canned | Marketside Fresh Green Beans, 12 oz"
  ],
  "4 carrots, chopped": [
   "carrots | 4 | Produce | Fresh Baby Peeled Carrots, 1 lb bag"
@@ -8557,6 +8941,9 @@
  ],
  "4 cups chopped cooked corned beef": [
   "corned beef | 4 cup | Meat & Deli | "
+ ],
+ "4 cups chopped romaine lettuce": [
+  "romaine lettuce | 4 cup | Produce | Fresh Romaine Hearts, 3 ct"
  ],
  "4 cups cooked brown rice": [
   "brown rice | 4 cup | Pasta, Rice & Grains | Great Value Natural Brown Long Grain Rice, 32 oz"
@@ -8666,7 +9053,7 @@
  "4 large eggs, beaten": [
   "eggs | 4 | Dairy & Refrigerated | Great Value Large White Eggs, 12 ct"
  ],
- "4 large flatbreads or naan": [
+ "4 large flatbreads": [
   "flatbreads | 4 | Bakery | Stonefire Original Naan, 2 ct (for naan, flatbread and pita)"
  ],
  "4 large flour tortillas": [
@@ -8710,9 +9097,6 @@
  ],
  "4 naan breads": [
   "naan breads | 4 | Bakery | Stonefire Original Naan, 2 ct (for naan, flatbread and pita)"
- ],
- "4 naan or flatbreads": [
-  "naan | 4 | Bakery | Stonefire Original Naan, 2 ct (for naan, flatbread and pita)"
  ],
  "4 ounces (113 grams) sharp cheddar cheese, shredded (1 cup)": [
   "sharp cheddar cheese | 4 oz | Dairy & Refrigerated | Great Value Finely Shredded Sharp Cheddar, 8 oz"
@@ -8768,14 +9152,23 @@
  "4 oz cream cheese, softened": [
   "cream cheese | 4 oz | Dairy & Refrigerated | Great Value Cream Cheese Brick, 8 oz"
  ],
+ "4 oz deli ham, chopped": [
+  "deli ham | 4 oz | Meat & Deli | Great Value Thin Sliced Honey Ham, 16 oz"
+ ],
+ "4 oz deli salami, chopped": [
+  "deli salami | 4 oz | Meat & Deli | Prima Della Genoa Salami, deli sliced (0.5 lb)"
+ ],
+ "4 oz diced ham": [
+  "ham | 4 oz | Meat & Deli | Great Value Thin Sliced Honey Ham, 16 oz"
+ ],
  "4 oz goat cheese, crumbled": [
   "goat cheese | 4 oz | Dairy & Refrigerated | Roth Plain Chèvre Goat Cheese Log, 4 oz"
  ],
  "4 oz pepperoni": [
   "pepperoni | 4 oz | Meat & Deli | Prima Della Pepperoni, deli sliced (0.5 lb)"
  ],
- "4 oz sliced deli ham": [
-  "deli ham | 4 oz | Meat & Deli | Great Value Thin Sliced Honey Ham, 16 oz"
+ "4 oz reduced-fat cream cheese, softened": [
+  "reduced-fat cream cheese | 4 oz | Dairy & Refrigerated | Great Value Cream Cheese Brick, 8 oz"
  ],
  "4 oz sour cream": [
   "sour cream | 4 oz | Dairy & Refrigerated | Great Value Sour Cream, 16 oz"
@@ -8807,7 +9200,13 @@
  "4 oz. sharp cheddar, shredded (about 1 c.)": [
   "sharp cheddar | 4 oz | Dairy & Refrigerated | Great Value Finely Shredded Sharp Cheddar, 8 oz"
  ],
+ "4 packages (3 oz) ramen noodles": [
+  "ramen noodles | 4 package | Pasta, Rice & Grains | Maruchan Ramen Chicken, 12 ct"
+ ],
  "4 pita breads": [
+  "pita breads | 4 | Bakery | Stonefire Original Naan, 2 ct (for naan, flatbread and pita)"
+ ],
+ "4 pita breads, warmed": [
   "pita breads | 4 | Bakery | Stonefire Original Naan, 2 ct (for naan, flatbread and pita)"
  ],
  "4 plum tomatoes, cored and cut into 1/2-inch pieces": [
@@ -8825,6 +9224,9 @@
  "4 red, orange, or yellow bell peppers, roughly chopped": [
   "red bell peppers | 4 | Produce | Fresh Red Bell Pepper, each"
  ],
+ "4 ripe bananas, sliced and frozen": [
+  "ripe bananas | 4 | Produce | Fresh Banana, each (bunch of 6)"
+ ],
  "4 sausage patties": [
   "sausage patties | 4 | Meat & Deli | Great Value Original Sausage Roll, 16 oz"
  ],
@@ -8839,6 +9241,9 @@
  ],
  "4 scallions, thinly sliced": [
   "scallions | 4 | Produce | Fresh Green Onions, 1 bunch"
+ ],
+ "4 slices Swiss cheese, cut into strips": [
+  "swiss cheese | 4 slice | Dairy & Refrigerated | Great Value Thin Sliced Swiss, 8 oz"
  ],
  "4 slices bacon, chopped": [
   "bacon | 4 slice | Meat & Deli | Great Value Hickory Smoked Bacon, 16 oz"
@@ -9055,6 +9460,12 @@
  "5 tbsp butter": [
   "butter | 5 tbsp | Dairy & Refrigerated | Great Value Salted Butter, 16 oz (4 sticks)"
  ],
+ "5 tbsp butter, melted": [
+  "butter | 5 tbsp | Dairy & Refrigerated | Great Value Salted Butter, 16 oz (4 sticks)"
+ ],
+ "5 tbsp butter, softened": [
+  "butter | 5 tbsp | Dairy & Refrigerated | Great Value Salted Butter, 16 oz (4 sticks)"
+ ],
  "5 – 6 large cloves of fresh garlic, minced": [
   "garlic | 6 clove | Produce | "
  ],
@@ -9097,11 +9508,11 @@
  "6 Tbsp. unsalted butter, melted": [
   "unsalted butter | 6 tbsp | Dairy & Refrigerated | Great Value Salted Butter, 16 oz (4 sticks)"
  ],
- "6 anchovy fillets in oil, drained and finely chopped (1 1/2 teaspoons)": [
-  "anchovy fillets in oil | 6 | Sauces & Condiments | "
- ],
  "6 apples, peeled and sliced": [
   "apples | 6 | Produce | Fresh Gala Apple, each"
+ ],
+ "6 boneless pork chops, 1 inch thick": [
+  "pork chops | 6 | Meat & Deli | Pork Center Cut Loin Chops, Boneless, Family Pack"
  ],
  "6 boneless skinless chicken breasts, thin-sliced": [
   "chicken breasts | 6 | Meat & Deli | Great Value Boneless Skinless Chicken Breasts, 5 lb (frozen)"
@@ -9112,10 +9523,16 @@
  "6 boneless, skinless chicken breasts (about 3 pounds)": [
   "chicken breasts | 6 | Meat & Deli | Great Value Boneless Skinless Chicken Breasts, 5 lb (frozen)"
  ],
+ "6 brioche buns": [
+  "brioche buns | 6 | Bakery | Great Value Hamburger Buns, 8 ct"
+ ],
  "6 brioche hamburger buns, toasted": [
   "brioche hamburger buns | 6 | Bakery | Great Value Hamburger Buns, 8 ct"
  ],
  "6 cloves garlic, finely chopped": [
+  "garlic | 6 clove | Produce | "
+ ],
+ "6 cloves garlic, minced": [
   "garlic | 6 clove | Produce | "
  ],
  "6 cloves garlic, smashed": [
@@ -9139,13 +9556,13 @@
  "6 cups crispy rice cereal": [
   "crispy rice cereal | 6 cup | Snacks & Nuts | Great Value Crisp Rice Cereal, 24 oz"
  ],
+ "6 cups low-sodium chicken broth": [
+  "low-sodium chicken broth | 6 cup | Pantry & Canned | Great Value Chicken Broth, 32 oz"
+ ],
  "6 cups mixed greens": [
   "mixed greens | 6 cup | Produce | Marketside Spring Mix, 5 oz"
  ],
  "6 cups vegetable broth": [
-  "vegetable broth | 6 cup | Pantry & Canned | Great Value Chicken Broth, 32 oz"
- ],
- "6 cups vegetable or chicken broth": [
   "vegetable broth | 6 cup | Pantry & Canned | Great Value Chicken Broth, 32 oz"
  ],
  "6 dried chiles de árbol, ribs and seeds removed": [
@@ -9169,13 +9586,22 @@
  "6 hamburger buns": [
   "hamburger buns | 6 | Bakery | Great Value Hamburger Buns, 8 ct"
  ],
+ "6 hoagie rolls": [
+  "hoagie rolls | 6 | Bakery | Martin's Hoagie Rolls, 6 ct"
+ ],
  "6 large eggs": [
   "eggs | 6 | Dairy & Refrigerated | Great Value Large White Eggs, 12 ct"
  ],
  "6 large eggs light beaten": [
   "eggs | 6 | Dairy & Refrigerated | Great Value Large White Eggs, 12 ct"
  ],
+ "6 large flatbreads": [
+  "flatbreads | 6 | Bakery | Stonefire Original Naan, 2 ct (for naan, flatbread and pita)"
+ ],
  "6 large flour tortillas": [
+  "flour tortillas | 6 | Bakery | Great Value Medium Flour Tortillas, 16 oz, 10 ct"
+ ],
+ "6 large flour tortillas (10-inch)": [
   "flour tortillas | 6 | Bakery | Great Value Medium Flour Tortillas, 16 oz, 10 ct"
  ],
  "6 large garlic cloves, chopped/minced": [
@@ -9186,6 +9612,15 @@
  ],
  "6 large red, orange or yellow bell peppers": [
   "red bell peppers | 6 | Produce | Fresh Red Bell Pepper, each"
+ ],
+ "6 large russet potatoes": [
+  "russet potatoes | 6 | Produce | Fresh Idaho Russet Potatoes, 5 lb bag"
+ ],
+ "6 leaves lettuce": [
+  "leaves lettuce | 6 | Produce | Fresh Romaine Hearts, 3 ct"
+ ],
+ "6 medium sweet potatoes": [
+  "sweet potatoes | 6 | Produce | Fresh Sweet Potato, each"
  ],
  "6 ounces Colby Jack cheese, shredded (1 1/2 cups)": [
   "colby jack cheese | 6 oz | Dairy & Refrigerated | Great Value Shredded Monterey Jack, 8 oz"
@@ -9233,6 +9668,9 @@
   "mushrooms | 6 oz | Produce | Freshness Guaranteed Sliced White Mushrooms, 8 oz"
  ],
  "6 oz deli ham": [
+  "deli ham | 6 oz | Meat & Deli | Great Value Thin Sliced Honey Ham, 16 oz"
+ ],
+ "6 oz deli ham, diced": [
   "deli ham | 6 oz | Meat & Deli | Great Value Thin Sliced Honey Ham, 16 oz"
  ],
  "6 oz deli ham, thinly sliced": [
@@ -9305,9 +9743,6 @@
  "6 small baking potatoes": [
   "baking potatoes | 6 | Produce | Fresh Idaho Russet Potatoes, 5 lb bag"
  ],
- "6 small flour tortillas or tostada shells": [
-  "flour tortillas | 6 | Bakery | Great Value Medium Flour Tortillas, 16 oz, 10 ct"
- ],
  "6 small jalapeños": [
   "jalapeños | 6 | Produce | Fresh Jalapeño Peppers, 8 oz"
  ],
@@ -9328,6 +9763,9 @@
  ],
  "6 tbsp butter, softened": [
   "butter | 6 tbsp | Dairy & Refrigerated | Great Value Salted Butter, 16 oz (4 sticks)"
+ ],
+ "6 tostada shells": [
+  "tostada shells | 6 | Bakery | Mission Baked Tostadas, 22 ct"
  ],
  "6 wraps": [
   "wraps | 6 | Pantry & Canned | Great Value Medium Flour Tortillas, 16 oz, 10 ct"
@@ -9431,6 +9869,9 @@
  "8 flour tortillas (8-inch)": [
   "flour tortillas | 8 | Bakery | Great Value Medium Flour Tortillas, 16 oz, 10 ct"
  ],
+ "8 graham cracker sheets, crushed": [
+  "graham cracker sheets | 8 | Pantry & Canned | "
+ ],
  "8 guajillo chiles stems cut off and seeds removed": [
   "guajillo chiles | 8 | Pantry & Canned | Dried Guajillo Chiles, 4 oz"
  ],
@@ -9443,6 +9884,9 @@
  "8 large eggs": [
   "eggs | 8 | Dairy & Refrigerated | Great Value Large White Eggs, 12 ct"
  ],
+ "8 large flour tortillas (10-inch)": [
+  "flour tortillas | 8 | Bakery | Great Value Medium Flour Tortillas, 16 oz, 10 ct"
+ ],
  "8 large strawberries, chopped": [
   "strawberries | 8 | Pantry & Canned | Fresh Strawberries, 1 lb"
  ],
@@ -9454,6 +9898,9 @@
  ],
  "8 mini sweet peppers, sliced in half lengthwise then seeded": [
   "mini sweet peppers | 8 | Produce | "
+ ],
+ "8 naan breads": [
+  "naan breads | 8 | Bakery | Stonefire Original Naan, 2 ct (for naan, flatbread and pita)"
  ],
  "8 ounce Rice Noodles": [
   "rice noodles | 8 oz | Pasta, Rice & Grains | Thai Kitchen Stir Fry Rice Noodles, 14 oz"
@@ -9551,6 +9998,12 @@
  "8 oz cremini mushrooms, sliced": [
   "cremini mushrooms | 8 oz | Produce | Freshness Guaranteed Sliced White Mushrooms, 8 oz"
  ],
+ "8 oz deli ham, cut into strips": [
+  "deli ham | 8 oz | Meat & Deli | Great Value Thin Sliced Honey Ham, 16 oz"
+ ],
+ "8 oz deli turkey, cut into strips": [
+  "deli turkey | 8 oz | Meat & Deli | Great Value Oven Roasted Turkey Breast Lunchmeat, 16 oz"
+ ],
  "8 oz diced ham": [
   "ham | 8 oz | Meat & Deli | Great Value Thin Sliced Honey Ham, 16 oz"
  ],
@@ -9569,8 +10022,11 @@
  "8 oz shredded mozzarella cheese": [
   "mozzarella cheese | 8 oz | Dairy & Refrigerated | Great Value Shredded Mozzarella, 16 oz"
  ],
- "8 oz spaghetti (optional, for the kids)": [
-  "spaghetti | 8 oz | Pasta, Rice & Grains | Great Value Spaghetti, 16 oz"
+ "8 oz sliced deli ham": [
+  "deli ham | 8 oz | Meat & Deli | Great Value Thin Sliced Honey Ham, 16 oz"
+ ],
+ "8 oz sliced deli ham, chopped": [
+  "deli ham | 8 oz | Meat & Deli | Great Value Thin Sliced Honey Ham, 16 oz"
  ],
  "8 oz uncooked DeLallo whole wheat or gluten free elbows": [
   "delallo whole wheat | 8 oz | Pantry & Canned | "
@@ -9602,9 +10058,6 @@
  "8 oz. red pepper sliced": [
   "red pepper | 8 oz | Produce | Fresh Red Bell Pepper, each"
  ],
- "8 sausage links": [
-  "sausage links | 8 | Meat & Deli | Great Value Pork Sausage Links, 24 oz"
- ],
  "8 slices American cheese": [
   "american cheese | 8 slice | Dairy & Refrigerated | Great Value American Singles, 16 slices"
  ],
@@ -9634,9 +10087,6 @@
  ],
  "8 slices cheddar cheese": [
   "cheddar cheese | 8 slice | Dairy & Refrigerated | Great Value Deli Style Sliced Sharp Cheddar, 8 oz (12 slices)"
- ],
- "8 slices ciabatta or sourdough bread": [
-  "ciabatta bread | 8 slice | Bakery | "
  ],
  "8 slices deli American cheese": [
   "deli american cheese | 8 slice | Dairy & Refrigerated | Great Value American Singles, 16 slices"
@@ -9677,9 +10127,6 @@
  "8 slices thick-cut bacon": [
   "thick-cut bacon | 8 slice | Meat & Deli | Great Value Hickory Smoked Bacon, 16 oz"
  ],
- "8 slices whole wheat bread": [
-  "wheat bread | 8 slice | Bakery | Great Value White Sandwich Bread, 20 oz"
- ],
  "8 small radishes, trimmed, thinly sliced": [
   "radishes | 8 | Pantry & Canned | Fresh Red Radishes, 1 bag"
  ],
@@ -9695,8 +10142,8 @@
  "8 tablespoons unsalted butter": [
   "unsalted butter | 8 tbsp | Dairy & Refrigerated | Great Value Salted Butter, 16 oz (4 sticks)"
  ],
- "8 thick slices brioche or Texas toast": [
-  "brioche toast | 8 | Bakery | Sara Lee Artesano Brioche Bread, 20 oz"
+ "8 thick slices brioche": [
+  "brioche | 8 | Bakery | Sara Lee Artesano Brioche Bread, 20 oz"
  ],
  "8 to 10 basil leaves, thinly sliced or roughly chopped": [
   "basil leaves | 10 | Produce | Fresh Basil, 0.5 oz clamshell"
@@ -9965,12 +10412,14 @@
  "For Topping:": [],
  "For Two 11\" Pizzas:": [],
  "For serving the tacos": [],
+ "For the BBQ sauce:": [],
  "For the Bowls:": [],
  "For the Broccoli:": [],
  "For the Burger Sauce:": [],
  "For the Cheese:": [],
  "For the Chicken:": [],
  "For the Clean Ranch Dressing:": [],
+ "For the Dijon white sauce:": [],
  "For the Drizzle Sauce:": [],
  "For the Garlic Butter:": [],
  "For the Glaze:": [],
@@ -9987,8 +10436,36 @@
  "For the Subs:": [],
  "For the Sweet Potato Mash:": [],
  "For the Yum Yum Sauce": [],
+ "For the base and toppings:": [],
+ "For the beef:": [],
+ "For the burger sauce:": [],
+ "For the cheese:": [],
+ "For the chicken:": [],
+ "For the cottage cheese base:": [],
+ "For the cream cheese base:": [],
  "For the dressing, 2 tablespoons of any of the following*:": [],
+ "For the dressing:": [],
+ "For the garlic butter:": [],
+ "For the garlic oil and yogurt sauce:": [],
+ "For the garlic oil:": [],
+ "For the garlic white sauce:": [],
+ "For the garlic-herb oil:": [],
+ "For the grinder salad:": [],
+ "For the lime cream base:": [],
+ "For the lime crema:": [],
+ "For the mojo:": [],
+ "For the mustard butter:": [],
+ "For the parmesan base:": [],
+ "For the pesto ricotta:": [],
+ "For the pickled cucumbers:": [],
+ "For the pickled onions:": [],
+ "For the pineapple slaw:": [],
  "For the salad:": [],
+ "For the sides:": [],
+ "For the sweet chili sauce:": [],
+ "For the toppings:": [],
+ "For the verde base:": [],
+ "For the yum yum sauce:": [],
  "Four 4-by-6-inch pieces of focaccia, split": [
   "focaccia | 4 | Bakery | Freshness Guaranteed French Bread Loaf, 14 oz"
  ],
@@ -10339,14 +10816,128 @@
  "Optional but elite: ¼ tsp Marmite or 1 tsp very finely grated Parmesan": [],
  "Optional but excellent: ¼ tsp ground allspice or five-spice": [],
  "Optional garnish: chopped fresh parsley or chives": [],
+ "Optional: 1 apple, grated": [
+  "apple | 1 | Produce | Fresh Gala Apple, each"
+ ],
+ "Optional: 1 can (4 oz) diced green chiles": [
+  "green chiles | 1 can | Pantry & Canned | Great Value Diced Green Chiles, 4 oz"
+ ],
+ "Optional: 1 cup cherry tomatoes, halved": [
+  "cherry tomatoes | 1 cup | Produce | Fresh Grape Tomatoes, 10 oz"
+ ],
+ "Optional: 1 cup fresh berries, for serving": [
+  "berries | 1 cup | Produce | "
+ ],
+ "Optional: 1 cup sliced strawberries, for serving": [
+  "strawberries | 1 cup | Pantry & Canned | Fresh Strawberries, 1 lb"
+ ],
+ "Optional: 1 tbsp balsamic glaze, for drizzling": [
+  "balsamic glaze | 1 tbsp | Pantry & Canned | "
+ ],
+ "Optional: 1 tbsp gochujang": [
+  "gochujang | 1 tbsp | Sauces & Condiments | Mother-in-Law's Gochujang, 10 oz"
+ ],
+ "Optional: 1 tbsp gochujang, for the adults": [
+  "gochujang | 1 tbsp | Sauces & Condiments | Mother-in-Law's Gochujang, 10 oz"
+ ],
+ "Optional: 1 tbsp honey": [
+  "honey | 1 tbsp | Sauces & Condiments | "
+ ],
+ "Optional: 1 tsp everything bagel seasoning": [
+  "everything bagel seasoning | 1 tsp | Bakery | "
+ ],
+ "Optional: 1 tsp sriracha, for the adults": [
+  "sriracha | 1 tsp | Sauces & Condiments | "
+ ],
+ "Optional: 1/2 cup BBQ sauce, for the adults": [
+  "bbq sauce | 0.5 cup | Sauces & Condiments | Great Value Original BBQ Sauce, 18 oz"
+ ],
+ "Optional: 1/2 cup chocolate chips": [
+  "chocolate chips | 0.5 cup | Snacks & Nuts | Great Value Semi-Sweet Chocolate Chips, 12 oz"
+ ],
+ "Optional: 1/2 cup horseradish sauce, for serving": [
+  "horseradish sauce | 0.5 cup | Sauces & Condiments | "
+ ],
+ "Optional: 1/2 cup salsa verde, for serving": [
+  "salsa verde | 0.5 cup | Sauces & Condiments | Great Value Salsa Verde, 16 oz"
+ ],
+ "Optional: 1/2 tsp celery seed": [
+  "celery seed | 0.5 tsp | Produce | "
+ ],
+ "Optional: 1/2 tsp chili powder, for the adults": [
+  "chili powder | 0.5 tsp | Spices & Baking | "
+ ],
+ "Optional: 1/2 tsp red pepper flakes, for the adults": [
+  "red pepper flakes | 0.5 tsp | Spices & Baking | "
+ ],
+ "Optional: 1/3 cup chopped peanuts": [
+  "peanuts | 0.333 cup | Snacks & Nuts | Great Value Dry Roasted Peanuts, 16 oz"
+ ],
+ "Optional: 1/3 cup pickled jalapeño slices, for the adults": [
+  "pickled jalapeño slices | 0.333 cup | Produce | Great Value Sliced Jalapeños, 12 oz jar"
+ ],
+ "Optional: 1/4 cup chopped peanuts": [
+  "peanuts | 0.25 cup | Snacks & Nuts | Great Value Dry Roasted Peanuts, 16 oz"
+ ],
+ "Optional: 1/4 cup fresh basil leaves": [
+  "basil leaves | 0.25 cup | Produce | Fresh Basil, 0.5 oz clamshell"
+ ],
+ "Optional: 1/4 cup pickled jalapeño slices": [
+  "pickled jalapeño slices | 0.25 cup | Produce | Great Value Sliced Jalapeños, 12 oz jar"
+ ],
+ "Optional: 1/4 cup pickled jalapeño slices, for the adults": [
+  "pickled jalapeño slices | 0.25 cup | Produce | Great Value Sliced Jalapeños, 12 oz jar"
+ ],
+ "Optional: 1/4 cup protein powder": [
+  "protein powder | 0.25 cup | Spices & Baking | "
+ ],
+ "Optional: 1/4 cup sliced pepperoncini": [
+  "pepperoncini | 0.25 cup | Pantry & Canned | Great Value Whole Pepperoncini, 12 fl oz"
+ ],
+ "Optional: 1/4 cup sliced pepperoncini, for the adults": [
+  "pepperoncini | 0.25 cup | Pantry & Canned | Great Value Whole Pepperoncini, 12 fl oz"
+ ],
+ "Optional: 1/4 tsp ground nutmeg": [
+  "ground nutmeg | 0.25 tsp | Spices & Baking | "
+ ],
+ "Optional: 1/4 tsp red pepper flakes": [
+  "red pepper flakes | 0.25 tsp | Spices & Baking | "
+ ],
  "Optional: 1–2 tbsp chopped green chiles for depth": [
   "green chiles | 2 tbsp | Pantry & Canned | Great Value Diced Green Chiles, 4 oz"
+ ],
+ "Optional: 2 cups baby arugula": [
+  "baby arugula | 2 cup | Produce | Marketside Organic Baby Arugula, 5 oz"
+ ],
+ "Optional: 2 cups mini marshmallows": [
+  "mini marshmallows | 2 cup | Snacks & Nuts | Jet-Puffed Mini Marshmallows, 1 lb"
+ ],
+ "Optional: 2 tbsp capers, drained": [
+  "capers | 2 tbsp | Pantry & Canned | Great Value Capers, 3.5 oz"
+ ],
+ "Optional: 2 tbsp horseradish sauce, for the adults": [
+  "horseradish sauce | 2 tbsp | Sauces & Condiments | "
+ ],
+ "Optional: 2 tbsp hot honey, for the adults": [
+  "hot honey | 2 tbsp | Sauces & Condiments | Mike's Hot Honey, 12 oz"
+ ],
+ "Optional: 2 tbsp mayonnaise": [
+  "mayonnaise | 2 tbsp | Sauces & Condiments | "
  ],
  "Optional: 2 tbsp whole milk": [
   "milk | 2 tbsp | Dairy & Refrigerated | Great Value Whole Vitamin D Milk, 1 gal"
  ],
+ "Optional: 2 tbsp yellow mustard, for drizzling": [
+  "yellow mustard | 2 tbsp | Sauces & Condiments | "
+ ],
  "Optional: 2 tsp balsamic vinegar at the end for brightness": [
   "balsamic vinegar | 2 tsp | Sauces & Condiments | "
+ ],
+ "Optional: 6 slices bacon, cooked and crumbled": [
+  "bacon | 6 slice | Meat & Deli | Great Value Hickory Smoked Bacon, 16 oz"
+ ],
+ "Optional: 8 oz spaghetti, for the kids": [
+  "spaghetti | 8 oz | Pasta, Rice & Grains | Great Value Spaghetti, 16 oz"
  ],
  "Optional: Bread & butter pickles or crispy onions for crunch": [
   "bread & butter pickles |  | Dairy & Refrigerated | Great Value Kosher Dill Spears, 24 fl oz"
@@ -10363,8 +10954,14 @@
  "Optional: crushed red pepper flakes for heat": [
   "red pepper flakes |  | Spices & Baking | "
  ],
+ "Optional: hot sauce, for the adults": [
+  "hot sauce |  | Sauces & Condiments | "
+ ],
  "Optional: lemon zest for adults": [
   "lemon |  | Produce | Fresh Lemon, each"
+ ],
+ "Optional: mashed potatoes, for serving": [
+  "mashed potatoes |  | Produce | Fresh Yellow Potatoes, 3 lb bag"
  ],
  "Optional: splash of lemon juice or zest (¼ tsp – subtle)": [
   "lemon juice |  | Pantry & Canned | Fresh Lemon, each"
@@ -10772,10 +11369,6 @@
  "chipotle mayo or plain mayonnaise": [
   "chipotle mayo |  | Sauces & Condiments | "
  ],
- "chives and shredded cheddar for topping": [
-  "chives |  | Produce | Fresh Chives, 0.5 oz clamshell",
-  "cheddar |  | Dairy & Refrigerated | Great Value Finely Shredded Sharp Cheddar, 8 oz"
- ],
  "chuck roast": [
   "chuck roast |  | Meat & Deli | Choice Angus Chuck Roast, 2.25-3.38 lb"
  ],
@@ -10804,23 +11397,8 @@
  "cumin": [
   "cumin |  | Spices & Baking | "
  ],
- "diced onion, cilantro and lime wedges for serving": [
-  "onion |  | Produce | Fresh Whole Yellow Onion, each",
-  "cilantro |  | Produce | Fresh Cilantro, 1 bunch",
-  "lime wedges |  | Produce | Fresh Lime, each"
- ],
- "diced onion, cilantro, guacamole and lime wedges for serving": [
-  "onion |  | Produce | Fresh Whole Yellow Onion, each",
-  "cilantro |  | Produce | Fresh Cilantro, 1 bunch",
-  "guacamole |  | Dairy & Refrigerated | Fresh Hass Avocado, each",
-  "lime wedges |  | Produce | Fresh Lime, each"
- ],
  "dill pickle slices": [
   "dill pickle slices |  | Produce | Great Value Kosher Dill Spears, 24 fl oz"
- ],
- "dill pickle slices and shredded lettuce for topping": [
-  "dill pickle slices |  | Produce | Great Value Kosher Dill Spears, 24 fl oz",
-  "lettuce |  | Produce | Fresh Romaine Hearts, 3 ct"
  ],
  "edamame": [
   "edamame |  | Produce | Great Value Frozen Edamame, 12 oz"
@@ -10833,9 +11411,6 @@
  ],
  "french bread (homemade garlic bread)": [
   "french bread |  | Bakery | Freshness Guaranteed French Bread Loaf, 14 oz"
- ],
- "fresh basil leaves": [
-  "basil leaves |  | Produce | Fresh Basil, 0.5 oz clamshell"
  ],
  "fresh cilantro diced": [
   "cilantro |  | Produce | Fresh Cilantro, 1 bunch"
@@ -10867,25 +11442,11 @@
  "grated cheddar cheese": [
   "cheddar cheese |  | Dairy & Refrigerated | Great Value Finely Shredded Sharp Cheddar, 8 oz"
  ],
- "guacamole and sour cream for serving": [
-  "guacamole |  | Dairy & Refrigerated | Fresh Hass Avocado, each",
-  "sour cream |  | Dairy & Refrigerated | Great Value Sour Cream, 16 oz"
- ],
  "handful of fresh basil fried or torn into pieces": [
   "basil |  | Produce | Fresh Basil, 0.5 oz clamshell"
  ],
  "honey for drizzling": [
   "honey |  | Sauces & Condiments | "
- ],
- "honey mustard and ketchup for dipping": [
-  "honey mustard |  | Sauces & Condiments | Great Value Honey Mustard Dressing, 16 fl oz",
-  "ketchup |  | Sauces & Condiments | "
- ],
- "honey mustard or ranch for dipping": [
-  "honey mustard |  | Sauces & Condiments | Great Value Honey Mustard Dressing, 16 fl oz"
- ],
- "horseradish sauce for serving (optional)": [
-  "horseradish sauce |  | Sauces & Condiments | "
  ],
  "iceberg lettuce leaves": [
   "iceberg lettuce leaves |  | Produce | Marketside Shredded Iceberg Lettuce, 8 oz"
@@ -10902,36 +11463,16 @@
  "juice from 1 lemon": [
   "lemon | 1 | Produce | Fresh Lemon, each"
  ],
- "lettuce, avocado and ranch or chipotle mayo for topping": [
-  "lettuce |  | Produce | Fresh Romaine Hearts, 3 ct",
-  "avocado |  | Produce | Fresh Hass Avocado, each",
-  "ranch mayo |  | Sauces & Condiments | Great Value Classic Ranch Dressing, 16 oz"
- ],
  "lettuce, chopped": [
   "lettuce |  | Produce | Fresh Romaine Hearts, 3 ct"
  ],
  "lime juice SOUR": [
   "lime juice sour |  | Pantry & Canned | Fresh Lime, each"
  ],
- "lime wedges": [
-  "lime wedges |  | Produce | Fresh Lime, each"
- ],
  "maple syrup": [
   "maple syrup |  | Sauces & Condiments | Great Value Original Syrup, 24 fl oz"
  ],
- "maple syrup for serving": [
-  "maple syrup |  | Sauces & Condiments | Great Value Original Syrup, 24 fl oz"
- ],
- "maple syrup or hot honey": [
-  "maple syrup |  | Sauces & Condiments | Great Value Original Syrup, 24 fl oz"
- ],
  "mashed potatoes for serving": [
-  "mashed potatoes |  | Produce | Fresh Yellow Potatoes, 3 lb bag"
- ],
- "mashed potatoes for serving (optional)": [
-  "mashed potatoes |  | Produce | Fresh Yellow Potatoes, 3 lb bag"
- ],
- "mashed potatoes or rice for serving": [
   "mashed potatoes |  | Produce | Fresh Yellow Potatoes, 3 lb bag"
  ],
  "mayo": [
@@ -10951,9 +11492,6 @@
  "paprika , or chili powder": [
   "paprika |  | Spices & Baking | "
  ],
- "pasta or rice for serving": [
-  "pasta |  | Pasta, Rice & Grains | Great Value Bowties, 12 oz"
- ],
  "peanut butter": [
   "peanut butter |  | Pantry & Canned | Great Value Creamy Peanut Butter (No Stir), 16 oz"
  ],
@@ -10963,10 +11501,6 @@
  "pepper jack cheese , grated": [
   "pepper jack cheese |  | Dairy & Refrigerated | Great Value Shredded Monterey Jack, 8 oz"
  ],
- "pepperoni, cooked sausage or ham for topping": [
-  "pepperoni |  | Meat & Deli | Prima Della Pepperoni, deli sliced (0.5 lb)",
-  "sausage |  | Meat & Deli | Great Value Original Sausage Roll, 16 oz"
- ],
  "pinch of garlic powder": [
   "garlic powder |  | Spices & Baking | "
  ],
@@ -10975,9 +11509,6 @@
  ],
  "pinch salt": [
   "salt |  | Spices & Baking | "
- ],
- "queso dip or sour cream for dipping": [
-  "queso dip |  | Dairy & Refrigerated | Great Value Queso Blanco Cheese Dip, 15 oz"
  ],
  "queso or mayo": [
   "queso |  | Dairy & Refrigerated | Great Value Queso Blanco Cheese Dip, 15 oz"
@@ -11000,9 +11531,6 @@
  "rice": [
   "rice |  | Pasta, Rice & Grains | Great Value Long Grain White Rice, 2 lb"
  ],
- "rice or pita for serving": [
-  "rice |  | Pasta, Rice & Grains | Great Value Long Grain White Rice, 2 lb"
- ],
  "roma tomato (optional)": [
   "roma tomato |  | Produce | Fresh Roma Tomato, each"
  ],
@@ -11014,12 +11542,6 @@
  ],
  "salsa": [
   "salsa |  | Sauces & Condiments | Great Value Thick & Chunky Salsa, Medium, 16 oz"
- ],
- "salsa verde or sour cream for dipping": [
-  "salsa verde |  | Sauces & Condiments | Great Value Salsa Verde, 16 oz"
- ],
- "salsa verde or sour cream for serving": [
-  "salsa verde |  | Sauces & Condiments | Great Value Salsa Verde, 16 oz"
  ],
  "salt": [
   "salt |  | Spices & Baking | "
@@ -11070,14 +11592,6 @@
   "avocado |  | Produce | Fresh Hass Avocado, each"
  ],
  "shredded lettuce for topping": [],
- "shredded lettuce, sour cream and avocado for topping": [
-  "lettuce |  | Produce | Fresh Romaine Hearts, 3 ct",
-  "sour cream |  | Dairy & Refrigerated | Great Value Sour Cream, 16 oz",
-  "avocado |  | Produce | Fresh Hass Avocado, each"
- ],
- "sliced jalapeños (optional)": [
-  "jalapeños |  | Produce | Fresh Jalapeño Peppers, 8 oz"
- ],
  "smoked paprika": [
   "smoked paprika |  | Spices & Baking | "
  ],
@@ -11102,11 +11616,6 @@
  ],
  "sour cream for serving": [
   "sour cream |  | Dairy & Refrigerated | Great Value Sour Cream, 16 oz"
- ],
- "sour cream, avocado and cheese for topping": [
-  "sour cream |  | Dairy & Refrigerated | Great Value Sour Cream, 16 oz",
-  "avocado |  | Produce | Fresh Hass Avocado, each",
-  "cheese |  | Dairy & Refrigerated | Great Value Finely Shredded Sharp Cheddar, 8 oz"
  ],
  "soy sauce, to taste": [
   "soy sauce |  | Sauces & Condiments | "
@@ -11143,10 +11652,7 @@
   "crackers |  | Snacks & Nuts | "
  ],
  "vanilla ice cream for serving": [
-  "vanilla ice cream |  | Spices & Baking | Great Value Vanilla Wafers, 11 oz"
- ],
- "warm tortillas or rice for serving": [
-  "tortillas |  | Bakery | Great Value Medium Flour Tortillas, 16 oz, 10 ct"
+  "vanilla ice cream |  | Spices & Baking | "
  ],
  "water": [
   "water |  | Pantry & Canned | "
@@ -11223,7 +11729,9 @@
  "¼ cup garbanzo beans, drained": [
   "garbanzo beans | 0.25 cup | Pantry & Canned | Great Value Garbanzos Chick Peas, 15.5 oz"
  ],
- "¼ cup gluten-free soy sauce": [],
+ "¼ cup gluten-free soy sauce": [
+  "gluten-free soy sauce | 0.25 cup | Sauces & Condiments | "
+ ],
  "¼ cup goat cheese crumbles": [
   "goat cheese crumbles | 0.25 cup | Dairy & Refrigerated | Roth Plain Chèvre Goat Cheese Log, 4 oz"
  ],
@@ -11233,7 +11741,9 @@
  "¼ cup honey + 1 tsp red pepper flakes + pinch of salt, warmed together and steeped 10 minutes": [
   "honey | 0.25 cup | Sauces & Condiments | "
  ],
- "¼ cup lower-sodium soy sauce": [],
+ "¼ cup lower-sodium soy sauce": [
+  "lower-sodium soy sauce | 0.25 cup | Sauces & Condiments | "
+ ],
  "¼ cup mayo": [
   "mayo | 0.25 cup | Sauces & Condiments | "
  ],
@@ -11346,7 +11856,7 @@
   "seasoned salt | 0.25 tsp | Spices & Baking | "
  ],
  "¼ teaspoon vanilla extract": [
-  "vanilla extract | 0.25 tsp | Spices & Baking | Great Value Vanilla Wafers, 11 oz"
+  "vanilla extract | 0.25 tsp | Spices & Baking | Great Value Pure Vanilla Extract, 2 fl oz"
  ],
  "¼ tsp Aleppo pepper (or smoked paprika)": [
   "aleppo pepper | 0.25 tsp | Produce | "
@@ -11495,7 +12005,9 @@
  "½ cup low-moisture shredded mozzarella": [
   "mozzarella | 0.5 cup | Dairy & Refrigerated | Great Value Shredded Mozzarella, 16 oz"
  ],
- "½ cup marinara sauce": [],
+ "½ cup marinara sauce": [
+  "marinara sauce | 0.5 cup | Sauces & Condiments | Great Value Marinara Pasta Sauce, 24 oz"
+ ],
  "½ cup mayo": [
   "mayo | 0.5 cup | Sauces & Condiments | "
  ],
@@ -11791,7 +12303,6 @@
  "¾ tsp Kosher salt": [
   "kosher salt | 0.75 tsp | Spices & Baking | "
  ],
- "¾ tsp fish sauce": [],
  "¾ tsp kosher salt, plus more to taste": [
   "kosher salt | 0.75 tsp | Spices & Baking | "
  ],
@@ -11800,6 +12311,9 @@
  ],
  "¾ tsp smoked paprika (or 1 tsp regular paprika if that’s what you have)": [
   "smoked paprika | 0.75 tsp | Spices & Baking | "
+ ],
+ "¾ tsp soy sauce": [
+  "soy sauce | 0.75 tsp | Sauces & Condiments | "
  ],
  "‌BUTTER FOR LAMINATING": [
   "‌butter for laminating |  | Dairy & Refrigerated | Great Value Salted Butter, 16 oz (4 sticks)"
