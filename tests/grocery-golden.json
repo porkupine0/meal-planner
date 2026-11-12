@@ -194,10 +194,10 @@
   "precooked brown rice | 1 package | Pasta, Rice & Grains | Great Value Natural Brown Long Grain Rice, 32 oz"
  ],
  "1 1/2 C (205g) Bread Flour": [
-  "c bread flour | 1.5 | Bakery | "
+  "bread flour | 1.5 cup | Bakery | "
  ],
  "1 1/2 C Water": [
-  "water | 1.5 | Pantry & Canned | "
+  "water | 1.5 cup | Pantry & Canned | "
  ],
  "1 1/2 Tablespoons (23g) Sriracha": [
   "sriracha | 1.5 tbsp | Sauces & Condiments | "
@@ -500,7 +500,7 @@
   "pure vanilla extract | 1.5 tsp | Spices & Baking | Great Value Vanilla Wafers, 11 oz"
  ],
  "1 1/3 C + 2 Tbs (350g) Water 80f (26c) **See note on Hydration": [
-  "c | 1.333 | Pantry & Canned | "
+  "water | 1.333 cup | Pantry & Canned | "
  ],
  "1 1/3 cups crispy fried onions": [
   "crispy onions | 1.333 cup | Produce | French's Crispy Fried Onions, 6 oz"
@@ -591,7 +591,7 @@
   "bell pepper | 1 | Produce | Fresh Green Bell Pepper, each"
  ],
  "1 C Onion – White or Yellow (julienne sliced)": [
-  "c onion | 1 | Produce | Fresh Whole Yellow Onion, each"
+  "onion | 1 cup | Produce | Fresh Whole Yellow Onion, each"
  ],
  "1 English cucumber, diced": [
   "english cucumber | 1 | Produce | Fresh Long English Cucumber, each"
@@ -1216,6 +1216,9 @@
  "1 cup butter, softened": [
   "butter | 1 cup | Dairy & Refrigerated | Great Value Salted Butter, 16 oz (4 sticks)"
  ],
+ "1 cup canned corn": [
+  "canned corn | 1 cup | Pantry & Canned | Great Value Golden Sweet Whole Kernel Corn, 15.25 oz can"
+ ],
  "1 cup canned refried beans, warmed": [
   "canned refried beans | 1 cup | Pantry & Canned | Great Value Traditional Refried Beans, 16 oz"
  ],
@@ -1443,9 +1446,6 @@
  ],
  "1 cup marinara sauce": [
   "marinara sauce | 1 cup | Sauces & Condiments | Great Value Marinara Pasta Sauce, 24 oz"
- ],
- "1 cup mashed potatoes (made with Greek yogurt)": [
-  "mashed potatoes | 1 cup | Produce | Fresh Yellow Potatoes, 3 lb bag"
  ],
  "1 cup matchstick-cut carrots": [
   "matchstick-cut carrots | 1 cup | Produce | Fresh Baby Peeled Carrots, 1 lb bag"
@@ -3692,13 +3692,13 @@
   "vinegar | 1.5 tbsp | Sauces & Condiments | "
  ],
  "1/2 C (120g) Enchilada Sauce , or salsa": [
-  "c enchilada sauce | 0.5 | Sauces & Condiments | Great Value Red Enchilada Sauce, Mild, 10 oz"
+  "enchilada sauce | 0.5 cup | Sauces & Condiments | Great Value Red Enchilada Sauce, Mild, 10 oz"
  ],
  "1/2 C + 1 Tbs (100g) Whole Wheat Flour or Whole Wheat Bread Flour *see note for flour subs": [
-  "c | 0.5 | Pantry & Canned | "
+  "wheat flour | 0.5 cup | Spices & Baking | "
  ],
  "1/2 C Green Peppers (julienne sliced)": [
-  "c green peppers | 0.5 | Produce | Fresh Green Bell Pepper, each"
+  "green peppers | 0.5 cup | Produce | Fresh Green Bell Pepper, each"
  ],
  "1/2 Tablespoon (8g) Olive Oil": [
   "olive oil | 0.5 tbsp | Sauces & Condiments | "
@@ -4571,10 +4571,10 @@
   "quarterd artichoke hearts | 0.333 | Pantry & Canned | Great Value Quartered Artichoke Hearts, 13.75 oz"
  ],
  "1/4 C (50g) Sourdough Starter bubbly, doubled in size, active starter": [
-  "c sourdough starter | 0.25 | Bakery | "
+  "sourdough starter | 0.25 cup | Bakery | "
  ],
  "1/4 C + 2 tsp (50g) Whole Wheat Flour or Whole Wheat Bread Flour *see note for flour subs": [
-  "c | 0.25 | Pantry & Canned | "
+  "wheat flour | 0.25 cup | Spices & Baking | "
  ],
  "1/4 Lime wedge, for serving": [
   "lime wedge | 0.25 | Produce | Fresh Lime, each"
@@ -4647,9 +4647,6 @@
  ],
  "1/4 cup butter or margarine": [
   "butter | 0.25 cup | Dairy & Refrigerated | Great Value Salted Butter, 16 oz (4 sticks)"
- ],
- "1/4 cup canned corn": [
-  "canned corn | 0.25 cup | Pantry & Canned | Great Value Golden Sweet Whole Kernel Corn, 15.25 oz can"
  ],
  "1/4 cup cashews": [
   "cashews | 0.25 cup | Snacks & Nuts | Great Value Roasted Salted Cashews, 14 oz"
@@ -5450,6 +5447,9 @@
   "ricotta cheese | 16 oz | Dairy & Refrigerated | Great Value Whole Milk Ricotta, 15 oz"
  ],
  "160 g": [],
+ "18 oz cooked blackened chicken breast, diced": [
+  "blackened chicken breast | 18 oz | Meat & Deli | Great Value Boneless Skinless Chicken Breasts, 5 lb (frozen)"
+ ],
  "180 ml (3/4 cup) whole (full-fat) milk": [
   "milk | 180 ml | Dairy & Refrigerated | Great Value Whole Vitamin D Milk, 1 gal"
  ],
@@ -7539,7 +7539,7 @@
   "white hominy | 3 can | Pantry & Canned | Great Value White Hominy, 15.5 oz"
  ],
  "3 C (410g) Bread Flour": [
-  "c bread flour | 3 | Bakery | "
+  "bread flour | 3 cup | Bakery | "
  ],
  "3 T. unsweetened greek yogurt with live cultures I used Fage 5%": [
   "unsweetened greek yogurt with live cultures | 3 | Dairy & Refrigerated | Great Value Plain Nonfat Greek Yogurt, 32 oz"
@@ -8175,7 +8175,7 @@
   "russet potatoes | 4 | Produce | Fresh Idaho Russet Potatoes, 5 lb bag"
  ],
  "3/4 C (175g) Water 80f (26c) **See note on Hydration": [
-  "c water 80f | 0.75 | Pantry & Canned | "
+  "water | 0.75 cup | Pantry & Canned | "
  ],
  "3/4 c. grated parmesan cheese, divided, plus more to serve": [
   "parmesan cheese | 0.75 cup | Dairy & Refrigerated | Great Value Grated Parmesan, 8 oz"
@@ -8582,6 +8582,9 @@
  "4 cups low-sodium chicken broth": [
   "low-sodium chicken broth | 4 cup | Pantry & Canned | Great Value Chicken Broth, 32 oz"
  ],
+ "4 cups mashed potatoes (made with Greek yogurt)": [
+  "mashed potatoes | 4 cup | Produce | Fresh Yellow Potatoes, 3 lb bag"
+ ],
  "4 cups milk": [
   "milk | 4 cup | Dairy & Refrigerated | Great Value Whole Vitamin D Milk, 1 gal"
  ],
@@ -8844,7 +8847,7 @@
   "bacon | 4 slice | Meat & Deli | Great Value Hickory Smoked Bacon, 16 oz"
  ],
  "4 slices cheddar cheese": [
-  "cheddar cheese | 4 slice | Dairy & Refrigerated | Great Value Finely Shredded Sharp Cheddar, 8 oz"
+  "cheddar cheese | 4 slice | Dairy & Refrigerated | Great Value Deli Style Sliced Sharp Cheddar, 8 oz (12 slices)"
  ],
  "4 slices cooked bacon, crumbled and divided": [
   "bacon | 4 slice | Meat & Deli | Great Value Hickory Smoked Bacon, 16 oz"
@@ -8853,7 +8856,7 @@
   "turkey bacon | 4 slice | Meat & Deli | Great Value Uncured Turkey Bacon, 10 oz"
  ],
  "4 slices mozzarella cheese": [
-  "mozzarella cheese | 4 slice | Dairy & Refrigerated | Great Value Shredded Mozzarella, 16 oz"
+  "mozzarella cheese | 4 slice | Dairy & Refrigerated | Great Value Deli Style Sliced Mozzarella, 8 oz (12 slices)"
  ],
  "4 slices provolone cheese": [
   "provolone cheese | 4 slice | Dairy & Refrigerated | Great Value Sliced Provolone, 8 oz"
@@ -8956,9 +8959,6 @@
  ],
  "4.5 cups chicken broth/stock, (48 oz)": [
   "chicken broth/stock | 4.5 cup | Pantry & Canned | Great Value Chicken Broth, 32 oz"
- ],
- "4.5 oz cooked blackened chicken breast, diced": [
-  "blackened chicken breast | 4.5 oz | Meat & Deli | Great Value Boneless Skinless Chicken Breasts, 5 lb (frozen)"
  ],
  "40 thin slices whole grain bread": [
   "grain bread | 40 | Bakery | Great Value White Sandwich Bread, 20 oz"
@@ -9282,7 +9282,7 @@
   "bacon | 6 slice | Meat & Deli | Great Value Hickory Smoked Bacon, 16 oz"
  ],
  "6 slices cheddar cheese (4 ounces)": [
-  "cheddar cheese | 6 slice | Dairy & Refrigerated | Great Value Finely Shredded Sharp Cheddar, 8 oz"
+  "cheddar cheese | 6 slice | Dairy & Refrigerated | Great Value Deli Style Sliced Sharp Cheddar, 8 oz (12 slices)"
  ],
  "6 slices frozen garlic bread, such as Texas Toast, cut into 1\" cubes": [
   "frozen garlic bread | 6 slice | Frozen | Great Value Garlic Texas Toast, 8 ct (frozen)"
@@ -9291,7 +9291,7 @@
   "swiss cheese | 6 slice | Dairy & Refrigerated | Great Value Thin Sliced Swiss, 8 oz"
  ],
  "6 slices pepper jack cheese (bottom layer)": [
-  "pepper jack cheese | 6 slice | Dairy & Refrigerated | Great Value Shredded Monterey Jack, 8 oz"
+  "pepper jack cheese | 6 slice | Dairy & Refrigerated | Great Value Deli Style Sliced Pepper Jack, 8 oz (12 slices)"
  ],
  "6 slices provolone cheese": [
   "provolone cheese | 6 slice | Dairy & Refrigerated | Great Value Sliced Provolone, 8 oz"
@@ -9633,7 +9633,7 @@
   "bread | 8 slice | Bakery | Great Value White Sandwich Bread, 20 oz"
  ],
  "8 slices cheddar cheese": [
-  "cheddar cheese | 8 slice | Dairy & Refrigerated | Great Value Finely Shredded Sharp Cheddar, 8 oz"
+  "cheddar cheese | 8 slice | Dairy & Refrigerated | Great Value Deli Style Sliced Sharp Cheddar, 8 oz (12 slices)"
  ],
  "8 slices ciabatta or sourdough bread": [
   "ciabatta bread | 8 slice | Bakery | "
@@ -9642,7 +9642,7 @@
   "deli american cheese | 8 slice | Dairy & Refrigerated | Great Value American Singles, 16 slices"
  ],
  "8 slices fresh mozzarella cheese": [
-  "mozzarella cheese | 8 slice | Dairy & Refrigerated | Great Value Shredded Mozzarella, 16 oz"
+  "mozzarella cheese | 8 slice | Dairy & Refrigerated | Great Value Deli Style Sliced Mozzarella, 8 oz (12 slices)"
  ],
  "8 slices good sourdough bread": [
   "sourdough bread | 8 slice | Bakery | "
@@ -9654,7 +9654,7 @@
   "hearty rye bread | 8 slice | Bakery | Arnold Seeded Rye Bread, 16 oz"
  ],
  "8 slices pepper jack cheese (or cheddar for the kids)": [
-  "pepper jack cheese | 8 slice | Dairy & Refrigerated | Great Value Shredded Monterey Jack, 8 oz"
+  "pepper jack cheese | 8 slice | Dairy & Refrigerated | Great Value Deli Style Sliced Pepper Jack, 8 oz (12 slices)"
  ],
  "8 slices provolone cheese": [
   "provolone cheese | 8 slice | Dairy & Refrigerated | Great Value Sliced Provolone, 8 oz"
