@@ -4,8 +4,12 @@ A weekly family meal planner. It runs entirely in the browser: open `index.html`
 
 ## What it does
 
-- **Plan:** pick a category for each day (Pasta, Soup, Quick & Easy, Leftovers, Eat Out, Surprise Me and more), then fill the week. Reroll, lock or hand-pick any day, and add a side.
-- **Groceries:** builds a list from the week's meals, sorted by store aisle with amounts combined. Pantry staples stay off the list, weekly staples are added every week, and you check items off as you shop or copy the list as text.
+- **Plan:** pick a category for each day (Pasta, Soup, Quick & Easy, Leftovers, Eat Out, Surprise Me and more), then fill the week. Reroll, lock or hand-pick any day, and add a side. Rerolling never changes nights you've already eaten (or tonight), and big changes have an Undo.
+- **Variety:** the planner avoids the same main protein or two soups on back-to-back nights and caps chicken nights per week (Settings). Single-serving recipes and ones without directions are never planned, and recipes that need a marinade or overnight rise aren't planned for tonight or tomorrow.
+- **Groceries:** builds a list from the week's meals, sorted by store aisle with amounts combined (cups and tablespoons add up, cans and ounces add up by weight). Each item shows the nights that use it. Mid-week, the list covers tonight onward (tap **Whole week** for everything). Pantry staples stay off the list, weekly staples are added every week (a skipped staple can be added back), optional and "for serving" items are marked, and you check items off as you shop or copy the list as text. Check-offs sync item by item, so two people can shop at once.
+- **White-sauce swap:** on a red-sauce night the plan says how to make it white, and the grocery list leaves out the marinara or tomatoes and buys Alfredo (or green enchilada sauce, cream, green chiles) instead. Tap **Keep the red sauce** to buy it as written.
+- **Household size:** set how many you cook for. Recipes that serve fewer are scaled up on the plan, cook view and grocery list; party-size recipes are halved.
+- **Cook once, eat twice:** point a Leftovers night at an earlier dinner and that dinner becomes a double batch.
 - **Week setup:** each new week starts with a short setup: list what needs to be used up, confirm each night's category, then make the plan. The first meals of the week are chosen to clear out those leftovers.
 - **Sides:** pick a side recipe or just type one, like "fruit" or "chips", and it goes on the grocery list.
 - **Create with Claude:** describe what you're in the mood for, match a night's category, or ask for something new, and Claude writes a recipe that follows the family rules (no seafood, no red sauce). On this GitHub site it needs an Anthropic API key, which you add in Settings and which is stored only in your browser.
@@ -13,12 +17,15 @@ A weekly family meal planner. It runs entirely in the browser: open `index.html`
 - **One meal from your leftovers:** Claude writes a single recipe that uses every leftover you've listed, checks which ones it used, and lets you plan it for any night.
 - **Busy nights:** mark nights as busy (in Settings for every week, or per week) and they get a quick or slow cooker meal.
 - **Ratings:** rate past nights with stars and a separate "the kids loved it / not a hit." Both steer future plans.
-- **Batch size:** make a half, 1½ or double batch on any night; the recipe and grocery amounts adjust.
+- **Batch size:** make a half, 1½ or double batch on any night; the recipe and grocery amounts adjust, including ranges like "2-3 cloves" and the number of servings.
+- **Cook view:** big checkable ingredients and steps, the screen stays on, and any "simmer 20 minutes" in a step becomes a tap-to-start timer.
+- **What can I make tonight?** and **History and stats** are in the ••• menu: dinners ranked by how little you'd need to buy, a month calendar, most-made meals and favorites you haven't made lately.
 - **Tonight and tomorrow:** the Plan page shows tonight's dinner with a Cook button, plus reminders for tomorrow (thaw the meat, start the slow cooker).
 - **Usual sides:** sides you've paired with a meal before are suggested first.
 - **Send:** share the grocery list or the week's menu by text.
-- **Recipes:** 493 recipes (no seafood) with ratings, times and categories, all editable, plus a way to add your own.
-- **Settings:** week start day (default Friday), your usual week, red-sauce handling, the no-repeat window and pantry staples.
+- **Recipes:** 579 recipes (no seafood) with ratings, times and categories, all editable, plus a way to add your own. Includes pizzas, takeout favorites, mild curries, BBQ, holiday mains, air fryer, meatless dinners, sides and desserts. Recipes without a photo get an illustrated tile.
+- **Settings:** week start day (default Friday; changing it moves your planned meals into the new weeks), your usual week, red-sauce handling, household size, chicken nights per week, the no-repeat window, pantry staples (searchable) and appearance (Light, Dark or Match my phone).
+- **Works offline:** after the first visit the app, recipes and your list open without signal (handy in the store).
 
 ## Files
 
@@ -26,6 +33,7 @@ A weekly family meal planner. It runs entirely in the browser: open `index.html`
 - `recipes.json`: recipe data
 - `thumbs.json`: recipe photo thumbnails
 - `icons/` and `manifest.webmanifest`: app logo and home-screen icon
+- `sw.js`: offline support (keeps a copy of the app and recipes on the phone)
 
 ## Saving
 
@@ -54,7 +62,7 @@ Each item on the grocery list has a store menu (Walmart or Sam's Club). Recipe i
 
 On the grocery list, tap **+ Walmart** next to an item and paste the link of the exact Walmart product you buy (or its item number). It's remembered for every week. **Add to Walmart cart** then opens Walmart with every saved product still on your list in the cart, so you can choose a pickup time and check out. Check off anything you already have first so it isn't added.
 
-About 285 common items (milk, eggs, butter, cheeses, bread, tortillas, chicken, ground beef and turkey, broth, canned beans, pasta, egg noodles, rice, Greek yogurt, and produce like onions, baby carrots, bell peppers (green unless the recipe says red) and cilantro) already link to a Great Value product (or Walmart's own produce) found on walmart.com, so they go in the cart without any setup. Some swaps happen on the list itself. Plain "chicken" is bought as chicken breasts, or as a rotisserie chicken (from Sam's Club) when the recipe uses it cooked or shredded. Prosciutto and pancetta are bought as bacon. Tomatoes are Roma, lettuce is romaine, bell peppers are green unless the recipe names a color, and yellow or orange peppers use red. Tap the **Great Value ✓** / **Default ✓** button to pick a different product, or choose **Don't add from Walmart** to leave that item out. **Use this** brings the default back.
+About 310 common items (milk, eggs, butter, cheeses, bread, tortillas, chicken, ground beef and turkey, broth, canned beans, pasta, egg noodles, rice, Greek yogurt, and produce like onions, baby carrots, bell peppers (green unless the recipe says red) and cilantro) already link to a Great Value product (or Walmart's own produce) found on walmart.com, so they go in the cart without any setup. Some swaps happen on the list itself. Plain "chicken" is bought as chicken breasts, or as a rotisserie chicken (from Sam's Club) when the recipe uses it cooked or shredded. Prosciutto and pancetta are bought as bacon. Tomatoes are Roma, lettuce is romaine, bell peppers are green unless the recipe names a color, and yellow or orange peppers use red. Tap the **Great Value ✓** / **Default ✓** button to pick a different product, or choose **Don't add from Walmart** to leave that item out. **Use this** brings the default back.
 
 ## Family sync (Firebase)
 
