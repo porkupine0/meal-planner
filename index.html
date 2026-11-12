@@ -1624,6 +1624,8 @@ function wmItemId(text){
 }
 // Great Value / store-brand picks found on walmart.com, used until you choose your own product.
 const WM_DEFAULTS = [
+  [/ham steaks?|diced ham|cubed ham|chopped ham|cooked ham, diced|ham, diced/i, "136547788", "Great Value Boneless Smoked Ham Steaks, 2 pk, 14 oz"],
+  [/(microwave|microwaveable|ready|90[- ]second|instant) (jasmine |white |long grain )?rice|rice pouch/i, "400530816", "Great Value Jasmine Rice 90 Second Pouch, 8.8 oz"],
   [/cream[- ]style corn|creamed corn/i, "10448549", "Great Value Cream Style Sweet Corn, 14.75 oz can"],
   [/boneless turkey breast|turkey breast roast/i, "17247616", "Butterball Boneless Turkey Breast Roast, 3 lb (frozen)"],
   [/turkey (breast )?tenderloins?/i, "112597611", "Jennie-O Turkey Breast Tenderloins, 24 oz"],
@@ -1964,7 +1966,9 @@ const WM_DEFAULTS = [
 // canned: the recipe calls for it by the can (corn, beans), so look for the canned product
 const wmDefault = (name, canned, sliced) => { let n = String(name || '').toLowerCase(); if (canned && /\bcorn\b/.test(n) && !/cream|frozen|chip|tortilla|starch|meal|flake/.test(n)) n = 'canned corn'; if (sliced && /^(?:deli )?(?:american )?cheese$/.test(n)) n = 'american cheese'; else if (sliced && /cheddar|pepper ?jack|monterey jack|mozzarella|colby/.test(n) && !/shredded|grated|fresh/.test(n)) n = 'sliced ' + n.replace(/^sliced\s+/, ''); const d = n && WM_DEFAULTS.find(x => x.re.test(n)); return d ? {id: d.id, qty: 1, label: d.label, auto: true} : null; };
 // The product used for an item: your own pick, else the default (unless you turned it off).
-const wmPick = (key, name, parts) => { const p = (S.walmart.map || {})[key]; if (p && p.off) return null; if (p && p.id) return p; return wmDefault(name, (parts || []).some(x => x.unit === 'can'), (parts || []).some(x => x.unit === 'slice')); };
+const wmPick = (key, name, parts) => { const p = (S.walmart.map || {})[key]; if (p && p.off) return null; if (p && p.id) return p;
+  if (/^ham$/i.test(name) && (parts || []).some(x => /\b(diced|cubed|chopped)\b/i.test(x.raw || ''))) name = 'diced ham'; // a block to dice, not deli slices
+  return wmDefault(name, (parts || []).some(x => x.unit === 'can'), (parts || []).some(x => x.unit === 'slice')); };
 // Where each grocery item is bought, remembered per item (same keys as Walmart products).
 const STORES = [['walmart','Walmart'],['sams',"Sam's Club"]];
 const storeOf = key => (S.walmart.stores || {})[key] || (/rotisserie/.test(key) ? 'sams' : 'walmart');
@@ -2873,7 +2877,7 @@ if (/[?&]debug\b/.test(location.search)) window.__T = {S, parseIngredient, ingOf
 boot();
 // ---------- updates (GitHub Pages) ----------
 // Home-screen apps keep running an old copy, so check for a newer version when the app is opened or brought back.
-const APP_VERSION = '2026-11-12.5';
+const APP_VERSION = '2026-11-12.6';
 let updateShown = false;
 let lastCheck = 0;
 async function checkForUpdate(){

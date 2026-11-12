@@ -23,7 +23,7 @@ A weekly family meal planner. It runs entirely in the browser: open `index.html`
 - **Tonight and tomorrow:** the Plan page shows tonight's dinner with a Cook button, plus reminders for tomorrow (thaw the meat, start the slow cooker).
 - **Usual sides:** sides you've paired with a meal before are suggested first.
 - **Send:** share the grocery list or the week's menu by text.
-- **Recipes:** 670 recipes (no seafood) with ratings, times and categories, all editable, plus a way to add your own. Includes pizzas, takeout favorites, mild curries, BBQ, holiday mains, air fryer, meatless dinners, sides and desserts. Recipes without a photo get an illustrated tile.
+- **Recipes:** 686 recipes (no seafood) with ratings, times and categories, all editable, plus a way to add your own. Includes pizzas, takeout favorites, mild curries, BBQ, holiday mains, air fryer, meatless dinners, sides and desserts. Recipes without a photo get an illustrated tile.
 - **Settings:** week start day (default Friday; changing it moves your planned meals into the new weeks), your usual week, red-sauce handling, household size, chicken nights per week, the no-repeat window, pantry staples (searchable) and appearance (Light, Dark or Match my phone).
 - **Works offline:** after the first visit the app, recipes and your list open without signal (handy in the store).
 

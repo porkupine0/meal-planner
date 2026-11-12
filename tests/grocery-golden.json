@@ -245,7 +245,7 @@
   "chicken breast | 1.5 cup | Meat & Deli | Great Value Boneless Skinless Chicken Breasts, 5 lb (frozen)"
  ],
  "1 1/2 cups diced ham": [
-  "ham | 1.5 cup | Meat & Deli | Great Value Thin Sliced Honey Ham, 16 oz"
+  "ham | 1.5 cup | Meat & Deli | Great Value Boneless Smoked Ham Steaks, 2 pk, 14 oz"
  ],
  "1 1/2 cups ditalini": [
   "ditalini | 1.5 cup | Pasta, Rice & Grains | Great Value Elbow Macaroni, 16 oz"
@@ -352,6 +352,9 @@
  "1 1/2 lb Yukon gold potatoes, cut in chunks": [
   "yukon gold potatoes | 1.5 lb | Produce | Fresh Yellow Potatoes, 3 lb bag"
  ],
+ "1 1/2 lb Yukon gold potatoes, cut into 1/2-inch cubes": [
+  "yukon gold potatoes | 1.5 lb | Produce | Fresh Yellow Potatoes, 3 lb bag"
+ ],
  "1 1/2 lb Yukon gold potatoes, cut into 3/4-inch cubes": [
   "yukon gold potatoes | 1.5 lb | Produce | Fresh Yellow Potatoes, 3 lb bag"
  ],
@@ -422,7 +425,7 @@
   "cremini mushrooms | 1.5 lb | Produce | Freshness Guaranteed Sliced White Mushrooms, 8 oz"
  ],
  "1 1/2 lb diced ham": [
-  "ham | 1.5 lb | Meat & Deli | Great Value Thin Sliced Honey Ham, 16 oz"
+  "ham | 1.5 lb | Meat & Deli | Great Value Boneless Smoked Ham Steaks, 2 pk, 14 oz"
  ],
  "1 1/2 lb flank steak": [
   "flank steak | 1.5 lb | Meat & Deli | Choice Angus Flank Steak, 1 per tray"
@@ -1095,6 +1098,9 @@
  "1 can (15 oz) chickpeas, drained": [
   "chickpeas | 1 can | Pantry & Canned | Great Value Garbanzos Chick Peas, 15.5 oz"
  ],
+ "1 can (15 oz) chickpeas, drained and patted dry": [
+  "chickpeas | 1 can | Pantry & Canned | Great Value Garbanzos Chick Peas, 15.5 oz"
+ ],
  "1 can (16 ounces) refried beans": [
   "refried beans | 1 can | Pantry & Canned | Great Value Traditional Refried Beans, 16 oz"
  ],
@@ -1124,6 +1130,9 @@
  ],
  "1 can (20 oz) pineapple rings, drained": [
   "pineapple rings | 1 can | Pantry & Canned | Great Value Pineapple Chunks in Juice, 20 oz"
+ ],
+ "1 can (28 oz) baked beans": [
+  "baked beans | 1 can | Pantry & Canned | Great Value Original Baked Beans, 28 oz"
  ],
  "1 can (28 oz) green enchilada sauce": [
   "green enchilada sauce | 1 can | Sauces & Condiments | Great Value Green Chile Enchilada Sauce, Mild, 10 oz"
@@ -1207,6 +1216,9 @@
  "1 clove garlic, smashed and peeled": [
   "garlic | 1 clove | Produce | "
  ],
+ "1 container (16 oz) hummus": [
+  "hummus | 1 container | Dairy & Refrigerated | "
+ ],
  "1 container (8 oz) French onion dip": [
   "french onion dip | 1 container | Produce | "
  ],
@@ -1227,6 +1239,9 @@
  ],
  "1 cup / 250 ml beef stock": [
   "beef stock | 1 cup | Pantry & Canned | Great Value Beef Broth, 32 oz"
+ ],
+ "1 cup Alfredo sauce, warmed": [
+  "alfredo sauce | 1 cup | Sauces & Condiments | Great Value Alfredo Pasta Sauce, 16 oz"
  ],
  "1 cup BBQ sauce": [
   "bbq sauce | 1 cup | Sauces & Condiments | Great Value Original BBQ Sauce, 18 oz"
@@ -1391,7 +1406,7 @@
   "canned pineapple | 1 cup | Pantry & Canned | Great Value Pineapple Chunks in Juice, 20 oz"
  ],
  "1 cup diced ham": [
-  "ham | 1 cup | Meat & Deli | Great Value Thin Sliced Honey Ham, 16 oz"
+  "ham | 1 cup | Meat & Deli | Great Value Boneless Smoked Ham Steaks, 2 pk, 14 oz"
  ],
  "1 cup diced or shredded grilled or baked chicken breast** (see notes for the perfect marinade)": [
   "grilled breast | 1 cup | Pantry & Canned | Freshness Guaranteed Rotisserie Chicken (chilled)"
@@ -1449,6 +1464,9 @@
  ],
  "1 cup frozen corn, thawed": [
   "frozen corn | 1 cup | Frozen | Great Value Frozen Whole Kernel Corn, 12 oz"
+ ],
+ "1 cup frozen cut green beans": [
+  "frozen cut green beans | 1 cup | Frozen | Marketside Fresh Green Beans, 12 oz"
  ],
  "1 cup frozen peas": [
   "frozen peas | 1 cup | Frozen | Great Value Frozen Sweet Peas, 12 oz"
@@ -1642,6 +1660,9 @@
  "1 cup rotisserie chicken (optional)": [
   "rotisserie chicken | 1 cup | Meat & Deli | Freshness Guaranteed Rotisserie Chicken (chilled)"
  ],
+ "1 cup salsa verde": [
+  "salsa verde | 1 cup | Sauces & Condiments | Great Value Salsa Verde, 16 oz"
+ ],
  "1 cup semisweet chocolate chips": [
   "semisweet chocolate chips | 1 cup | Snacks & Nuts | Great Value Semi-Sweet Chocolate Chips, 12 oz"
  ],
@@ -1761,6 +1782,9 @@
  ],
  "1 cup thinly sliced yellow onion": [
   "yellow onion | 1 cup | Produce | Fresh Whole Yellow Onion, each"
+ ],
+ "1 cup tortilla chips": [
+  "tortilla chips | 1 cup | Snacks & Nuts | Great Value Restaurant Style White Corn Tortilla Chips, 13 oz"
  ],
  "1 cup tortilla chips, crushed": [
   "tortilla chips | 1 cup | Snacks & Nuts | Great Value Restaurant Style White Corn Tortilla Chips, 13 oz"
@@ -2060,7 +2084,7 @@
   "deli roast beef | 1 lb | Meat & Deli | Great Value Roast Beef Lunchmeat, 7 oz"
  ],
  "1 lb diced ham": [
-  "ham | 1 lb | Meat & Deli | Great Value Thin Sliced Honey Ham, 16 oz"
+  "ham | 1 lb | Meat & Deli | Great Value Boneless Smoked Ham Steaks, 2 pk, 14 oz"
  ],
  "1 lb elbow macaroni": [
   "elbow macaroni | 1 lb | Pasta, Rice & Grains | Great Value Elbow Macaroni, 16 oz"
@@ -2590,6 +2614,9 @@
  "1 red bell pepper, chunked": [
   "red bell pepper | 1 | Produce | Fresh Red Bell Pepper, each"
  ],
+ "1 red bell pepper, cut into chunks": [
+  "red bell pepper | 1 | Produce | Fresh Red Bell Pepper, each"
+ ],
  "1 red bell pepper, diced": [
   "red bell pepper | 1 | Produce | Fresh Red Bell Pepper, each"
  ],
@@ -2606,6 +2633,9 @@
   "red bell pepper | 1 | Produce | Fresh Red Bell Pepper, each"
  ],
  "1 red onion, chunked": [
+  "red onion | 1 | Produce | Fresh Whole Red Onion, each"
+ ],
+ "1 red onion, cut into wedges": [
   "red onion | 1 | Produce | Fresh Whole Red Onion, each"
  ],
  "1 red onion, diced": [
@@ -5575,6 +5605,9 @@
  "12 slices bacon": [
   "bacon | 12 slice | Meat & Deli | Great Value Hickory Smoked Bacon, 16 oz"
  ],
+ "12 slices bacon, chopped": [
+  "bacon | 12 slice | Meat & Deli | Great Value Hickory Smoked Bacon, 16 oz"
+ ],
  "12 slices of pepperoni (1/4 lb)": [
   "pepperoni | 12 slice | Meat & Deli | Prima Della Pepperoni, deli sliced (0.5 lb)"
  ],
@@ -5659,6 +5692,9 @@
  "15 oz. can petite diced Tomatoes (no salt added)": [
   "canned diced tomatoes | 15 oz | Pantry & Canned | Great Value Petite Diced Tomatoes, 14.5 oz"
  ],
+ "15 small flour tortillas": [
+  "flour tortillas | 15 | Bakery | Great Value Medium Flour Tortillas, 16 oz, 10 ct"
+ ],
  "15oz pinto beans, drained and rinsed": [
   "pinto beans | 15 oz | Pantry & Canned | Great Value Pinto Beans, 15.5 oz can"
  ],
@@ -5684,7 +5720,7 @@
   "velveeta | 16 oz | Dairy & Refrigerated | Velveeta Original, 16 oz"
  ],
  "16 oz. cooked ham odd the bone, sliced or diced": [
-  "ham | 16 oz | Meat & Deli | Great Value Thin Sliced Honey Ham, 16 oz"
+  "ham | 16 oz | Meat & Deli | Great Value Boneless Smoked Ham Steaks, 2 pk, 14 oz"
  ],
  "16 oz. strawberries, stemmed, halved, sliced, divided": [
   "strawberries | 16 oz | Pantry & Canned | Fresh Strawberries, 1 lb"
@@ -5712,6 +5748,9 @@
  ],
  "16 tablespoons cold unsalted butter, 2 sticks or 227 grams": [
   "unsalted butter | 16 tbsp | Dairy & Refrigerated | Great Value Salted Butter, 16 oz (4 sticks)"
+ ],
+ "16 tostada shells": [
+  "tostada shells | 16 | Bakery | Mission Baked Tostadas, 22 ct"
  ],
  "16 tostadas or a 10-ounce bag tortilla chips": [
   "tostadas chips | 16 | Snacks & Nuts | Great Value Restaurant Style White Corn Tortilla Chips, 13 oz"
@@ -6085,6 +6124,9 @@
  "2 Zucchini, chopped": [
   "zucchini | 2 | Produce | Fresh Zucchini, each"
  ],
+ "2 apples, cut into wedges": [
+  "apples | 2 | Produce | Fresh Gala Apple, each"
+ ],
  "2 apples, thinly sliced": [
   "apples | 2 | Produce | Fresh Gala Apple, each"
  ],
@@ -6157,8 +6199,14 @@
  "2 cans (15 oz) great northern beans, drained": [
   "great northern beans | 2 can | Pantry & Canned | Great Value Great Northern Beans, 15.5 oz can"
  ],
+ "2 cans (15 oz) pinto beans, drained": [
+  "pinto beans | 2 can | Pantry & Canned | Great Value Pinto Beans, 15.5 oz can"
+ ],
  "2 cans (15 oz) pinto beans, with liquid": [
   "pinto beans | 2 can | Pantry & Canned | Great Value Pinto Beans, 15.5 oz can"
+ ],
+ "2 cans (15 oz) white hominy, drained": [
+  "white hominy | 2 can | Pantry & Canned | Great Value White Hominy, 15.5 oz"
  ],
  "2 cans (21 oz) cherry pie filling": [
   "cherry pie filling | 2 can | Pantry & Canned | Great Value Cherry Pie Filling, 21 oz"
@@ -6371,7 +6419,7 @@
   "deli coleslaw | 2 cup | Produce | Marketside Tri-Color Cole Slaw, 16 oz"
  ],
  "2 cups diced ham": [
-  "ham | 2 cup | Meat & Deli | Great Value Thin Sliced Honey Ham, 16 oz"
+  "ham | 2 cup | Meat & Deli | Great Value Boneless Smoked Ham Steaks, 2 pk, 14 oz"
  ],
  "2 cups elbow macaroni": [
   "elbow macaroni | 2 cup | Pasta, Rice & Grains | Great Value Elbow Macaroni, 16 oz"
@@ -6794,6 +6842,9 @@
  "2 lb ground turkey (93/7)": [
   "ground turkey | 2 lb | Meat & Deli | Shady Brook Farms 93/7 Ground Turkey, 1 lb tray"
  ],
+ "2 lb ham steaks": [
+  "ham steaks | 2 lb | Meat & Deli | Great Value Boneless Smoked Ham Steaks, 2 pk, 14 oz"
+ ],
  "2 lb homemade pizza dough": [
   "pizza dough | 2 lb | Dairy & Refrigerated | Pizza Buddy Fresh Pizza Dough, 16 oz (bakery)"
  ],
@@ -6908,6 +6959,9 @@
  "2 medium shallots, sliced into 1/4\" rounds": [
   "shallots | 2 | Produce | Fresh Whole Shallots, 3 oz"
  ],
+ "2 medium sweet potatoes, cut into 3/4-inch cubes": [
+  "sweet potatoes | 2 | Produce | Fresh Sweet Potato, each"
+ ],
  "2 medium zucchini (about 1 lb.), sliced into 1/4\"-thick rounds": [
   "zucchini | 2 | Produce | Fresh Zucchini, each"
  ],
@@ -6940,6 +6994,9 @@
  ],
  "2 packages (12 oz) fully cooked chicken sausage, sliced": [
   "chicken sausage | 2 package | Meat & Deli | Aidells Chicken & Apple Smoked Chicken Sausage, 12 oz"
+ ],
+ "2 packages (14 oz) smoked turkey sausage, sliced": [
+  "smoked turkey sausage | 2 package | Meat & Deli | Hillshire Farm Smoked Sausage, 14 oz"
  ],
  "2 packages (16 oz) shelf-stable potato gnocchi": [
   "shelf-stable potato gnocchi | 2 package | Dairy & Refrigerated | Gia Russa Potato Gnocchi, 16 oz"
@@ -7337,6 +7394,9 @@
  "2 tbsp cashews (optional)": [
   "cashews | 2 tbsp | Snacks & Nuts | Great Value Roasted Salted Cashews, 14 oz"
  ],
+ "2 tbsp chili powder": [
+  "chili powder | 2 tbsp | Spices & Baking | "
+ ],
  "2 tbsp chopped fresh chives": [
   "chives | 2 tbsp | Produce | Fresh Chives, 0.5 oz clamshell"
  ],
@@ -7393,6 +7453,9 @@
  ],
  "2 tbsp low-sodium soy sauce": [
   "low-sodium soy sauce | 2 tbsp | Sauces & Condiments | "
+ ],
+ "2 tbsp maple syrup": [
+  "maple syrup | 2 tbsp | Sauces & Condiments | Great Value Original Syrup, 24 fl oz"
  ],
  "2 tbsp mayonnaise": [
   "mayonnaise | 2 tbsp | Sauces & Condiments | "
@@ -7970,8 +8033,17 @@
  "3 c. packed baby spinach": [
   "baby spinach | 3 cup | Produce | Marketside Fresh Spinach, 10 oz"
  ],
+ "3 cans (15 oz) black beans": [
+  "black beans | 3 can | Pantry & Canned | Great Value Black Beans, 15 oz can"
+ ],
  "3 cans (15 oz) great northern beans, drained and rinsed": [
   "great northern beans | 3 can | Pantry & Canned | Great Value Great Northern Beans, 15.5 oz can"
+ ],
+ "3 cans (15 oz) pinto beans, drained": [
+  "pinto beans | 3 can | Pantry & Canned | Great Value Pinto Beans, 15.5 oz can"
+ ],
+ "3 cans (15 oz) red kidney beans, drained and rinsed": [
+  "red kidney beans | 3 can | Pantry & Canned | Great Value Dark Red Kidney Beans, 15.5 oz"
  ],
  "3 carrots, diced": [
   "carrots | 3 | Produce | Fresh Baby Peeled Carrots, 1 lb bag"
@@ -8109,7 +8181,7 @@
   "rotisserie chicken | 3 cup | Meat & Deli | Freshness Guaranteed Rotisserie Chicken (chilled)"
  ],
  "3 cups diced ham": [
-  "ham | 3 cup | Meat & Deli | Great Value Thin Sliced Honey Ham, 16 oz"
+  "ham | 3 cup | Meat & Deli | Great Value Boneless Smoked Ham Steaks, 2 pk, 14 oz"
  ],
  "3 cups diced rotisserie chicken": [
   "rotisserie chicken | 3 cup | Meat & Deli | Freshness Guaranteed Rotisserie Chicken (chilled)"
@@ -8164,6 +8236,9 @@
  ],
  "3 cups shredded iceberg lettuce": [
   "iceberg lettuce | 3 cup | Produce | Marketside Shredded Iceberg Lettuce, 8 oz"
+ ],
+ "3 cups shredded lettuce": [
+  "lettuce | 3 cup | Produce | Fresh Romaine Hearts, 3 ct"
  ],
  "3 cups shredded mozzarella (about 12 oz.), divided": [
   "mozzarella | 3 cup | Dairy & Refrigerated | Great Value Shredded Mozzarella, 16 oz"
@@ -8257,6 +8332,9 @@
  ],
  "3 lb boneless pork loin": [
   "pork loin | 3 lb | Meat & Deli | Tyson Boneless Pork Loin Roast"
+ ],
+ "3 lb boneless pork shoulder": [
+  "pork shoulder | 3 lb | Meat & Deli | Smithfield Boneless Pork Shoulder Butt Roast"
  ],
  "3 lb boneless skinless chicken breasts": [
   "chicken breasts | 3 lb | Meat & Deli | Great Value Boneless Skinless Chicken Breasts, 5 lb (frozen)"
@@ -9162,7 +9240,7 @@
   "deli salami | 4 oz | Meat & Deli | Prima Della Genoa Salami, deli sliced (0.5 lb)"
  ],
  "4 oz diced ham": [
-  "ham | 4 oz | Meat & Deli | Great Value Thin Sliced Honey Ham, 16 oz"
+  "ham | 4 oz | Meat & Deli | Great Value Boneless Smoked Ham Steaks, 2 pk, 14 oz"
  ],
  "4 oz goat cheese, crumbled": [
   "goat cheese | 4 oz | Dairy & Refrigerated | Roth Plain Chèvre Goat Cheese Log, 4 oz"
@@ -9205,6 +9283,9 @@
  ],
  "4 packages (3 oz) ramen noodles": [
   "ramen noodles | 4 package | Pasta, Rice & Grains | Maruchan Ramen Chicken, 12 ct"
+ ],
+ "4 packages (8.5 oz) microwave jasmine rice": [
+  "microwave jasmine rice | 4 package | Pasta, Rice & Grains | Great Value Jasmine Rice 90 Second Pouch, 8.8 oz"
  ],
  "4 pita breads": [
   "pita breads | 4 | Bakery | Stonefire Original Naan, 2 ct (for naan, flatbread and pita)"
@@ -9454,6 +9535,9 @@
  "5 oz. sugar snap peas, cleaned, cut on this bias into 1/4\" pieces": [
   "sugar snap peas | 5 oz | Produce | Marketside Organic Sugar Snap Peas, 8 oz"
  ],
+ "5 packages (3 oz) chicken ramen noodles": [
+  "chicken ramen noodles | 5 package | Meat & Deli | Maruchan Ramen Chicken, 12 ct"
+ ],
  "5 pounds boneless pork shoulder": [
   "pork shoulder | 5 lb | Meat & Deli | Smithfield Boneless Pork Shoulder Butt Roast"
  ],
@@ -9601,6 +9685,9 @@
  "6 large eggs light beaten": [
   "eggs | 6 | Dairy & Refrigerated | Great Value Large White Eggs, 12 ct"
  ],
+ "6 large eggs, beaten": [
+  "eggs | 6 | Dairy & Refrigerated | Great Value Large White Eggs, 12 ct"
+ ],
  "6 large flatbreads": [
   "flatbreads | 6 | Bakery | Stonefire Original Naan, 2 ct (for naan, flatbread and pita)"
  ],
@@ -9686,6 +9773,9 @@
   "deli salami | 6 oz | Meat & Deli | Prima Della Genoa Salami, deli sliced (0.5 lb)"
  ],
  "6 oz freshly-grated sharp cheddar cheese, plus more for garnishing**": [],
+ "6 oz pepperoni": [
+  "pepperoni | 6 oz | Meat & Deli | Prima Della Pepperoni, deli sliced (0.5 lb)"
+ ],
  "6 oz salami, diced": [
   "salami | 6 oz | Meat & Deli | Prima Della Genoa Salami, deli sliced (0.5 lb)"
  ],
@@ -10011,7 +10101,7 @@
   "deli turkey | 8 oz | Meat & Deli | Great Value Oven Roasted Turkey Breast Lunchmeat, 16 oz"
  ],
  "8 oz diced ham": [
-  "ham | 8 oz | Meat & Deli | Great Value Thin Sliced Honey Ham, 16 oz"
+  "ham | 8 oz | Meat & Deli | Great Value Boneless Smoked Ham Steaks, 2 pk, 14 oz"
  ],
  "8 oz fresh mozzarella, sliced": [
   "mozzarella | 8 oz | Dairy & Refrigerated | Great Value Shredded Mozzarella, 16 oz"
@@ -10066,9 +10156,6 @@
  ],
  "8 slices American cheese": [
   "american cheese | 8 slice | Dairy & Refrigerated | Great Value American Singles, 16 slices"
- ],
- "8 slices Narutomaki, optional*": [
-  "narutomaki | 8 slice | Pantry & Canned | "
  ],
  "8 slices Pullman bread, sliced 1-inch thick": [
   "pullman bread | 8 slice | Bakery | Great Value White Sandwich Bread, 20 oz"
@@ -10834,11 +10921,44 @@
  "Optional: 1 cup fresh berries, for serving": [
   "berries | 1 cup | Produce | "
  ],
+ "Optional: 1 cup shredded rotisserie chicken": [
+  "rotisserie chicken | 1 cup | Meat & Deli | Freshness Guaranteed Rotisserie Chicken (chilled)"
+ ],
  "Optional: 1 cup sliced strawberries, for serving": [
   "strawberries | 1 cup | Pantry & Canned | Fresh Strawberries, 1 lb"
  ],
+ "Optional: 1 large egg": [
+  "egg | 1 | Dairy & Refrigerated | Great Value Large White Eggs, 12 ct"
+ ],
+ "Optional: 1 lb breakfast sausage": [
+  "breakfast sausage | 1 lb | Meat & Deli | Great Value Original Sausage Roll, 16 oz"
+ ],
+ "Optional: 1 lb flank steak, thinly sliced against the grain": [
+  "flank steak | 1 lb | Meat & Deli | Choice Angus Flank Steak, 1 per tray"
+ ],
+ "Optional: 1 lb ground beef": [
+  "ground beef | 1 lb | Meat & Deli | 80/20 Ground Beef Chuck, 1 lb roll"
+ ],
+ "Optional: 1 lb ground pork": [
+  "ground pork | 1 lb | Meat & Deli | Smithfield All Natural Fresh Ground Pork, 1.5 lb"
+ ],
+ "Optional: 1 lb mild Italian sausage": [
+  "italian sausage | 1 lb | Meat & Deli | Marketside Mild Ground Italian Sausage, 1 lb"
+ ],
+ "Optional: 1 lb sirloin steak, thinly sliced": [
+  "sirloin steak | 1 lb | Meat & Deli | Choice Angus Top Sirloin Steak, 1 per tray"
+ ],
+ "Optional: 1 package (12 oz) fully cooked chicken sausage, sliced": [
+  "chicken sausage | 1 package | Meat & Deli | Aidells Chicken & Apple Smoked Chicken Sausage, 12 oz"
+ ],
+ "Optional: 1 package (24 oz) fully cooked pork sausage links": [
+  "pork sausage links | 1 package | Meat & Deli | Great Value Pork Sausage Links, 24 oz"
+ ],
  "Optional: 1 tbsp balsamic glaze, for drizzling": [
   "balsamic glaze | 1 tbsp | Pantry & Canned | "
+ ],
+ "Optional: 1 tbsp chili crisp, for the adults": [
+  "chili crisp | 1 tbsp | Pantry & Canned | "
  ],
  "Optional: 1 tbsp gochujang": [
   "gochujang | 1 tbsp | Sauces & Condiments | Mother-in-Law's Gochujang, 10 oz"
@@ -10849,8 +10969,14 @@
  "Optional: 1 tbsp honey": [
   "honey | 1 tbsp | Sauces & Condiments | "
  ],
+ "Optional: 1 tsp chili crisp, for the adults": [
+  "chili crisp | 1 tsp | Pantry & Canned | "
+ ],
  "Optional: 1 tsp everything bagel seasoning": [
   "everything bagel seasoning | 1 tsp | Bakery | "
+ ],
+ "Optional: 1 tsp red pepper flakes, for the adults": [
+  "red pepper flakes | 1 tsp | Spices & Baking | "
  ],
  "Optional: 1 tsp sriracha, for the adults": [
   "sriracha | 1 tsp | Sauces & Condiments | "
@@ -10863,6 +10989,9 @@
  ],
  "Optional: 1/2 cup horseradish sauce, for serving": [
   "horseradish sauce | 0.5 cup | Sauces & Condiments | "
+ ],
+ "Optional: 1/2 cup pizza sauce, for the adults": [
+  "pizza sauce | 0.5 cup | Sauces & Condiments | Great Value Pizza Sauce, 14 oz"
  ],
  "Optional: 1/2 cup salsa verde, for serving": [
   "salsa verde | 0.5 cup | Sauces & Condiments | Great Value Salsa Verde, 16 oz"
@@ -10909,14 +11038,29 @@
  "Optional: 1/4 tsp red pepper flakes": [
   "red pepper flakes | 0.25 tsp | Spices & Baking | "
  ],
+ "Optional: 14 oz kielbasa, sliced": [
+  "kielbasa | 14 oz | Meat & Deli | Hillshire Farm Polska Kielbasa, 14 oz"
+ ],
  "Optional: 1–2 tbsp chopped green chiles for depth": [
   "green chiles | 2 tbsp | Pantry & Canned | Great Value Diced Green Chiles, 4 oz"
+ ],
+ "Optional: 2 cans (15 oz) cannellini beans, drained": [
+  "cannellini beans | 2 can | Pantry & Canned | Great Value Great Northern Beans, 15.5 oz can"
  ],
  "Optional: 2 cups baby arugula": [
   "baby arugula | 2 cup | Produce | Marketside Organic Baby Arugula, 5 oz"
  ],
+ "Optional: 2 cups diced ham": [
+  "ham | 2 cup | Meat & Deli | Great Value Boneless Smoked Ham Steaks, 2 pk, 14 oz"
+ ],
  "Optional: 2 cups mini marshmallows": [
   "mini marshmallows | 2 cup | Snacks & Nuts | Jet-Puffed Mini Marshmallows, 1 lb"
+ ],
+ "Optional: 2 cups shredded rotisserie chicken": [
+  "rotisserie chicken | 2 cup | Meat & Deli | Freshness Guaranteed Rotisserie Chicken (chilled)"
+ ],
+ "Optional: 2 large eggs": [
+  "eggs | 2 | Dairy & Refrigerated | Great Value Large White Eggs, 12 ct"
  ],
  "Optional: 2 tbsp capers, drained": [
   "capers | 2 tbsp | Pantry & Canned | Great Value Capers, 3.5 oz"
@@ -10939,8 +11083,20 @@
  "Optional: 2 tsp balsamic vinegar at the end for brightness": [
   "balsamic vinegar | 2 tsp | Sauces & Condiments | "
  ],
+ "Optional: 3 cups shredded rotisserie chicken": [
+  "rotisserie chicken | 3 cup | Meat & Deli | Freshness Guaranteed Rotisserie Chicken (chilled)"
+ ],
+ "Optional: 4 large eggs": [
+  "eggs | 4 | Dairy & Refrigerated | Great Value Large White Eggs, 12 ct"
+ ],
  "Optional: 6 slices bacon, cooked and crumbled": [
   "bacon | 6 slice | Meat & Deli | Great Value Hickory Smoked Bacon, 16 oz"
+ ],
+ "Optional: 8 oz sliced deli ham": [
+  "deli ham | 8 oz | Meat & Deli | Great Value Thin Sliced Honey Ham, 16 oz"
+ ],
+ "Optional: 8 oz sliced deli turkey": [
+  "deli turkey | 8 oz | Meat & Deli | Great Value Oven Roasted Turkey Breast Lunchmeat, 16 oz"
  ],
  "Optional: 8 oz spaghetti, for the kids": [
   "spaghetti | 8 oz | Pasta, Rice & Grains | Great Value Spaghetti, 16 oz"
