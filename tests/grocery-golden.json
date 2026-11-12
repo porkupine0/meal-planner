@@ -942,7 +942,7 @@
  "1 ball burrata (4 oz), gently torn in half or left whole": [
   "burrata | 1 ball | Dairy & Refrigerated | BelGioioso Burrata, 8 oz (two 4 oz balls)"
  ],
- "1 ball of pizza dough (about 12 oz)": [
+ "1 ball homemade pizza dough (about 12 oz)": [
   "pizza dough | 1 ball | Dairy & Refrigerated | Pizza Buddy Fresh Pizza Dough, 16 oz (bakery)"
  ],
  "1 bay leaf": [
@@ -2092,6 +2092,9 @@
  "1 lb ground turkey": [
   "ground turkey | 1 lb | Meat & Deli | Shady Brook Farms 93/7 Ground Turkey, 1 lb tray"
  ],
+ "1 lb homemade pizza dough": [
+  "pizza dough | 1 lb | Dairy & Refrigerated | Pizza Buddy Fresh Pizza Dough, 16 oz (bakery)"
+ ],
  "1 lb lean ground beef": [
   "ground beef | 1 lb | Meat & Deli | 80/20 Ground Beef Chuck, 1 lb roll"
  ],
@@ -2119,9 +2122,6 @@
  "1 lb penne pasta": [
   "penne pasta | 1 lb | Pasta, Rice & Grains | Great Value Penne Pasta, 16 oz"
  ],
- "1 lb pizza dough": [
-  "pizza dough | 1 lb | Dairy & Refrigerated | Pizza Buddy Fresh Pizza Dough, 16 oz (bakery)"
- ],
  "1 lb rotini pasta": [
   "rotini pasta | 1 lb | Pasta, Rice & Grains | Great Value Rotini, 16 oz"
  ],
@@ -2136,9 +2136,6 @@
  ],
  "1 lb spaghetti, broken in half": [
   "spaghetti | 1 lb | Pasta, Rice & Grains | Great Value Spaghetti, 16 oz"
- ],
- "1 lb store-bought pizza dough": [
-  "pizza dough | 1 lb | Dairy & Refrigerated | Pizza Buddy Fresh Pizza Dough, 16 oz (bakery)"
  ],
  "1 lb store-bought ravioli I recommend spinach and ricotta, but you could use beef or experiment with other flavours.": [
   "ravioli | 1 lb | Dairy & Refrigerated | Great Value Cheese Ravioli, 25 oz (frozen)"
@@ -3913,6 +3910,9 @@
  "1/2 cup BBQ sauce": [
   "bbq sauce | 0.5 cup | Sauces & Condiments | Great Value Original BBQ Sauce, 18 oz"
  ],
+ "1/2 cup Caesar dressing": [
+  "caesar dressing | 0.5 cup | Sauces & Condiments | Great Value Creamy Caesar Dressing, 16 fl oz"
+ ],
  "1/2 cup Italian breadcrumbs": [
   "italian breadcrumbs | 0.5 cup | Spices & Baking | Great Value Plain Panko Bread Crumbs, 8 oz"
  ],
@@ -4510,9 +4510,6 @@
  "1/2 tsp Cumin": [
   "cumin | 0.5 tsp | Spices & Baking | "
  ],
- "1/2 tsp Dijon mustard": [
-  "dijon mustard | 0.5 tsp | Sauces & Condiments | "
- ],
  "1/2 tsp Italian seasoning": [
   "italian seasoning | 0.5 tsp | Spices & Baking | "
  ],
@@ -4674,6 +4671,9 @@
  ],
  "1/3 cup (80g) Sweet Chili Sauce": [
   "sweet chili sauce | 0.333 cup | Sauces & Condiments | Great Value Thai Style Sweet Chili Sauce, 13.25 oz"
+ ],
+ "1/3 cup Caesar dressing": [
+  "caesar dressing | 0.333 cup | Sauces & Condiments | Great Value Creamy Caesar Dressing, 16 fl oz"
  ],
  "1/3 cup all-purpose flour": [
   "all-purpose flour | 0.333 cup | Spices & Baking | "
@@ -6794,6 +6794,9 @@
  "2 lb ground turkey (93/7)": [
   "ground turkey | 2 lb | Meat & Deli | Shady Brook Farms 93/7 Ground Turkey, 1 lb tray"
  ],
+ "2 lb homemade pizza dough": [
+  "pizza dough | 2 lb | Dairy & Refrigerated | Pizza Buddy Fresh Pizza Dough, 16 oz (bakery)"
+ ],
  "2 lb kielbasa, sliced": [
   "kielbasa | 2 lb | Meat & Deli | Hillshire Farm Polska Kielbasa, 14 oz"
  ],
@@ -6817,9 +6820,6 @@
  ],
  "2 lb skirt steak": [
   "skirt steak | 2 lb | Meat & Deli | Beef Inside Skirt Steak, 1 per tray"
- ],
- "2 lb store-bought pizza dough": [
-  "pizza dough | 2 lb | Dairy & Refrigerated | Pizza Buddy Fresh Pizza Dough, 16 oz (bakery)"
  ],
  "2 lb sweet potatoes, peeled and cubed": [
   "sweet potatoes | 2 lb | Produce | Fresh Sweet Potato, each"
@@ -8813,6 +8813,9 @@
  "4 ancho chiles (or use 4 guajillo or New Mexico chiles for a milder flavor), seeds removed": [
   "ancho chiles | 4 | Pantry & Canned | Dried Ancho Chiles, 4 oz"
  ],
+ "4 anchovy fillets, rinsed, patted dry, and minced to paste": [
+  "anchovy fillets | 4 | Pantry & Canned | "
+ ],
  "4 bananas, sliced": [
   "bananas | 4 | Produce | Fresh Banana, each (bunch of 6)"
  ],
@@ -9507,6 +9510,9 @@
  ],
  "6 Tbsp. unsalted butter, melted": [
   "unsalted butter | 6 tbsp | Dairy & Refrigerated | Great Value Salted Butter, 16 oz (4 sticks)"
+ ],
+ "6 anchovy fillets in oil, drained and finely chopped (1 1/2 teaspoons)": [
+  "anchovy fillets in oil | 6 | Sauces & Condiments | "
  ],
  "6 apples, peeled and sliced": [
   "apples | 6 | Produce | Fresh Gala Apple, each"
