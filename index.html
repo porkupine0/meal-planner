@@ -757,7 +757,7 @@ function proteinOf(r){
   if (r._p !== undefined) return r._p;
   const t = (r.n + ' ' + (r.i || []).slice(0, 12).join(' ')).toLowerCase();
   const n = r.n.toLowerCase();
-  const order = [['chicken', /chicken|rotisserie/], ['beef', /beef|steak|brisket|chuck|meatball|burger|sirloin|ribeye|sloppy|bulgogi|cheesesteak|philly|roast\b/], ['pork', /pork|carnitas|ham\b|bacon|ribs\b|kielbasa|sausage|brat|chorizo|pepperoni|salami|prosciutto/], ['turkey', /turkey/]];
+  const order = [['chicken', /chicken|rotisserie/], ['turkey', /turkey/], ['pork', /\bham steaks?\b/], ['beef', /beef|steak|brisket|chuck|meatball|burger|sirloin|ribeye|sloppy|bulgogi|cheesesteak|philly|roast\b/], ['pork', /pork|carnitas|ham\b|bacon|ribs\b|kielbasa|sausage|brat|chorizo|pepperoni|salami|prosciutto/], ['turkey', /turkey/]];
   let p = (order.find(([, re]) => re.test(n)) || order.find(([, re]) => re.test(t)) || ['meatless'])[0];
   try { Object.defineProperty(r, '_p', {value: p, enumerable: false, configurable: true}); } catch {}
   return p;
@@ -898,7 +898,7 @@ function badges(r, opts={}){
   if (r.t) b.push(`<span class="chip">${I.clock}${fmtMin(r.t)}</span>`);
   if (isQuick(r)) b.push(`<span class="chip quick">${I.bolt}Quick</span>`);
   if (isFav(r)) b.push(`<span class="chip fav">${I.star}${r.r}</span>`);
-  { const nu = r.k === 'main' ? nuOf(r) : null; if (nu && nu.protein > 0 && nu.protein < 150) b.push(`<span class="chip ${nu.protein >= 28 ? 'protein' : ''}">${Math.round(nu.protein)} g protein</span>`); }
+  { const nu = r.k === 'main' ? nuOf(r) : null; if (nu && nu.protein >= 12 && nu.protein < 150) b.push(`<span class="chip ${nu.protein >= 28 ? 'protein' : ''}">${Math.round(nu.protein)} g protein</span>`); }
   if (r.nw && !r.r) b.push(`<span class="chip new">New</span>`);
   if (r.red && S.settings.redMode !== 'off') b.push(`<span class="chip red">Red sauce · swap</span>`);
   if (r.kr) b.push(kidChip(r));
@@ -1447,7 +1447,7 @@ const nuOf = (() => {
   return r => { const t = r && r.nu; if (!t) return null; let p = cache.get(t); if (p === undefined) { p = parseNu(t); if (p.kcal > 1800) p.kcal = null; cache.set(t, p); } return p; };
 })();
 // What a night's category should feel like. Used by pick() only as a soft preference: if too few recipes fit, the whole category is used.
-const TACO_RE = /\b(tacos?|fajitas?|burritos?|quesadillas?|nachos?|enchiladas?|tostadas?|chalupas?|taquitos?|flautas?|chimichangas?|crunchwraps?)\b/i, TACO_NOT = /breakfast|soup|salad|casserole|bake\b|lasagna|gnocchi|chilaquiles/i;
+const TACO_RE = /\b(tacos?|fajitas?|burritos?|quesadillas?|nachos?|enchiladas?|tostadas?|chalupas?|taquitos?|flautas?|chimichangas?|crunchwraps?)\b/i, TACO_NOT = /breakfast|soup|salad|casserole|bake\b|lasagna|gnocchi|chilaquiles|pizza|pasta|burrito rice/i;
 const PASTA_ING = /\b(pasta|spaghetti|penne|fettuccine|linguine|rigatoni|rotini|macaroni|ziti|orzo|shells?|tortellini|ravioli|gnocchi|lasagna|farfalle|bucatini|angel hair|cavatappi|manicotti|egg noodles|elbow|cappellini|ditalini|tagliatelle|pappardelle|noodles?)\b/i;
 const NIGHT_FIT = {
   M: r => TACO_RE.test(r.n) && !TACO_NOT.test(r.n),                         // taco night brings tacos, burritos, fajitas, nachos, quesadillas
@@ -3330,11 +3330,11 @@ async function boot(){
   else if (FB_CONFIG.apiKey) startFirebase();
 }
 // For automated checks only: ?debug exposes the internals.
-if (/[?&]debug\b/.test(location.search)) window.__T = {tileEmoji, nuOf, S, asLeanBeef, parseIngredient, ingOf, cleanName, whiteSwap, swapsList, fitsDay, reminder, groceryModel, groceryEntries, walmartModel, wmDefault, wmPick, packsFor, editWeek, getWeek, curStart, pick, generateWeek, render, scaleLine, aisleOf};
+if (/[?&]debug\b/.test(location.search)) window.__T = {proteinOf, tileEmoji, nuOf, S, asLeanBeef, parseIngredient, ingOf, cleanName, whiteSwap, swapsList, fitsDay, reminder, groceryModel, groceryEntries, walmartModel, wmDefault, wmPick, packsFor, editWeek, getWeek, curStart, pick, generateWeek, render, scaleLine, aisleOf};
 boot();
 // ---------- updates (GitHub Pages) ----------
 // Home-screen apps keep running an old copy, so check for a newer version when the app is opened or brought back.
-const APP_VERSION = '2026-11-15.19';
+const APP_VERSION = '2026-11-15.20';
 let updateShown = false;
 let lastCheck = 0;
 async function checkForUpdate(){
