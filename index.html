@@ -972,6 +972,8 @@ function attachListeners(){
   db.doc('app/fridge').onSnapshot(s => { baseDoc['app/fridge'] = s.exists ? structuredClone(s.data()) : null; S.fridge = s.exists ? structuredClone(s.data()) : {items:[]}; scheduleRender(); }, onErr);
   db.collection('overrides').onSnapshot(q => { for (const k of Object.keys(baseDoc)) if (k.startsWith('overrides/')) delete baseDoc[k]; for (const x of q.docs) baseDoc['overrides/' + x.id] = structuredClone(x.data()); collLoaded.overrides = true; S.overrides = Object.fromEntries(q.docs.map(x => [x.id, structuredClone(x.data())])); rebuildRecipes(); scheduleRender(); }, onErr);
   db.collection('custom').onSnapshot(q => { for (const k of Object.keys(baseDoc)) if (k.startsWith('custom/')) delete baseDoc[k]; for (const x of q.docs) baseDoc['custom/' + x.id] = structuredClone(x.data()); collLoaded.custom = true; S.custom = Object.fromEntries(q.docs.map(x => [x.id, structuredClone(x.data())])); rebuildRecipes(); scheduleRender(); }, onErr);
+  // weak signal can look online while the server never answers: after 10 seconds, stop waiting so a new week can still be started
+  setTimeout(() => { if (!S.weeksFresh) { S.weeksFresh = true; scheduleRender(); } }, 10000);
   db.collection('weeks').orderBy('start','desc').limit(60).onSnapshot(q => { S.weeks = Object.fromEntries(q.docs.map(x => [x.id, structuredClone(x.data())])); for (const id of Object.keys(S.drafts)) if (S.weeks[id]) delete S.drafts[id]; if (!q.fromCache) S.weeksFresh = true; S.weeksLoaded = true; scheduleRender(); }, onErr);
 }
 // ---------- family sync (Firebase) for the GitHub Pages site ----------
@@ -3145,7 +3147,7 @@ if (/[?&]debug\b/.test(location.search)) window.__T = {S, parseIngredient, ingOf
 boot();
 // ---------- updates (GitHub Pages) ----------
 // Home-screen apps keep running an old copy, so check for a newer version when the app is opened or brought back.
-const APP_VERSION = '2026-11-15.7';
+const APP_VERSION = '2026-11-15.8';
 let updateShown = false;
 let lastCheck = 0;
 async function checkForUpdate(){
