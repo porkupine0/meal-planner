@@ -1445,6 +1445,14 @@ const nuOf = (() => {
   const cache = new Map();
   return r => { const t = r && r.nu; if (!t) return null; let p = cache.get(t); if (p === undefined) { p = parseNu(t); if (p.kcal > 1800) p.kcal = null; cache.set(t, p); } return p; };
 })();
+// What a night's category should feel like. Used by pick() only as a soft preference: if too few recipes fit, the whole category is used.
+const TACO_RE = /\b(tacos?|fajitas?|burritos?|quesadillas?|nachos?|enchiladas?|tostadas?|chalupas?|taquitos?|flautas?|chimichangas?|crunchwraps?)\b/i, TACO_NOT = /breakfast|soup|salad|casserole|bake\b|lasagna|gnocchi|chilaquiles/i;
+const PASTA_ING = /\b(pasta|spaghetti|penne|fettuccine|linguine|rigatoni|rotini|macaroni|ziti|orzo|shells?|tortellini|ravioli|gnocchi|lasagna|farfalle|bucatini|angel hair|cavatappi|manicotti|egg noodles|elbow|cappellini|ditalini|tagliatelle|pappardelle|noodles?)\b/i;
+const NIGHT_FIT = {
+  M: r => TACO_RE.test(r.n) && !TACO_NOT.test(r.n),                         // taco night brings tacos, burritos, fajitas, nachos, quesadillas
+  SC: r => reminder(r) === 'Start in the morning',                          // slow cooker night is a real all-day cook, not an Instant Pot 30-minute dinner
+  P: r => ingOf(r).some(i => PASTA_ING.test(i.name)),                        // pasta night has pasta in it
+};
 function pick(cat, w, dateISO, rand=Math.random, exclude=null){
   if (!cat || NOCOOK.some(n=>n[0]===cat)) return null;
   const used = new Set(Object.entries(w.days).filter(([k,d]) => k !== dateISO && d.rid).map(([,d]) => d.rid));
@@ -1457,14 +1465,16 @@ function pick(cat, w, dateISO, rand=Math.random, exclude=null){
   if (w.days[dateISO]?.busy) { const easy = pool.filter(isBusyOk); if (easy.length) pool = easy; }
   const cookIdx = keys.filter(k => !NOCOOK.some(n => n[0] === w.days[k].cat)).indexOf(dateISO);
   { const fresh0 = pool.filter(r => !recent.has(r.id)); if (fresh0.length) pool = fresh0; } // a leftover match must not bring back last week's dinner
-  const want = uncoveredLeftovers(w, dateISO);
+  const want = uncoveredLeftovers(w, dateISO); let usedUp = false;
   if (want.length && cookIdx >= 0 && cookIdx < 4) {
     let hit = pool.filter(r => fridgeMatches(r).some(n => want.includes(n)));
     if (!hit.length && S.settings.useUpOverride) hit = S.recipes.filter(r => plannable(r) && !used.has(r.id) && !recent.has(r.id) && fridgeMatches(r).some(n => want.includes(n)));
-    if (hit.length) pool = hit;
+    if (hit.length) { pool = hit; usedUp = true; }
   }
   const fresh = pool.filter(r => !recent.has(r.id));
   if (fresh.length) pool = fresh;
+  // The night's character, soft: skipped when a leftover is steering this night, and only when enough recipes fit.
+  if (!usedUp && NIGHT_FIT[cat]) { const ok = pool.filter(NIGHT_FIT[cat]); if (ok.length >= 12) pool = ok; }
   // Nutrition, soft: each rule only narrows the pool when something is left, and unknown nutrition always passes. Leftover matches and busy nights above still win.
   { const kcal = r => nuOf(r)?.kcal ?? null, prot = r => nuOf(r)?.protein ?? null;
     const cookedKcal = k => { const d = w.days[k]; return k !== dateISO && d.rid && !NOCOOK.some(n => n[0] === d.cat) && S.byId[d.rid] ? kcal(S.byId[d.rid]) : null; };
@@ -3309,7 +3319,7 @@ if (/[?&]debug\b/.test(location.search)) window.__T = {tileEmoji, nuOf, S, asLea
 boot();
 // ---------- updates (GitHub Pages) ----------
 // Home-screen apps keep running an old copy, so check for a newer version when the app is opened or brought back.
-const APP_VERSION = '2026-11-15.17';
+const APP_VERSION = '2026-11-15.18';
 let updateShown = false;
 let lastCheck = 0;
 async function checkForUpdate(){
