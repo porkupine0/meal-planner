@@ -76,7 +76,7 @@ a{color:var(--accent)}
 .tab .count{font-size:11px;background:var(--accent);color:var(--accent-ink);border-radius:99px;padding:0 6px;line-height:17px}
 @media (max-width:760px){
   .tabs{position:fixed;left:0;right:0;bottom:0;margin:0;transform:translateZ(0);-webkit-backface-visibility:hidden;background:var(--surface);border-top:1px solid var(--line);justify-content:space-around;padding:6px max(6px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(6px,env(safe-area-inset-left,0px));z-index:30}
-  .tab{flex-direction:column;gap:2px;font-size:11px;padding:6px 4px;flex:1}
+  .tab{flex-direction:column;gap:2px;font-size:12px;padding:6px 4px;flex:1}
   .tab svg{width:22px;height:22px}
   .tab .count{position:absolute;margin-left:22px;margin-top:-4px}
   .tab{position:relative}
@@ -88,7 +88,7 @@ a{color:var(--accent)}
 @media (max-width:520px){.status{font-size:11.5px}.brand{font-size:19px;min-width:0}.top-in{gap:10px}}
 @media (max-width:360px){.status span:last-child{display:none}}
 .items li{min-width:0}
-@media (max-width:760px){input[type=text],input[type=number],input[type=search],input[type=date],select,textarea{font-size:16px}}
+@media (max-width:760px){input[type=text],input[type=number],input[type=search],input[type=date],input[type=email],input[type=password],select,textarea{font-size:16px}}
 .items li .it-x{flex:none}
 /* common */
 .btn{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 13px;cursor:pointer;font-weight:600;display:inline-flex;align-items:center;gap:7px;line-height:1.2;white-space:nowrap}
@@ -105,7 +105,7 @@ a.btn.primary{color:var(--accent-ink)}
 .btn.icon{padding:7px}
 .btn[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
 .btn:disabled{opacity:.45;cursor:default}
-input[type=text],input[type=number],input[type=search],input[type=date],select,textarea{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 11px;width:100%;min-width:0}
+input[type=text],input[type=number],input[type=search],input[type=date],input[type=email],input[type=password],select,textarea{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 11px;width:100%;min-width:0}
 textarea{resize:vertical;min-height:90px;line-height:1.4}
 select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 15px) 52%,calc(100% - 10px) 52%;background-size:5px 5px;background-repeat:no-repeat;padding-right:28px}
 .label{font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:700}
@@ -165,10 +165,10 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,va
 .aisle h3{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px;margin:0 0 6px}
 .aisle h3 .muted{font-family:var(--f-body);font-weight:500;font-size:13px}
 .items{list-style:none;margin:0;padding:0;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
-.items li{display:flex;gap:10px;align-items:flex-start;padding:9px 12px;border-top:1px solid var(--line)}
+.items li{display:flex;gap:10px;align-items:center;padding:9px 12px;border-top:1px solid var(--line)}
 .items li:first-child{border-top:0}
 .items li.done .it-name{text-decoration:line-through;color:var(--muted)}
-.check{appearance:none;width:22px;height:22px;border:2px solid var(--line);border-radius:7px;flex:none;cursor:pointer;display:grid;place-items:center;margin-top:1px;background:var(--surface)}
+.check{appearance:none;width:22px;height:22px;border:2px solid #8C998F;border-radius:7px;flex:none;cursor:pointer;display:grid;place-items:center;margin-top:1px;background:var(--surface)}
 .check:checked{background:var(--accent);border-color:var(--accent)}
 .check:checked::after{content:"";width:6px;height:11px;border:solid var(--accent-ink);border-width:0 2.5px 2.5px 0;transform:rotate(45deg) translate(-1px,-1px)}
 .it-b{flex:1;min-width:0}
@@ -255,7 +255,13 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,va
 /* cook mode */
 .cook{display:flex;flex-direction:column;gap:12px;font-size:17px}
 .cook h3{font-size:19px;margin-top:4px}
+.chips.scroll{-webkit-mask-image:linear-gradient(90deg,#000 90%,transparent);mask-image:linear-gradient(90deg,#000 90%,transparent)}
 .cook-ing{list-style:none;margin:0;padding:0}
+.cook-steps button{font-size:18px;line-height:1.5}
+.cook details>summary{cursor:pointer;font-weight:700;font-size:18px;padding:10px 0;list-style:none}
+.cook details>summary::-webkit-details-marker{display:none}
+.cook details>summary::after{content:' ▾';color:var(--muted)}
+.cook details[open]>summary::after{content:' ▴'}
 .cook-ing li{border-bottom:1px solid var(--line)}
 .cook-ing li.hdr{font-weight:700;color:var(--accent);padding:10px 0 4px;border:0}
 .cook-ing label{display:flex;gap:12px;align-items:flex-start;padding:9px 0;cursor:pointer}
@@ -373,9 +379,9 @@ details.pantry summary::-webkit-details-marker{display:none}
 .modal-h{position:sticky;top:0;background:var(--surface);display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line);z-index:2}
 .modal-h h2{font-size:20px;flex:1;min-width:0}
 .modal-b{padding:16px;display:flex;flex-direction:column;gap:16px}
-.hero{width:100%;max-width:300px;aspect-ratio:4/3;object-fit:cover;border-radius:12px}
+.hero{width:100%;max-width:none;aspect-ratio:16/9;object-fit:cover;border-radius:12px}
 .stars{display:inline-flex;gap:2px}
-.star{border:0;background:none;padding:2px;cursor:pointer;color:var(--line)}
+.star{border:0;background:none;padding:2px;cursor:pointer;color:#9AA79E}
 .star svg{width:24px;height:24px}
 .star.on{color:var(--sun)}
 .ing{margin:0;padding:0;list-style:none;columns:2 240px;column-gap:24px}
@@ -1365,7 +1371,7 @@ function viewSetup(start, w, label, dates){
     <div class="setup">
       <section class="panel"><div class="label">Step 1</div><h3>What needs to be used up?</h3>
         <p class="muted" style="margin:0 0 4px;font-size:14px">Add leftover or half-used ingredients from the fridge. The first meals of the week will be planned around them.</p>
-        <div class="addrow"><input type="text" id="fridge-in" placeholder="e.g. spinach, sour cream, ham" aria-label="Ingredient to use up" value="${esc(S.fridgeDraft)}"><button class="btn" data-act="addfridge">${I.plus}Add</button></div>
+        <div class="addrow"><input type="text" id="fridge-in" placeholder="e.g. spinach, ham" aria-label="Ingredient to use up" value="${esc(S.fridgeDraft)}"><button class="btn" data-act="addfridge">${I.plus}Add</button></div>
         ${overrideBox()}
         <div class="chips" style="margin-top:10px">${fr.length ? fr.map(f => `<span class="chip fridge" style="font-size:13px;padding:4px 6px 4px 10px">${esc(f.name)}<button class="btn ghost sm icon" style="padding:2px" data-act="usedfridge" data-id="${f.id}" aria-label="Remove ${esc(f.name)}">${I.x}</button></span>`).join('') : '<span class="muted" style="font-size:14px">Nothing yet. Skip this step if the fridge is clear.</span>'}</div>
         ${fr.length && aiMode() ? `<button class="btn ai-all" style="margin-top:10px" data-act="aiopen" data-all="1">${I.wand}Ask Claude for one meal that uses ${fr.length === 2 ? 'both' : fr.length > 1 ? `all ${fr.length}` : 'it'}</button>` : ''}
@@ -1468,11 +1474,11 @@ function viewPlan(){
       : `<div class="day-f">
         <button class="btn ghost" data-act="reroll" data-day="${id}" ${nocook||!day.cat?'disabled':''}>${I.reroll}Reroll</button>
         <button class="btn ghost" data-act="pick" data-day="${id}">${I.search}Choose</button>
-        <button class="btn ghost" data-act="lock" data-day="${id}" aria-pressed="${!!day.locked}" aria-label="${day.locked?'Unlock':'Lock'} this night" title="Lock keeps this meal when you reroll">${day.locked?I.lock:I.unlock}</button>
-        <button class="btn ghost" data-act="clear" data-day="${id}" aria-label="Clear night" ${!r&&!day.cat?'disabled':''}>${I.x}</button>
+        <button class="btn ghost" data-act="lock" data-day="${id}" aria-pressed="${!!day.locked}" aria-label="${day.locked?'Unlock':'Lock'} this night" title="Lock keeps this meal when you reroll">${day.locked?I.lock:I.unlock}${day.locked?'Locked':'Lock'}</button>
+        <button class="btn ghost" data-act="clear" data-day="${id}" aria-label="Clear night" ${!r&&!day.cat?'disabled':''}>${I.x}Clear</button>
       </div>`;
     return `<article class="day ${id===today?'today':''} ${day.locked?'locked':''} ${past?'past':''}">
-      <div class="day-h"><div class="day-date"><span>${DOW[d.getDay()]}</span><b>${d.getDate()}</b></div>
+      <div class="day-h"><div class="day-date"><span>${id === iso(new Date()) ? 'TODAY' : DOW[d.getDay()]}</span><b>${d.getDate()}</b></div>
         <select id="cat-${id}" data-cat="${id}" aria-label="Category for ${DOWL[d.getDay()]}" ${past ? 'disabled' : ''}>${catOptions(day.cat)}</select>${past ? '' : `<button class="chipbtn busy-t" data-act="busy" data-day="${id}" aria-pressed="${!!day.busy}" title="Busy nights get a quick or slow cooker meal">Busy</button>`}</div>
       ${body}${foot}</article>`;
   }).join('');
@@ -2278,14 +2284,14 @@ function viewGrocery(){
       // In the store the list comes first: one compact row for ordering, and a sticky bar with progress and the store filter.
       return `${edit ? `<div class="wm-bar editing"><div class="grow"><b>Linking Walmart products</b><div class="muted" style="font-size:13px">Each item shows the product that goes in the cart. Tap the button next to an item to change it, or <b>+ Walmart</b> to link one that has no default. You only do this once per item.</div></div><button class="btn primary" data-act="wmedit">Done</button></div>`
         : `<div class="order-row">${n ? `<a class="btn primary" href="${esc(wm.url)}" target="_blank" rel="noopener" data-wmcart aria-label="Add ${n} products to Walmart cart">${I.cart}Walmart cart · ${n}</a>` : `<button class="btn primary" data-act="wmedit">${I.cart}Set up Walmart pickup</button>`}${nS ? `<button class="btn" data-act="sendsams" aria-label="Send Sam's Club list, ${nS} items">${I.share}Sam's list · ${nS}</button>` : ''}${n ? `<button class="btn ghost" data-act="wmedit">Check products</button>` : ''}</div>`}
-        ${midweek ? `<div class="chips" role="group" aria-label="Which nights"><button class="chipbtn" data-act="listscope" data-v="rest" aria-pressed="${!w.listAll}">Today on</button><button class="chipbtn" data-act="listscope" data-v="all" aria-pressed="${!!w.listAll}">Whole week</button>${!w.listAll && m.skipped ? `<span class="muted" style="font-size:13px;align-self:center">${m.skipped} earlier night${m.skipped > 1 ? 's' : ''} left off</span>` : ''}</div>` : ''}
+        ${midweek ? `<div class="chips" role="group" aria-label="Which nights"><button class="chipbtn" data-act="listscope" data-v="rest" aria-pressed="${!w.listAll}">From today</button><button class="chipbtn" data-act="listscope" data-v="all" aria-pressed="${!!w.listAll}">Whole week</button>${!w.listAll && m.skipped ? `<span class="muted" style="font-size:13px;align-self:center">${m.skipped} earlier night${m.skipped > 1 ? 's' : ''} left off</span>` : ''}</div>` : ''}
       <div class="g-sticky">
         ${nS ? `<div class="chips" role="group" aria-label="Show items for">${[['all','All',ents.length],['walmart','Walmart',nW],['sams',"Sam's Club",nS]].map(([v,l,c]) => `<button class="chipbtn" data-act="storeview" data-v="${v}" aria-pressed="${view === v}">${l} <span class="muted">${c}</span></button>`).join('')}</div>` : ''}
         ${m.total ? `<div class="progress-row"><div class="progress" aria-hidden="true"><span style="width:${Math.round(100 * (m.total - left) / m.total)}%"></span></div><span class="muted"><b class="ink">${left ? `${left} to get` : 'All done'}</b> · ${m.total - left} of ${m.total} checked</span></div>` : ''}
       </div>`; })()}
     ${!m.total ? `<div class="empty">Nothing on the list yet. Plan some meals or add weekly staples in Settings.</div>` : ''}
     ${staplesHTML}${aisles}${extrasHTML}
-    <div class="addrow"><input type="text" id="extra-in" placeholder="Add something else (paper towels, snacks…)" aria-label="Add grocery item"><button class="btn" data-act="addextra">${I.plus}Add</button></div>
+    <div class="addrow"><input type="text" id="extra-in" placeholder="Paper towels, snacks…" aria-label="Add grocery item"><button class="btn" data-act="addextra">${I.plus}Add</button></div>
     ${!edit && (n || wm.missing.length) ? `<details class="wm-check" style="margin-top:18px" ${S.wmSent ? 'open' : ''}><summary><b>${S.wmSent ? 'Did everything make it into the cart?' : 'What gets sent to Walmart'}</b> <span class="muted">${n} product${n === 1 ? '' : 's'} going in the cart${wm.missing.length ? ` · ${wm.missing.length} item${wm.missing.length === 1 ? '' : 's'} not linked` : ''}</span></summary>
       <p class="muted" style="margin:0 0 8px;font-size:13px">Walmart quietly skips anything it can't add for your store, with no warning. Compare this list to your cart and tap <b>Open</b> on anything that's missing to add it by hand. Optional items and Sam's Club items are never sent.</p>
       ${n ? `<ul class="items">${wm.mapped.map(x => `<li><div class="it-b"><div class="it-name"><span class="it-qty">${x.n} ×</span> ${esc(x.p.label || ('Item #' + x.p.id))}</div><div class="it-for">for ${esc(x.name)}</div></div><a class="btn sm it-x" href="https://www.walmart.com/ip/${esc(x.p.id)}" target="_blank" rel="noopener">Open</a></li>`).join('')}</ul>` : ''}
@@ -2295,7 +2301,7 @@ function viewGrocery(){
     ${m.fromFridge.length ? `<details class="aisle donebox"><summary><h3>Using from the fridge <span class="muted">${m.fromFridge.length}</span></h3></summary>
       <p class="muted" style="font-size:13.5px;margin:0 0 8px">These leftovers are planned for one meal each, so they aren't on the list for that meal.</p>
       <div class="mini-list">${m.fromFridge.map(x => `<div class="mini"><span class="grow">${esc(x.name)} <span class="muted" style="font-size:12.5px">· ${esc(DOW[parseISO(x.day).getDay()])}: ${esc(x.recipe)}</span></span></div>`).join('')}</div></details>` : ''}
-    ${pantryList.length || (w.need||[]).length ? `<details class="aisle donebox"><summary><h3>Left off: in your pantry <span class="muted">${pantryList.length}</span></h3></summary>
+    ${pantryList.length || (w.need||[]).length ? `<details class="aisle donebox"><summary><h3>Not on the list: in your pantry <span class="muted">${pantryList.length}</span></h3></summary>
       <p class="muted" style="font-size:13.5px;margin:0 0 8px">These are pantry staples, so they aren't on the list. Tap <b>Need it</b> if you're running low.</p>
       <div class="mini-list">${pantryList.map(([k,rs]) => `<div class="mini"><span class="grow">${esc(cap(k))}</span><button class="btn sm" data-act="need" data-key="${esc(k)}">Need it</button></div>`).join('')}</div>
       ${(w.need||[]).length?`<div style="margin-top:10px" class="muted">Added back this week: ${(w.need).map(x=>`<button class="chipbtn" data-act="unneed" data-key="${esc(x)}">${esc(x)} ✕</button>`).join(' ')}</div>`:''}</details>` : ''}
@@ -2341,7 +2347,7 @@ function filteredRecipes(){
 function viewRecipes(){
   const list = filteredRecipes(); const f = S.rf;
   const nNew = S.recipes.filter(r=>r.nw).length;
-  return `<div class="section-h"><div><div class="label">${S.recipes.length} recipes · ${nNew} added by Claude · no seafood</div><h1>Recipe box</h1></div><div class="row"><button class="btn" data-act="newrecipe">${I.plus}Add</button><button class="btn primary" data-act="aiopen">${I.wand}Create with Claude</button></div></div>
+  return `<div class="section-h"><div><div class="label">${S.recipes.length} in the box · ${nNew} added by Claude · no seafood</div><h1>Recipe box</h1></div><div class="row"><button class="btn" data-act="newrecipe">${I.plus}Add</button><button class="btn primary" data-act="aiopen">${I.wand}Create with Claude</button></div></div>
   <div class="filters">
     <div class="row" style="flex-wrap:nowrap"><div class="searchbox" style="flex:1">${I.search}<input type="search" id="rq" placeholder="Search by name or ingredient (try “spinach”)" value="${esc(f.q)}" aria-label="Search recipes"></div>
       <select id="rsort" style="width:auto" aria-label="Sort"><option value="fav" ${f.sort==='fav'?'selected':''}>Top rated</option><option value="time" ${f.sort==='time'?'selected':''}>Fastest</option><option value="name" ${f.sort==='name'?'selected':''}>A–Z</option><option value="new" ${f.sort==='new'?'selected':''}>Newest</option></select></div>
@@ -2357,7 +2363,7 @@ function viewRecipes(){
     <div class="row" style="justify-content:space-between"><span class="muted">${list.length} recipe${list.length===1?'':'s'}</span><label class="mini" style="font-size:13.5px"><input type="checkbox" data-toggle-mains ${!f.mains?'checked':''}> Include sides &amp; desserts</label></div>
   </div>
   ${list.length ? `<div class="rgrid">${list.slice(0, f.limit).map(r => `<button class="rcard" data-open="${r.id}">${thumbHTML(r)}<div class="rb"><div class="rn">${esc(r.n)}</div><div class="meal-meta">${r.t?`<span class="chip">${I.clock}${fmtMin(r.t)}</span>`:''}${isFav(r)?`<span class="chip fav">${I.star}${r.r}</span>`:''}${r.nw && !r.r?'<span class="chip new">New</span>':''}${r.red && S.settings.redMode!=='off'?'<span class="chip red">Red sauce</span>':''}${r.hide?'<span class="chip">Hidden</span>':''}</div></div></button>`).join('')}</div>
-    ${list.length > f.limit ? `<div class="morebtn"><button class="btn" data-act="more">Show more (${list.length - f.limit} left)</button></div>`:''}` : `<div class="empty">No recipes match. Clear a filter or try another word.</div>`}`;
+    ${list.length > f.limit ? `<div class="morebtn"><button class="btn" data-act="more">Show more (${list.length - f.limit} left)</button></div>`:''}` : `<div class="empty">No recipes match. Clear a filter or try another word.<div style="margin-top:12px"><button class="btn" data-act="clearsearch">Clear search and filters</button></div></div>`}`;
 }
 function viewSettings(){
   const st = S.settings;
@@ -2752,8 +2758,10 @@ function renderModal(){
       <div id="timers">${timersHTML()}</div>
       ${r.red && S.settings.redMode !== 'off' ? `<div class="tip" style="margin:0"><b>${m.white ? 'Making it white' : 'White-sauce swap'}:</b> ${esc(SWAP[r.red]||SWAP.other)}</div>` : ''}
       ${sp ? `<div class="tip spicy" style="margin:0"><b>Heat on the side:</b> leave out or halve the ${esc(sp)} and pass it at the table.</div>` : ''}
-      <div class="row" style="justify-content:space-between"><h3>Ingredients</h3>${scaleChips(m)}</div><ul class="cook-ing">${r.i.map((l, n) => { const x = scaleLine(l, m.scale); const red = m.white && RED_ING.test(cleanName(x)); return isHeader(x) ? `<li class="hdr">${esc(x)}</li>` : `<li class="${red ? 'swapped' : ''}"><label><input type="checkbox" class="check" data-cooking="i${n}" ${m.done?.['i'+n]?'checked':''}> <span>${esc(x)}${red ? ' <em>(leave out: white-sauce swap)</em>' : ''}</span></label></li>`; }).join('')}</ul>
       <h3>Steps</h3><ol class="cook-steps">${steps.map((x, n) => `<li class="${m.done?.['s'+n]?'done':''}"><button data-act="cookstep" data-n="s${n}"><span class="num">${n + 1}</span><span>${esc(x.replace(/^(?:step\s*)?\d+[.):]\s*/i,''))}</span></button>${timerBtns(x) ? `<div class="chips" style="margin:6px 0 0 40px">${timerBtns(x)}</div>` : ''}</li>`).join('') || '<li>No directions saved.</li>'}</ol>
+      <details style="margin-top:16px"><summary>Ingredients (${r.i.filter(l => !isHeader(l)).length})</summary>
+      <div class="row" style="justify-content:space-between"><h3>Ingredients</h3>${scaleChips(m)}</div><ul class="cook-ing">${r.i.map((l, n) => { const x = scaleLine(l, m.scale); const red = m.white && RED_ING.test(cleanName(x)); return isHeader(x) ? `<li class="hdr">${esc(x)}</li>` : `<li class="${red ? 'swapped' : ''}"><label><input type="checkbox" class="check" data-cooking="i${n}" ${m.done?.['i'+n]?'checked':''}> <span>${esc(x)}${red ? ' <em>(leave out: white-sauce swap)</em>' : ''}</span></label></li>`; }).join('')}</ul>
+      </details>
       ${r.no ? `<div class="panel" style="margin:0"><div class="label">Family notes</div><p style="margin:6px 0 0">${esc(r.no)}</p></div>` : ''}
       <button class="btn" style="justify-content:center" data-act="close">Done cooking</button>
     </div>`;
@@ -2856,6 +2864,7 @@ document.addEventListener('click', async e => {
     case 'delrecipe': { const id = S.modal.id; if (t.dataset.sure) { delete S.custom[id]; removeDoc('custom/' + id); rebuildRecipes(); closeModal(); render(); toast('Recipe deleted'); } else { t.dataset.sure = 1; t.innerHTML = I.trash + 'Tap again to delete'; } return; }
     case 'newrecipe': return openModal({type:'new', focus:'nf-n'});
     case 'more': S.rf.limit += 60; return render();
+    case 'clearsearch': S.rf = {...S.rf, q:'', tag:'', fav:false, quick:false, kid:false, limit:60}; return render();
     // grocery
     case 'copylist': return shareText(groceryText(), 'Grocery list', 'List');
     case 'sharemenu': return shareText(menuText(), "This week's dinners", 'Menu');
@@ -3051,7 +3060,7 @@ if (/[?&]debug\b/.test(location.search)) window.__T = {S, parseIngredient, ingOf
 boot();
 // ---------- updates (GitHub Pages) ----------
 // Home-screen apps keep running an old copy, so check for a newer version when the app is opened or brought back.
-const APP_VERSION = '2026-11-15.4';
+const APP_VERSION = '2026-11-15.6';
 let updateShown = false;
 let lastCheck = 0;
 async function checkForUpdate(){
