@@ -819,18 +819,64 @@ function uncoveredLeftovers(w, exceptDay){
   return (S.fridge.items || []).map(f => f.name).filter(n => !covered.has(n));
 }
 // Recipes without a photo get an illustrated tile: the dish as a picture on a soft color.
-const TILE = [[/pizza|flatbread|calzone|stromboli/, '🍕'], [/burrito|chimichanga|wrap\b/, '🌯'], [/taco|enchilada|quesadilla|nacho|fajita|tostada|tamale|carnitas|chilaquiles/, '🌮'], [/burger|slider|sloppy joe|patty melt/, '🍔'], [/hot dog|brat\b|bratwurst/, '🌭'],
-  [/sandwich|\bsub\b|hoagie|panini|melt|club|grilled cheese|french dip|cheesesteak|philly|po'? ?boy/, '🥪'], [/dumpling|potsticker|wonton|egg roll/, '🥟'], [/ramen|noodle|lo mein|pad thai|udon|pho/, '🍜'], [/curry|tikka|masala|korma|butter chicken/, '🍛'],
-  [/pasta|spaghetti|lasagna|ravioli|gnocchi|mac\b|macaroni|penne|rigatoni|ziti|tortellini|fettuccine|alfredo|orzo|shells|bow ?tie|carbonara|linguine|stroganoff/, '🍝'], [/soup|chili|stew|chowder|posole|bisque/, '🍲'], [/salad|slaw/, '🥗'],
-  [/fried rice|rice|bowl|risotto|jambalaya|stir[- ]fry|teriyaki|bulgogi|hibachi/, '🍚'], [/kebab|skewer|souvlaki|satay/, '🍢'], [/pancake|waffle|french toast|crepe/, '🥞'], [/egg|omelet|frittata|quiche|breakfast|hash\b|strata|biscuits and gravy/, '🍳'],
-  [/casserole|bake\b|baked|pot pie|shepherd|cobbler/, '🥘'], [/potato|fries|tots/, '🥔'], [/cookie|brownie|bar\b|bars\b|cake|cheesecake|pudding|crisp|dessert|treat|fudge|pie\b/, '🍪'], [/bread|roll|biscuit|knots|focaccia|naan/, '🥖'],
-  [/corn/, '🌽'], [/steak|beef|roast|brisket|prime rib|tenderloin/, '🥩'], [/ribs|pork|ham\b|chop/, '🍖'], [/wing|drumstick|chicken|turkey/, '🍗'], [/broccoli|bean|veg|squash|zucchini|asparagus|carrot|sprout|cauliflower/, '🥦']];
-function tileEmoji(r){ const n = r.n.toLowerCase(); for (const [re, e] of TILE) if (re.test(n)) return e; return {chicken:'🍗', beef:'🥩', pork:'🍖', turkey:'🍗', meatless:'🥦'}[proteinOf(r)] || '🍽️'; }
-const TOPPER = [[/pineapple|hawaiian/, '🍍'], [/bacon/, '🥓'], [/pepperoni|salami|sausage|kielbasa|brat/, '🌭'], [/mushroom/, '🍄'], [/spinach|pesto|basil|kale|broccoli/, '🥬'], [/bbq|barbecue|ribs|burnt ends|smoked/, '🔥'], [/buffalo|hot honey|cajun|chipotle|jalape/, '🌶️'],
-  [/ranch|alfredo|white|cream|cheese|cheesy|queso|mac\b/, '🧀'], [/egg|breakfast/, '🥚'], [/lemon/, '🍋'], [/avocado|guac/, '🥑'], [/corn/, '🌽'], [/teriyaki|sesame|soy|bulgogi|korean|asian/, '🥢'], [/potato|tots|hash/, '🥔'], [/beef|steak|burger|roast/, '🥩'], [/chicken|turkey/, '🍗'], [/pork|ham\b|carnitas/, '🍖']];
+// Rules are ordered: the first match wins, so specific dishes come before general ones.
+const TILE = [
+  [/pizza (sauce|oil|base)|spread$/, '🥣'], [/^2-minute hot honey/, '🍯'], [/pigs in a blanket/, '🌭'],
+  [/ice cream|nice cream|parfait/, '🍨'], [/cheesecake|\bcake\b/, '🍰'], [/pudding|mousse/, '🍮'], [/brownie/, '🍫'], [/cookie/, '🍪'], [/treats$/, '🍬'], [/^(?!.*egg).*muffins?$/, '🧁'], [/smoothie/, '🥤'], [/energy bites/, '🥜'], [/berry bark/, '🍓'], [/apple crisp/, '🥧'],
+  [/corn dog/, '🌭'], [/egg rolls?|spring rolls?/, '🥟'], [/(and|&) dumplings/, '🍲'], [/noodle soup/, '🍜'],
+  [/pizza|flatbread|calzone|stromboli/, '🍕'],
+  [/sandwich/, '🥪'], [/french toast/, '🍞'], [/egg bake|breakfast casserole/, '🍳'],
+  [/\bblt\b/, '🥪'],
+  [/(tortellini|penne|ziti|pasta|ravioli|rigatoni|spaghetti|gnocchi).*\bbake\b/, '🍝'],
+  [/king ranch|casserole|\bbake\b|pot pie(?! soup)|tamale pie|bubble up|shepherd|cobbler/, '🥘'], [/refried beans|baked beans/, '🥘'],
+  [/soup|chowder|stew\b|bisque|chil[il]*e? verde|bean chili|turkey chili|\bchilli\b|chili$|chili con|posole|pozole/, '🍲'],
+  [/croissant|puff pastry/, '🥐'], [/lettuce wraps?/, '🥬'], [/fruit salad/, '🍓'], [/^(?!.*sliders?).*(salad|slaw)/, '🥗'],
+  [/patty melt/, '🍔'], [/sliders?/, '🥪'], [/helper\b/, '🍝'], [/fries$/, '🍟'],
+  [/(cheese)?burger(?! soup)|sloppy joe/, '🍔'],
+  [/sub\b|hoagie|grinder|panini|club\b|grilled cheese|french dip|po'? ?boy|\bmelts?\b/, '🥪'],
+  [/pitas?\b/, '🥙'],
+  [/salad|slaw/, '🥗'],
+  [/ziti|lasagna|ravioli|tortellini|tetrazzini|pasta|spaghetti|macaroni|\bmac\b|penne|rigatoni|orecchiette|farfalle|gnocchi|fettuccine|alfredo|orzo|shells|carbonara|linguine|stroganoff|egg noodles|zucchini noodles|meatballs? with/, '🍝'],
+  [/\bbowls?\b/, '🍚'],
+  [/hot dog|brat\b|bratwurst/, '🌭'],
+  [/burrito|chimichanga|wraps?\b|pinwheels|crunchwrap/, '🌯'],
+  [/taco|taquito|chalupa|enchilada|quesadilla|nacho|fajita|tostada|tamale|carnitas|chilaquiles|flauta/, '🌮'],
+  [/dumpling|potsticker|wonton|pierogi/, '🥟'], [/ramen|noodle|lo mein|pad thai|udon|pho\b|yakisoba/, '🍜'],
+  [/curry|tikka|masala|korma|(?<!garlic )butter chicken/, '🍛'],
+  [/mongolian|cashew|sweet and sour|sesame chicken|general tso|kung pao|honey walnut|orange chicken|takeout|(beef|chicken) (and|\+) broccoli|stir[- ]?fry/, '🥡'],
+  [/rice|risotto|jambalaya|teriyaki|bulgogi|hibachi/, '🍚'], [/kebab|kabob|skewer|souvlaki|satay/, '🍢'],
+  [/waffles?/, '🧇'], [/pancake|crepe/, '🥞'],
+  [/\beggs?\b|omelet|frittata|quiche|breakfast|hash\b|strata|biscuits and gravy/, '🍳'],
+  [/mozzarella sticks/, '🧀'], [/muddy buddies/, '🍫'], [/dressing|ranch$|\bjam\b|\bdip\b/, '🥣'],
+  [/roast turkey|turkey breast/, '🦃'], [/roast chicken/, '🍗'], [/(turkey|chicken) tenderloin/, '🍗'],
+  [/pork|chops?\b|ribs|burnt ends|\bham\b/, '🍖'],
+  [/sweet potato/, '🍠'], [/carrot/, '🥕'], [/\bcorn\b/, '🌽'],
+  [/^(?!.*(chicken|steak|beef|turkey|pork|ham\b)).*(potato|fries|tots)/, '🥔'],
+  [/steak|beef|\broast\b|brisket|prime rib|tenderloin|meatloaf|salisbury/, '🥩'],
+  [/wing|drumstick|chicken|turkey|tenders|nuggets/, '🍗'],
+  [/potato/, '🥔'],
+  [/cookie|brownie|bars?\b|cake|cheesecake|pudding|crisp\b|dessert|treat|fudge|\bpie\b/, '🍪'], [/bread|rolls?\b|focaccia|naan|knots|stuffing|biscuits?\b/, '🥖'],
+  [/broccoli|sprout|green bean|bean|veg|squash|zucchini|asparagus|cauliflower/, '🥦']];
+// Specific dishes the patterns cannot get right: recipe id -> [tile emoji, topper emoji or '' for none].
+const TILE_ID = {
+  "96403098-0544-478E-9A64-EB2D2D1D893A": ["🌮", "🥘"],
+  "B2BE4611-FF96-4E14-9557-5C3A3C61FF46": ["🍝", "🌭"],
+  "1E4C1A91-B6EF-4822-88F2-A6BD373FEB6A": ["🍖", "🔥"],
+  "6E9EB17C-C93E-4687-B1B0-B5AF575F1498": ["🥩", ""],
+  "7FF20F05-5BF1-4B8F-B21B-5F7533FE39E2": ["🥩", "🥔"],
+  "add-chicken-katsu-with-tonkatsu-sauce": ["🍗", "🍚"],
+  "add-rice-krispie-treats": ["🍬", ""],
+  "add-pigs-in-a-blanket": ["🌭", ""],
+  "add-philly-cheesesteak-stuffed-peppers": ["🥩", "🌶️"]};
+function tileEmoji(r){ const n = r.n.toLowerCase(), o = TILE_ID[r.id]; if (o) return o[0]; for (const [re, e] of TILE) if (re.test(n)) return e; return {chicken:'🍗', beef:'🥩', pork:'🍖', turkey:'🍗', meatless:'🥦'}[proteinOf(r)] || '🍽️'; }
+// A small second picture for the tile's corner: the most telling ingredient or style, never the same as the main emoji.
+const TOPPER = [[/mousse|cheesecake|nice cream|parfait|brownie|cookie|pudding|\bcake\b|smoothie|ice cream|muffin/, ''], [/cucumber|tzatziki/, '🥒'], [/coleslaw/, ''], [/banana/, '🍌'], [/peanut/, '🥜'], [/pineapple|hawaiian(?! roll)/, '🍍'], [/bacon/, '🥓'], [/mushroom/, '🍄'], [/^(?!.*pizza).*(sausage|kielbasa|brat\b)/, '🌭'], [/sausage|pepperoni|salami|prosciutto|\bham\b/, '🍖'], [/spinach|pesto|basil|kale|arugula/, '🥬'], [/bbq|barbecue|ribs|burnt ends|smoked/, '🔥'], [/buffalo|hot honey|cajun|chipotle|jalape|blackened/, '🌶️'],
+  [/cheeseburger/, '🍔'], [/ranch|alfredo|white|cheese|cheesy|queso|\bmac\b|cheddar|parmesan|mozzarella|ricotta|brie|swiss|gouda|havarti|\bmelt/, '🧀'], [/\beggs?\b|breakfast/, '🥚'], [/lemon/, '🍋'], [/avocado|guac/, '🥑'], [/\bcorn\b/, '🌽'], [/coconut/, '🥥'], [/teriyaki|sesame|soy|bulgogi|korean|asian/, '🥢'],
+  [/apple/, '🍎'], [/strawberry/, '🍓'], [/taco|fajita|enchilada/, '🌮'], [/pizza/, '🍕'], [/wonton|dumpling|potsticker|pierogi/, '🥟'], [/\brice\b/, '🍚'], [/pasta|tortellini|orzo/, '🍝'],
+  [/sweet potato/, '🍠'], [/potato|tots|hash/, '🥔'], [/veg|veggie|green bean|broccoli|brussels/, '🥦'], [/waffle/, '🧇'], [/honey/, '🍯'], [/beef|steak|hamburger|meatball/, '🥩'], [/chicken|turkey/, '🍗'], [/pork|carnitas/, '🍖']];
 const TILE_HUE = {PZ:12, M:35, P:48, SO:24, SA:110, R:160, S:200, B:52, SC:18, G:6, MP:28, C:340, H:130};
 function tileHTML(r){
-  const main = tileEmoji(r), n = r.n.toLowerCase(), top = (TOPPER.find(([re, e]) => re.test(n) && e !== main) || [])[1];
+  const main = tileEmoji(r), n = r.n.toLowerCase(), ov = TILE_ID[r.id], top = ov ? ov[1] : (TOPPER.find(([re, e]) => re.test(n) && e !== main) || [])[1];
   const h = (TILE_HUE[(r.c || [])[0]] ?? hashStr(r.n) % 360) + hashStr(r.n) % 24 - 12;
   return `<span class="tile-in" style="--h:${h}" aria-hidden="true"><span>${main}</span>${top ? `<i class="tile-top">${top}</i>` : ''}</span>`;
 }
@@ -3246,7 +3292,7 @@ if (/[?&]debug\b/.test(location.search)) window.__T = {nuOf, S, asLeanBeef, pars
 boot();
 // ---------- updates (GitHub Pages) ----------
 // Home-screen apps keep running an old copy, so check for a newer version when the app is opened or brought back.
-const APP_VERSION = '2026-11-15.10';
+const APP_VERSION = '2026-11-15.11';
 let updateShown = false;
 let lastCheck = 0;
 async function checkForUpdate(){
