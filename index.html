@@ -869,7 +869,13 @@ const TILE_ID = {
   "add-chicken-katsu-with-tonkatsu-sauce": ["🍗", "🍚"],
   "add-rice-krispie-treats": ["🍬", ""],
   "add-pigs-in-a-blanket": ["🌭", ""],
-  "add-philly-cheesesteak-stuffed-peppers": ["🥩", "🌶️"]};
+  "add-philly-cheesesteak-stuffed-peppers": ["🥩", "🌶️"],
+  "add-cheesy-ranch-ground-beef-rotini": ["🍝", "🧀"],
+  "add-bbq-beans-and-franks-skillet": ["🌭", "🍖"],
+  "add-crispy-bacon-ranch-roasted-cabbage-wedge": ["🥬", "🥓"],
+  "add-beef-gyro-bowls-with-tzatziki": ["🥙", "🍚"],
+  "add-sheet-pan-brats-with-honey-mustard-potat": ["🌭", "🥔"],
+  "add-bacon-egg-salad-club-wraps": ["🌯", "🥓"]};
 function tileEmoji(r){ const n = r.n.toLowerCase(), o = TILE_ID[r.id]; if (o) return o[0]; for (const [re, e] of TILE) if (re.test(n)) return e; return {chicken:'🍗', beef:'🥩', pork:'🍖', turkey:'🍗', meatless:'🥦'}[proteinOf(r)] || '🍽️'; }
 // A small second picture for the tile's corner: the most telling ingredient or style, never the same as the main emoji.
 const TOPPER = [[/mousse|cheesecake|nice cream|parfait|brownie|cookie|pudding|\bcake\b|smoothie|ice cream|muffin/, ''], [/cucumber|tzatziki/, '🥒'], [/coleslaw/, ''], [/banana/, '🍌'], [/peanut/, '🥜'], [/pineapple|hawaiian(?! roll)/, '🍍'], [/bacon/, '🥓'], [/mushroom/, '🍄'], [/^(?!.*pizza).*(sausage|kielbasa|brat\b)/, '🌭'], [/sausage|pepperoni|salami|prosciutto|\bham\b/, '🍖'], [/spinach|pesto|basil|kale|arugula/, '🥬'], [/bbq|barbecue|ribs|burnt ends|smoked/, '🔥'], [/buffalo|hot honey|cajun|chipotle|jalape|blackened/, '🌶️'],
@@ -3299,11 +3305,11 @@ async function boot(){
   else if (FB_CONFIG.apiKey) startFirebase();
 }
 // For automated checks only: ?debug exposes the internals.
-if (/[?&]debug\b/.test(location.search)) window.__T = {nuOf, S, asLeanBeef, parseIngredient, ingOf, cleanName, whiteSwap, swapsList, fitsDay, reminder, groceryModel, groceryEntries, walmartModel, wmDefault, wmPick, packsFor, editWeek, getWeek, curStart, pick, generateWeek, render, scaleLine, aisleOf};
+if (/[?&]debug\b/.test(location.search)) window.__T = {tileEmoji, nuOf, S, asLeanBeef, parseIngredient, ingOf, cleanName, whiteSwap, swapsList, fitsDay, reminder, groceryModel, groceryEntries, walmartModel, wmDefault, wmPick, packsFor, editWeek, getWeek, curStart, pick, generateWeek, render, scaleLine, aisleOf};
 boot();
 // ---------- updates (GitHub Pages) ----------
 // Home-screen apps keep running an old copy, so check for a newer version when the app is opened or brought back.
-const APP_VERSION = '2026-11-15.16';
+const APP_VERSION = '2026-11-15.17';
 let updateShown = false;
 let lastCheck = 0;
 async function checkForUpdate(){

@@ -78,3 +78,11 @@ Data rule for everything below: new saved fields are additive and optional; code
 2. Staple quantities (#2): fixes the cart every single week; use the separate map so the two phones can't clobber it.
 3. Protein badge (#3): display-only, tiny, safest and dad-friendly; ship together with #1 as a patch release.
 Then #4 (tacos), #6, #5. If two phones are ever on mixed versions for long, do the version-skew guard before #5.
+
+## Interface ideas not built (from the interface designer)
+- Grocery top area: drop the app header on that tab and merge the store filters and "Check products" into one menu.
+- Optional "shopping mode": aisle-ordered list with larger rows, checked items sinking to the bottom of each aisle.
+- Clear the Undo message when you change tabs, and place it above the content.
+- Desktop layout for Groceries and Plan.
+- Recipe screen: a sticky Cook button at the bottom, and a title row with the rating.
+- Cook mode: one tap to start the first timer.
