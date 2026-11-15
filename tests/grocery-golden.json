@@ -428,10 +428,10 @@
   "ham | 1.5 lb | Meat & Deli | Great Value Boneless Smoked Ham Steaks, 2 pk, 14 oz"
  ],
  "1 1/2 lb flank steak": [
-  "flank steak | 1.5 lb | Meat & Deli | Choice Angus Flank Steak, 1 per tray"
+  "flank steak | 1.5 lb | Meat & Deli | Choice Angus Flank Steak, about 1.5 lb tray"
  ],
  "1 1/2 lb flank steak, thinly sliced against the grain": [
-  "flank steak | 1.5 lb | Meat & Deli | Choice Angus Flank Steak, 1 per tray"
+  "flank steak | 1.5 lb | Meat & Deli | Choice Angus Flank Steak, about 1.5 lb tray"
  ],
  "1 1/2 lb frozen Italian-style meatballs": [
   "frozen italian-style meatballs | 1.5 lb | Frozen | Great Value Homestyle Meatballs, 32 oz (frozen)"
@@ -455,7 +455,7 @@
   "ground turkey | 1.5 lb | Meat & Deli | Shady Brook Farms 93/7 Ground Turkey, 1 lb tray"
  ],
  "1 1/2 lb lean ground beef (90/10)": [
-  "ground beef | 1.5 lb | Meat & Deli | 93% Lean Ground Beef, 1 lb roll"
+  "lean ground beef | 1.5 lb | Meat & Deli | 93% Lean Ground Beef, 1 lb roll"
  ],
  "1 1/2 lb mild Italian sausage": [
   "italian sausage | 1.5 lb | Meat & Deli | Marketside Mild Ground Italian Sausage, 1 lb"
@@ -464,22 +464,22 @@
   "shaved beef steak | 1.5 lb | Meat & Deli | Gary's QuickSteak Thin Sirloin, 10.8 oz (frozen)"
  ],
  "1 1/2 lb sirloin steak": [
-  "sirloin steak | 1.5 lb | Meat & Deli | Choice Angus Top Sirloin Steak, 1 per tray"
+  "sirloin steak | 1.5 lb | Meat & Deli | Choice Angus Top Sirloin Steak, about 1.25 lb tray"
  ],
  "1 1/2 lb sirloin steak, about 1 inch thick": [
-  "sirloin steak | 1.5 lb | Meat & Deli | Choice Angus Top Sirloin Steak, 1 per tray"
+  "sirloin steak | 1.5 lb | Meat & Deli | Choice Angus Top Sirloin Steak, about 1.25 lb tray"
  ],
  "1 1/2 lb sirloin steak, cut into 1 1/2-inch cubes": [
-  "sirloin steak | 1.5 lb | Meat & Deli | Choice Angus Top Sirloin Steak, 1 per tray"
+  "sirloin steak | 1.5 lb | Meat & Deli | Choice Angus Top Sirloin Steak, about 1.25 lb tray"
  ],
  "1 1/2 lb sirloin steak, cut into 1-inch cubes": [
-  "sirloin steak | 1.5 lb | Meat & Deli | Choice Angus Top Sirloin Steak, 1 per tray"
+  "sirloin steak | 1.5 lb | Meat & Deli | Choice Angus Top Sirloin Steak, about 1.25 lb tray"
  ],
  "1 1/2 lb sirloin steak, cut into 1/2-inch pieces": [
-  "sirloin steak | 1.5 lb | Meat & Deli | Choice Angus Top Sirloin Steak, 1 per tray"
+  "sirloin steak | 1.5 lb | Meat & Deli | Choice Angus Top Sirloin Steak, about 1.25 lb tray"
  ],
  "1 1/2 lb skirt steak": [
-  "skirt steak | 1.5 lb | Meat & Deli | Beef Inside Skirt Steak, 1 per tray"
+  "skirt steak | 1.5 lb | Meat & Deli | Beef Inside Skirt Steak, about 1.5 lb tray"
  ],
  "1 1/2 lb thin-sliced glazed ham": [
   "thin-sliced glazed ham | 1.5 lb | Meat & Deli | Great Value Thin Sliced Honey Ham, 16 oz"
@@ -503,7 +503,7 @@
   "parmesan | 1.5 oz | Dairy & Refrigerated | Great Value Grated Parmesan, 8 oz"
  ],
  "1 1/2 pounds skirt steak": [
-  "skirt steak | 1.5 lb | Meat & Deli | Beef Inside Skirt Steak, 1 per tray"
+  "skirt steak | 1.5 lb | Meat & Deli | Beef Inside Skirt Steak, about 1.5 lb tray"
  ],
  "1 1/2 romaine hearts, cored and chopped": [
   "romaine hearts | 1.5 | Produce | Fresh Romaine Hearts, 3 ct"
@@ -581,7 +581,7 @@
   "ground turkey | 1.25 lb | Meat & Deli | Shady Brook Farms 93/7 Ground Turkey, 1 lb tray"
  ],
  "1 1/4 lb lean ground beef (90/10)": [
-  "ground beef | 1.25 lb | Meat & Deli | 93% Lean Ground Beef, 1 lb roll"
+  "lean ground beef | 1.25 lb | Meat & Deli | 93% Lean Ground Beef, 1 lb roll"
  ],
  "1 1/4 lb mild Italian sausage links": [
   "mild italian sausage links | 1.25 lb | Meat & Deli | Marketside Mild Ground Italian Sausage, 1 lb"
@@ -2159,13 +2159,13 @@
   "pizza dough | 1 lb | Dairy & Refrigerated | Pizza Buddy Fresh Pizza Dough, 16 oz (bakery)"
  ],
  "1 lb lean ground beef": [
-  "ground beef | 1 lb | Meat & Deli | 93% Lean Ground Beef, 1 lb roll"
+  "lean ground beef | 1 lb | Meat & Deli | 93% Lean Ground Beef, 1 lb roll"
  ],
  "1 lb lean ground beef (90/10 or leaner)": [
-  "ground beef | 1 lb | Meat & Deli | 93% Lean Ground Beef, 1 lb roll"
+  "lean ground beef | 1 lb | Meat & Deli | 93% Lean Ground Beef, 1 lb roll"
  ],
  "1 lb lean ground beef (90/10)": [
-  "ground beef | 1 lb | Meat & Deli | 93% Lean Ground Beef, 1 lb roll"
+  "lean ground beef | 1 lb | Meat & Deli | 93% Lean Ground Beef, 1 lb roll"
  ],
  "1 lb mild Italian sausage": [
   "italian sausage | 1 lb | Meat & Deli | Marketside Mild Ground Italian Sausage, 1 lb"
@@ -2276,13 +2276,13 @@
   "ground sausage | 1 lb | Meat & Deli | Marketside Mild Ground Italian Sausage, 1 lb"
  ],
  "1 lb. lean ground beef": [
-  "ground beef | 1 lb | Meat & Deli | 93% Lean Ground Beef, 1 lb roll"
+  "lean ground beef | 1 lb | Meat & Deli | 93% Lean Ground Beef, 1 lb roll"
  ],
  "1 lb. mild Italian sausage, meat removed from casings": [
   "italian sausage | 1 lb | Meat & Deli | Marketside Mild Ground Italian Sausage, 1 lb"
  ],
  "1 lb. skirt steak": [
-  "skirt steak | 1 lb | Meat & Deli | Beef Inside Skirt Steak, 1 per tray"
+  "skirt steak | 1 lb | Meat & Deli | Beef Inside Skirt Steak, about 1.5 lb tray"
  ],
  "1 lb. uncooked penne pasta": [
   "penne pasta | 1 lb | Pasta, Rice & Grains | Great Value Penne Pasta, 16 oz"
@@ -2540,13 +2540,13 @@
   "poblano pepper | 1 | Produce | Fresh Poblano Pepper, each"
  ],
  "1 pound 90 percent lean ground beef": [
-  "ground beef | 1 lb | Meat & Deli | 93% Lean Ground Beef, 1 lb roll"
+  "lean ground beef | 1 lb | Meat & Deli | 93% Lean Ground Beef, 1 lb roll"
  ],
  "1 pound 90% lean ground beef": [
-  "ground beef | 1 lb | Meat & Deli | 93% Lean Ground Beef, 1 lb roll"
+  "lean ground beef | 1 lb | Meat & Deli | 93% Lean Ground Beef, 1 lb roll"
  ],
  "1 pound Extra Lean Ground Beef": [
-  "ground beef | 1 lb | Meat & Deli | 93% Lean Ground Beef, 1 lb roll"
+  "lean ground beef | 1 lb | Meat & Deli | 93% Lean Ground Beef, 1 lb roll"
  ],
  "1 pound Ground Beef": [
   "ground beef | 1 lb | Meat & Deli | 80/20 Ground Beef Chuck, 1 lb roll"
@@ -2597,7 +2597,7 @@
   "hot sausage | 1 lb | Meat & Deli | Great Value Original Sausage Roll, 16 oz"
  ],
  "1 pound lean ground beef": [
-  "ground beef | 1 lb | Meat & Deli | 93% Lean Ground Beef, 1 lb roll"
+  "lean ground beef | 1 lb | Meat & Deli | 93% Lean Ground Beef, 1 lb roll"
  ],
  "1 pound rigatoni": [
   "rigatoni | 1 lb | Pasta, Rice & Grains | Great Value Penne Pasta, 16 oz"
@@ -2612,7 +2612,7 @@
   "sharp cheddar | 1 lb | Dairy & Refrigerated | Great Value Finely Shredded Sharp Cheddar, 8 oz"
  ],
  "1 pound sirloin steak, thinly sliced": [
-  "sirloin steak | 1 lb | Meat & Deli | Choice Angus Top Sirloin Steak, 1 per tray"
+  "sirloin steak | 1 lb | Meat & Deli | Choice Angus Top Sirloin Steak, about 1.25 lb tray"
  ],
  "1 pound sweet Italian sausage, casings removed": [
   "italian sausage | 1 lb | Meat & Deli | Marketside Mild Ground Italian Sausage, 1 lb"
@@ -3824,7 +3824,7 @@
   "chicken breast | 1.5 lb | Meat & Deli | Great Value Boneless Skinless Chicken Breasts, 5 lb (frozen)"
  ],
  "1 ½ pound Flank Steak thinly sliced": [
-  "flank steak | 1.5 lb | Meat & Deli | Choice Angus Flank Steak, 1 per tray"
+  "flank steak | 1.5 lb | Meat & Deli | Choice Angus Flank Steak, about 1.5 lb tray"
  ],
  "1 ½ pounds 85 percent lean ground beef": [
   "ground beef | 1.5 lb | Meat & Deli | 80/20 Ground Beef Chuck, 1 lb roll"
@@ -3833,7 +3833,7 @@
   "chicken thighs | 1.5 lb | Meat & Deli | Freshness Guaranteed Boneless Skinless Chicken Thighs (tray)"
  ],
  "1 ½ pounds skirt steak, cut into 1/2-inch pieces": [
-  "skirt steak | 1.5 lb | Meat & Deli | Beef Inside Skirt Steak, 1 per tray"
+  "skirt steak | 1.5 lb | Meat & Deli | Beef Inside Skirt Steak, about 1.5 lb tray"
  ],
  "1 ½ teaspoon garlic granules or garlic powder": [
   "garlic granules | 1.5 tsp | Produce | Great Value Garlic Powder, 3.4 oz"
@@ -3884,7 +3884,7 @@
   "chicken thighs | 2 lb | Meat & Deli | Freshness Guaranteed Boneless Skinless Chicken Thighs (tray)"
  ],
  "1.25 lbs flank steak, thinly sliced and marinated (soy sauce, pepper, sriracha, sesame oil and a splash of pickle brine)": [
-  "flank steak | 1.25 lb | Meat & Deli | Choice Angus Flank Steak, 1 per tray"
+  "flank steak | 1.25 lb | Meat & Deli | Choice Angus Flank Steak, about 1.5 lb tray"
  ],
  "1.5 cups half-and-half": [
   "half-and-half | 1.5 cup | Pantry & Canned | Great Value Half & Half, 32 oz"
@@ -6233,7 +6233,7 @@
   "unsalted butter | 2 tbsp | Dairy & Refrigerated | Great Value Salted Butter, 16 oz (4 sticks)"
  ],
  "2 Whole Skirt Steaks": [
-  "skirt steaks | 2 | Pantry & Canned | Beef Inside Skirt Steak, 1 per tray"
+  "skirt steaks | 2 | Pantry & Canned | Beef Inside Skirt Steak, about 1.5 lb tray"
  ],
  "2 Zucchini, chopped": [
   "zucchini | 2 | Produce | Fresh Zucchini, each"
@@ -6963,7 +6963,7 @@
   "cube steak | 2 lb | Meat & Deli | Beef Cubed Steak, 0.65-1.15 lb"
  ],
  "2 lb flank steak": [
-  "flank steak | 2 lb | Meat & Deli | Choice Angus Flank Steak, 1 per tray"
+  "flank steak | 2 lb | Meat & Deli | Choice Angus Flank Steak, about 1.5 lb tray"
  ],
  "2 lb frozen meatballs": [
   "frozen meatballs | 2 lb | Frozen | Great Value Homestyle Meatballs, 32 oz (frozen)"
@@ -6984,7 +6984,7 @@
   "pizza dough | 2 lb | Dairy & Refrigerated | Pizza Buddy Fresh Pizza Dough, 16 oz (bakery)"
  ],
  "2 lb lean ground beef (90/10)": [
-  "ground beef | 2 lb | Meat & Deli | 93% Lean Ground Beef, 1 lb roll"
+  "lean ground beef | 2 lb | Meat & Deli | 93% Lean Ground Beef, 1 lb roll"
  ],
  "2 lb pork tenderloin": [
   "pork tenderloin | 2 lb | Meat & Deli | Smithfield All Natural Pork Tenderloin, 2 ct"
@@ -6996,19 +6996,19 @@
   "shaved beef steak | 2 lb | Meat & Deli | Gary's QuickSteak Thin Sirloin, 10.8 oz (frozen)"
  ],
  "2 lb sirloin steak": [
-  "sirloin steak | 2 lb | Meat & Deli | Choice Angus Top Sirloin Steak, 1 per tray"
+  "sirloin steak | 2 lb | Meat & Deli | Choice Angus Top Sirloin Steak, about 1.25 lb tray"
  ],
  "2 lb sirloin steak tips": [
-  "sirloin steak tips | 2 lb | Meat & Deli | Choice Angus Top Sirloin Steak, 1 per tray"
+  "sirloin steak tips | 2 lb | Meat & Deli | Choice Angus Top Sirloin Steak, about 1.25 lb tray"
  ],
  "2 lb sirloin steak, cut into 1-inch cubes": [
-  "sirloin steak | 2 lb | Meat & Deli | Choice Angus Top Sirloin Steak, 1 per tray"
+  "sirloin steak | 2 lb | Meat & Deli | Choice Angus Top Sirloin Steak, about 1.25 lb tray"
  ],
  "2 lb sirloin steak, thinly sliced against the grain": [
-  "sirloin steak | 2 lb | Meat & Deli | Choice Angus Top Sirloin Steak, 1 per tray"
+  "sirloin steak | 2 lb | Meat & Deli | Choice Angus Top Sirloin Steak, about 1.25 lb tray"
  ],
  "2 lb skirt steak": [
-  "skirt steak | 2 lb | Meat & Deli | Beef Inside Skirt Steak, 1 per tray"
+  "skirt steak | 2 lb | Meat & Deli | Beef Inside Skirt Steak, about 1.5 lb tray"
  ],
  "2 lb sweet potatoes, peeled and cubed": [
   "sweet potatoes | 2 lb | Produce | Fresh Sweet Potato, each"
@@ -11120,7 +11120,7 @@
   "breakfast sausage | 1 lb | Meat & Deli | Great Value Original Sausage Roll, 16 oz"
  ],
  "Optional: 1 lb flank steak, thinly sliced against the grain": [
-  "flank steak | 1 lb | Meat & Deli | Choice Angus Flank Steak, 1 per tray"
+  "flank steak | 1 lb | Meat & Deli | Choice Angus Flank Steak, about 1.5 lb tray"
  ],
  "Optional: 1 lb ground beef": [
   "ground beef | 1 lb | Meat & Deli | 80/20 Ground Beef Chuck, 1 lb roll"
@@ -11132,7 +11132,7 @@
   "italian sausage | 1 lb | Meat & Deli | Marketside Mild Ground Italian Sausage, 1 lb"
  ],
  "Optional: 1 lb sirloin steak, thinly sliced": [
-  "sirloin steak | 1 lb | Meat & Deli | Choice Angus Top Sirloin Steak, 1 per tray"
+  "sirloin steak | 1 lb | Meat & Deli | Choice Angus Top Sirloin Steak, about 1.25 lb tray"
  ],
  "Optional: 1 package (12 oz) fully cooked chicken sausage, sliced": [
   "chicken sausage | 1 package | Meat & Deli | Aidells Chicken & Apple Smoked Chicken Sausage, 12 oz"
@@ -11689,7 +11689,9 @@
  "a sprinkle": [
   "sprinkle |  | Pantry & Canned | "
  ],
- "adobo seasoning": [],
+ "adobo seasoning": [
+  "adobo seasoning |  | Spices & Baking | "
+ ],
  "arrowroot powder acts like cornstarch (you can use cornstarch if that’s what you have in your pantry.)": [
   "arrowroot powder acts like cornstarch |  | Spices & Baking | "
  ],
@@ -11942,7 +11944,9 @@
  "syrup": [
   "syrup |  | Sauces & Condiments | Great Value Original Syrup, 24 fl oz"
  ],
- "taco seasoning": [],
+ "taco seasoning": [
+  "taco seasoning |  | Spices & Baking | Great Value Original Taco Seasoning, 1 oz"
+ ],
  "top with tomatoes": [
   "tomatoes |  | Produce | Fresh Roma Tomato, each"
  ],

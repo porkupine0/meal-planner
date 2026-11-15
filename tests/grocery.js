@@ -30,7 +30,7 @@ const server = http.createServer((req, res) => {
     const T = window.__T, res = {};
     for (const r of T.S.recipes) for (const line of r.i) {
       if (line in res) continue;
-      res[line] = T.parseIngredient(line).map(it => {
+      res[line] = T.parseIngredient(line).map(it0 => { const it = T.asLeanBeef(it0);
         const p = T.wmPick('i:' + it.core, it.name, [it]);
         return [it.name, [it.qty == null ? it.qty : Math.round(it.qty * 1000) / 1000, it.unit].filter(x => x !== '' && x != null).join(' '), T.aisleOf(it), p ? p.label || p.id : ''].join(' | ');
       });
