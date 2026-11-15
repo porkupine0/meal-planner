@@ -1712,6 +1712,7 @@ const WM_DEFAULTS = [
   [/turkey bacon/i, "5490588995", "Great Value Uncured Turkey Bacon, 10 oz"],
   [/bacon (bits|pieces|crumbles)/i, "10315616", "Great Value Real Bacon Pieces, 2.5 oz"],
   [/(?<!(turkey|canadian) )\bbacon\b(?!.*bits)|prosciutto|pancetta/i, "10293911", "Great Value Hickory Smoked Bacon, 16 oz"],
+  [/turkey (polska )?kielbasa|kielbasa.*turkey/i, "49906142", "Hillshire Farm Turkey Polska Kielbasa, 13 oz"],
   [/kielbasa|polska/i, "44391031", "Hillshire Farm Polska Kielbasa, 14 oz"],
   [/^(?!.*(little|lit'?l|cocktail)).*smoked sausage/i, "5440505153", "Great Value Chicken Smoked Sausage, 14 oz"],
   [/spiral|bone-in ham|whole ham|ham roast/i, "155067647", "Marketside Bone-In Spiral Cut Honey Ham, 8-12 lb"],
@@ -1843,7 +1844,8 @@ const WM_DEFAULTS = [
   [/(?<!horse)\bradish(es)?\b/i, "42353640", "Fresh Red Radishes, 1 bag"],
   [/\bapples?\b(?!.*(cider|juice|sauce|vinegar|butter|pie|jack))/i, "44390953", "Fresh Gala Apple, each"],
   [/sun-? ?dried tomato/i, "149411733", "California Sun Dry Sun-Dried Tomatoes in Oil, 8 oz"],
-  [/breakfast sausage|sausage patt|sausage roll|^(hot |mild |spicy )?(ground )?(pork )?sausage$/i, "46575468", "Great Value Original Sausage Roll, 16 oz"],
+  [/sausage patt(?:y|ies)/i, "10403027", "Jimmy Dean Fully Cooked Original Pork Sausage Patties, 9.6 oz, 8 ct"],
+  [/breakfast sausage|sausage roll|^(hot |mild |spicy )?(ground )?(pork )?sausage$/i, "46575468", "Great Value Original Sausage Roll, 16 oz"],
   [/pineapple (chunks?|tidbits|slices?|rings?)|canned pineapple|crushed pineapple|^(fresh )?pineapple$/i, "10315437", "Great Value Pineapple Chunks in Juice, 20 oz"],
   [/brussels? sprouts?/i, "51259385", "Fresh Brussels Sprouts, 1 lb bag"],
   [/blueberr(?!.*(muffin|jam|pie|dried|preserves))/i, "50912363", "Fresh Blueberries, 1 pint"],
@@ -2135,6 +2137,7 @@ const WM_DEFAULTS = [
 const wmDefault = (name, canned, sliced) => { let n = String(name || '').toLowerCase(); if (canned && /\bcorn\b/.test(n) && !/cream|frozen|chip|tortilla|starch|meal|flake/.test(n)) n = 'canned corn'; if (sliced && /^(?:deli )?(?:american )?cheese$/.test(n)) n = 'american cheese'; else if (sliced && /cheddar|pepper ?jack|monterey jack|mozzarella|colby/.test(n) && !/shredded|grated|fresh/.test(n)) n = 'sliced ' + n.replace(/^sliced\s+/, ''); const d = n && WM_DEFAULTS.find(x => x.re.test(n)); return d ? {id: d.id, qty: 1, label: d.label, auto: true} : null; };
 // The product used for an item: your own pick, else the default (unless you turned it off).
 const wmPick = (key, name, parts) => { const p = (S.walmart.map || {})[key]; if (p && p.off) return null; if (p && p.id) return p;
+  if (/^ground beef$/i.test(name) && (parts || []).some(x => /(\b9[0-3]\s*(\/|%|percent)|\b(?<!\d\d% )lean ground beef|extra lean)/i.test(x.raw || '') && !/\b(7\d|8[0-5])\s*(\/|%|percent)/.test(x.raw || ''))) return {id: '15136792', qty: 1, label: '93% Lean Ground Beef, 1 lb roll', auto: true};
   if (/^ham$/i.test(name) && (parts || []).some(x => /\b(diced|cubed|chopped)\b/i.test(x.raw || ''))) name = 'diced ham'; // a block to dice, not deli slices
   return wmDefault(name, (parts || []).some(x => x.unit === 'can'), (parts || []).some(x => x.unit === 'slice')); };
 // Where each grocery item is bought, remembered per item (same keys as Walmart products).
@@ -3048,7 +3051,7 @@ if (/[?&]debug\b/.test(location.search)) window.__T = {S, parseIngredient, ingOf
 boot();
 // ---------- updates (GitHub Pages) ----------
 // Home-screen apps keep running an old copy, so check for a newer version when the app is opened or brought back.
-const APP_VERSION = '2026-11-15.3';
+const APP_VERSION = '2026-11-15.4';
 let updateShown = false;
 let lastCheck = 0;
 async function checkForUpdate(){
