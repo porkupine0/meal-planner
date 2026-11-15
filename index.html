@@ -1299,6 +1299,93 @@ function recentIds(startISO){
   }
   return ids;
 }
+// Nutrition for the planner's soft rules. Reads kcal and protein out of a recipe's nu text (many site layouts; same parser as diet/nutrition.js).
+// Anything it cannot read stays null, and null always counts as acceptable. A per-serving figure over 1800 kcal is a whole-recipe total, so it is ignored too.
+const nuOf = (() => {
+  const num = s => { if (s == null) return null; const v = parseFloat(String(s).replace(/,/g, '')); return Number.isFinite(v) ? v : null; };
+  const NUM = '(~?\\s*\\d[\\d,]*(?:\\.\\d+)?)';
+  const TOTAL_MARK = /\b(?:full|whole|entire|total)\s+(?:recipe|batch|dish)\b|\bentire batch\b|\bfull recipe\b/i;
+  const PERSERV_MARK = /\b(?:amount\s+)?per\s+(?:adult\s+)?serving\b|\(per serving\)|\bper serving\b/i;
+  function normalize(t) {
+    return String(t || '')
+      .replace(/[•·\t]/g, ' ').replace(/≈|~/g, ' ').replace(/[   ]/g, ' ')
+      .replace(/\bgrams?\b/gi, 'g').replace(/\bcalories?\b(?=\s*[;,.|)\n]|$)/gi, 'kcal').replace(/\bcalories\b/gi, 'Calories')
+      .replace(/(\d),(\d{3})\b/g, '$1$2');
+  }
+  // choose the per-serving part of strings that also carry whole-recipe totals
+  function perServingSegment(t) {
+    // 1) a per-serving marker: take text after the LAST one, cut at the next "total / full recipe" marker
+    const marks = [...t.matchAll(new RegExp(PERSERV_MARK.source, 'gi'))];
+    if (marks.length) {
+      const m = marks[marks.length - 1];
+      let seg = t.slice(m.index);
+      const cut = seg.slice(m[0].length).search(TOTAL_MARK);
+      if (cut >= 0) seg = seg.slice(0, m[0].length + cut);
+      // a marker like "(per serving)\n350 Calories 16g Fat..." keeps its trailing "Nutrition Facts" panel
+      if (/\bcalories|\bkcal/i.test(seg)) return seg;
+    }
+    // 2) several repeated Calories blocks: pick the calorie value repeated most often (smallest on ties)
+    const cal = [...t.matchAll(/calories\s*:?\s*(\d[\d.]*)|(\d[\d.]*)\s*kcal/gi)].map(m => ({ v: num(m[1] || m[2]), i: m.index }));
+    const uniq = [...new Set(cal.map(c => c.v))];
+    if (uniq.length > 1) {
+      const cnt = v => cal.filter(c => c.v === v).length;
+      const best = uniq.slice().sort((a, b) => cnt(b) - cnt(a) || a - b)[0];
+      const first = cal.find(c => c.v === best);
+      const next = cal.find(c => c.i > first.i && c.v !== best);
+      return t.slice(first.i, next ? next.i : undefined);
+    }
+    return t;
+  }
+  function field(seg, kind) {
+    let re, m;
+    if (kind === 'kcal') {
+      // "Calories: 520", "CALORIES: 365", "Calories per Serving 853", "Cals: 326"; never "Calories from Fat"
+      re = new RegExp('\\b(?:calories|cals)(?!\\s+from)(?:\\s+per\\s+serving)?\\s*[:=]?\\s*' + NUM, 'i');
+      if ((m = seg.match(re))) return num(m[1]);
+      re = new RegExp(NUM + '\\s*(?:kcal|cals?\\b|calories?)', 'i');
+      if ((m = seg.match(re))) return num(m[1]);
+      return null;
+    }
+    if (kind === 'protein') {
+      re = new RegExp('\\bprotein\\s*[:=]?\\s*' + NUM, 'i'); if ((m = seg.match(re))) return num(m[1]);
+      re = new RegExp(NUM + '\\s*g?\\s*(?:of\\s+)?protein', 'i'); if ((m = seg.match(re))) return num(m[1]);
+      return null;
+    }
+    if (kind === 'carb') {
+      re = new RegExp('(?<!net )\\b(?:total\\s+)?carbohydrates?\\s*[:=]?\\s*' + NUM, 'i'); if ((m = seg.match(re))) return num(m[1]);
+      re = new RegExp('(?<!net )\\b(?:total\\s+)?carbs?\\s*[:=]?\\s*' + NUM, 'i'); if ((m = seg.match(re))) return num(m[1]);
+      re = new RegExp(NUM + '\\s*g?\\s*(?:of\\s+)?(?:carbohydrates?|carbs)\\b', 'i'); if ((m = seg.match(re))) return num(m[1]);
+      return null;
+    }
+    if (kind === 'fat') {
+      // not Saturated / Trans / Polyunsaturated / Monounsaturated / Unsaturated Fat, not "Calories from Fat"
+      re = new RegExp('(?<!saturated )(?<!trans )(?<!from )(?<!polyunsaturated )(?<!monounsaturated )(?<!unsaturated )(?<!high-)(?<!low )\\b(?:total\\s+)?fats?\\s*[:=]?\\s*' + NUM, 'i');
+      for (const mm of seg.matchAll(new RegExp(re.source, 'gi'))) { return num(mm[1]); }
+      re = new RegExp(NUM + '\\s*g?\\s*(?:of\\s+)?(?:total\\s+)?fat\\b', 'i'); if ((m = seg.match(re))) return num(m[1]);
+      return null;
+    }
+    return null;
+  }
+  function parseNu(text) {
+    const out = { kcal: null, protein: null, carb: null, fat: null, servings: null };
+    if (!text || !String(text).trim()) return out;
+    const t = normalize(text);
+    const seg = perServingSegment(t);
+    for (const k of ['kcal', 'protein', 'carb', 'fat']) out[k] = field(seg, k);
+    // servings: "1 of 6 servings", "Servings: 8", "(~1/9 of recipe)", "(1/6 of recipe)"
+    let m;
+    if ((m = t.match(/\b1\s+of\s+(\d+(?:\.\d+)?)\s+servings?\b/i))) out.servings = +m[1];
+    else if ((m = t.match(/\bservings?\s*:\s*(\d+)\b(?![ \t]*[a-z])/i)) || (m = t.match(/\bkeyword:.*\bservings:\s*(\d+)/i))) out.servings = +m[1];
+    else if ((m = t.match(/\(\s*1\/(\d+)\s+of\s+(?:the\s+)?recipe\s*\)/i))) out.servings = +m[1];
+    // sanity: implausible fields -> unknown (never "low")
+    if (out.kcal != null && out.kcal <= 0) out.kcal = null;
+    for (const k of ['protein', 'carb', 'fat']) if (out[k] != null && out[k] > 1500) out[k] = null;
+    return out;
+  }
+  
+  const cache = new Map();
+  return r => { const t = r && r.nu; if (!t) return null; let p = cache.get(t); if (p === undefined) { p = parseNu(t); if (p.kcal > 1800) p.kcal = null; cache.set(t, p); } return p; };
+})();
 function pick(cat, w, dateISO, rand=Math.random, exclude=null){
   if (!cat || NOCOOK.some(n=>n[0]===cat)) return null;
   const used = new Set(Object.entries(w.days).filter(([k,d]) => k !== dateISO && d.rid).map(([,d]) => d.rid));
@@ -1319,6 +1406,13 @@ function pick(cat, w, dateISO, rand=Math.random, exclude=null){
   }
   const fresh = pool.filter(r => !recent.has(r.id));
   if (fresh.length) pool = fresh;
+  // Nutrition, soft: each rule only narrows the pool when something is left, and unknown nutrition always passes. Leftover matches and busy nights above still win.
+  { const kcal = r => nuOf(r)?.kcal ?? null, prot = r => nuOf(r)?.protein ?? null;
+    const cookedKcal = k => { const d = w.days[k]; return k !== dateISO && d.rid && !NOCOOK.some(n => n[0] === d.cat) && S.byId[d.rid] ? kcal(S.byId[d.rid]) : null; };
+    { const ok = pool.filter(r => prot(r) == null || prot(r) >= 28); if (ok.length >= 3) pool = ok; }                        // dinner at or above 28 g protein (30 g cost too much variety)
+    { const seen = keys.filter(k => cookedKcal(k) > 900).length; const ok = pool.filter(r => !(kcal(r) > 900)); if (seen >= 2 ? ok.length : ok.length >= 3) pool = ok; } // no third night over 900 kcal; a first or second one only if there are few lighter options
+    { if ([keys[dayIdx - 1], keys[dayIdx + 1]].some(k => k && cookedKcal(k) > 800)) { const ok = pool.filter(r => !(kcal(r) > 800)); if (ok.length) pool = ok; } } // not two heavy nights in a row
+  }
   if (!pool.length) return null;
   // Variety: not the same main protein (or two soups) on back-to-back nights, and only so many chicken nights a week.
   const near = [keys[dayIdx-1], keys[dayIdx+1]].map(k => k && w.days[k]).filter(d => d && d.rid && !NOCOOK.some(n => n[0] === d.cat)).map(d => S.byId[d.rid]).filter(Boolean);
@@ -3148,11 +3242,11 @@ async function boot(){
   else if (FB_CONFIG.apiKey) startFirebase();
 }
 // For automated checks only: ?debug exposes the internals.
-if (/[?&]debug\b/.test(location.search)) window.__T = {S, asLeanBeef, parseIngredient, ingOf, cleanName, whiteSwap, swapsList, fitsDay, reminder, groceryModel, groceryEntries, walmartModel, wmDefault, wmPick, packsFor, editWeek, getWeek, curStart, pick, generateWeek, render, scaleLine, aisleOf};
+if (/[?&]debug\b/.test(location.search)) window.__T = {nuOf, S, asLeanBeef, parseIngredient, ingOf, cleanName, whiteSwap, swapsList, fitsDay, reminder, groceryModel, groceryEntries, walmartModel, wmDefault, wmPick, packsFor, editWeek, getWeek, curStart, pick, generateWeek, render, scaleLine, aisleOf};
 boot();
 // ---------- updates (GitHub Pages) ----------
 // Home-screen apps keep running an old copy, so check for a newer version when the app is opened or brought back.
-const APP_VERSION = '2026-11-15.9';
+const APP_VERSION = '2026-11-15.10';
 let updateShown = false;
 let lastCheck = 0;
 async function checkForUpdate(){
