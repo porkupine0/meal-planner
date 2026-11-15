@@ -795,8 +795,10 @@ function fridgeUses(leftover, ingName){
   if (OTHER_PRODUCT.test(rest) && !OTHER_PRODUCT.test(leftover.toLowerCase())) return false;
   return !/\b(coconut|almond|oat|soy|condensed|evaporated) $/.test(t.slice(0, m.index));
 }
+// Leftovers added more than a week ago stop steering the plan; they stay on the list until you remove them.
+const liveFridge = () => (S.fridge.items || []).filter(f => !f.added || Date.now() - f.added < 7 * 864e5);
 function fridgeMatches(r){
-  const items = S.fridge.items || [];
+  const items = liveFridge();
   if (!items.length) return [];
   const names = ingOf(r).map(x => x.name), nm = ' ' + r.n.toLowerCase() + ' ';
   return items.filter(f => { const re = fridgeRegex(f.name); return re && (re.test(nm) || names.some(n => fridgeUses(f.name, n))); }).map(f => f.name);
@@ -816,7 +818,7 @@ function leftoverClaims(w){
 function uncoveredLeftovers(w, exceptDay){
   const covered = new Set();
   for (const [k, d] of Object.entries(w.days)) { const r = k !== exceptDay && d.rid && !NOCOOK.some(n => n[0] === d.cat) && S.byId[d.rid]; if (r) fridgeMatches(r).forEach(n => covered.add(n)); }
-  return (S.fridge.items || []).map(f => f.name).filter(n => !covered.has(n));
+  return liveFridge().map(f => f.name).filter(n => !covered.has(n));
 }
 // Recipes without a photo get an illustrated tile: the dish as a picture on a soft color.
 // Rules are ordered: the first match wins, so specific dishes come before general ones.
@@ -889,6 +891,7 @@ function badges(r, opts={}){
   if (r.t) b.push(`<span class="chip">${I.clock}${fmtMin(r.t)}</span>`);
   if (isQuick(r)) b.push(`<span class="chip quick">${I.bolt}Quick</span>`);
   if (isFav(r)) b.push(`<span class="chip fav">${I.star}${r.r}</span>`);
+  { const nu = nuOf(r); if (nu && nu.protein >= 28 && nu.protein < 150) b.push(`<span class="chip quick">${Math.round(nu.protein)} g protein</span>`); }
   if (r.nw && !r.r) b.push(`<span class="chip new">New</span>`);
   if (r.red && S.settings.redMode !== 'off') b.push(`<span class="chip red">Red sauce · swap</span>`);
   if (r.kr) b.push(kidChip(r));
@@ -2472,8 +2475,10 @@ function walmartModel(m){
   ].filter(r => storeOf(r.key) === 'walmart');
   const byId = new Map(); const missing = [];
   for (const r of rows) { const p = wmPick(r.key, r.name, r.parts); if (!(p && p.id)) { missing.push(r); continue; }
-    const x = byId.get(p.id) || {...r, p, need: undefined}; x.need = packNeed(r.parts || [], x.need, r.name); byId.set(p.id, x); }
-  const mapped = [...byId.values()].map(x => ({...x, n: packsFrom(x.need, x.p)}));
+    const x = byId.get(p.id) || {...r, p, need: undefined}; x.need = packNeed(r.parts || [], x.need, r.name); if (/^s:(milk|sandwich bread)$/.test(r.key)) x.bigStaple = true; byId.set(p.id, x); }
+  // milk and sandwich bread go fast in a house of five or more: buy two
+  const big = (+S.settings.family || 0) >= 5;
+  const mapped = [...byId.values()].map(x => ({...x, n: packsFrom(x.need, x.p) * (big && x.bigStaple ? 2 : 1)}));
   const url = mapped.length ? WM_CART + mapped.map(x => `${x.p.id}|${x.n}`).join(',') : '';
   return {mapped, missing, url};
 }
@@ -3298,7 +3303,7 @@ if (/[?&]debug\b/.test(location.search)) window.__T = {nuOf, S, asLeanBeef, pars
 boot();
 // ---------- updates (GitHub Pages) ----------
 // Home-screen apps keep running an old copy, so check for a newer version when the app is opened or brought back.
-const APP_VERSION = '2026-11-15.14';
+const APP_VERSION = '2026-11-15.15';
 let updateShown = false;
 let lastCheck = 0;
 async function checkForUpdate(){
