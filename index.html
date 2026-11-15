@@ -510,7 +510,7 @@ const DEFAULT_STAPLES = [['Milk',1],['Eggs',1],['Sandwich bread',1],['Bananas',1
 const DEFAULT_SETTINGS = {
   weekStart:5, redMode:'swap', noRepeat:3, family:4, maxChicken:3,
   pattern:{5:'PZ',6:'G',0:'SC',1:'quick',2:'M',3:'P',4:'LO'},
-  pantry: DEFAULT_PANTRY.map(([name,on])=>({name,on:!!on})),
+  pantryV: 7, pantry: DEFAULT_PANTRY.map(([name,on])=>({name,on:!!on})),
   staples: DEFAULT_STAPLES.map(([name,on])=>({name,on:!!on})),
 };
 
@@ -781,11 +781,18 @@ function fridgeRegex(name){
   if (!fridgeRe.has(name)) { const k = fridgeKey(name); fridgeRe.set(name, k ? new RegExp('\\b' + k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + '(e?s)?\\b') : null); }
   return fridgeRe.get(name);
 }
+const OTHER_PRODUCT = /\b(broth|stock|bouillon|soup|vinegar|sauce|seasoning|powder|extract|oil|juice)\b/;
+function fridgeUses(leftover, ingName){
+  const re = fridgeRegex(leftover), t = ' ' + ingName + ' ', m = re && t.match(re); if (!m) return false;
+  const rest = t.slice(0, m.index) + ' ' + t.slice(m.index + m[0].length);
+  if (OTHER_PRODUCT.test(rest) && !OTHER_PRODUCT.test(leftover.toLowerCase())) return false;
+  return !/\b(coconut|almond|oat|soy|condensed|evaporated) $/.test(t.slice(0, m.index));
+}
 function fridgeMatches(r){
   const items = S.fridge.items || [];
   if (!items.length) return [];
-  const text = ' ' + ingOf(r).map(x => x.name).join(' | ') + ' ' + r.n.toLowerCase() + ' ';
-  return items.filter(f => { const re = fridgeRegex(f.name); return re && re.test(text); }).map(f => f.name);
+  const names = ingOf(r).map(x => x.name), nm = ' ' + r.n.toLowerCase() + ' ';
+  return items.filter(f => { const re = fridgeRegex(f.name); return re && (re.test(nm) || names.some(n => fridgeUses(f.name, n))); }).map(f => f.name);
 }
 // Each leftover is used by one meal: the earliest night in the week whose dinner uses it.
 function leftoverClaims(w){
@@ -901,20 +908,17 @@ function persist(path, data){
     q.data = data; clearTimeout(q.timer);
     q.timer = setTimeout(() => flush(path), 350);
   } else {
-    try { localStorage.setItem('sb.' + path, JSON.stringify(data)); } catch {}
+    try { localStorage.setItem('sb.' + path, JSON.stringify(data)); } catch { toast('This phone is out of storage space, so that change was not saved.'); }
   }
 }
-async function flush(path){
-  const q = writeQ[path]; if (q) q.timer = null; if (!q || q.busy) { if (q) q.again = true; return; }
-  q.busy = true; const data = q.data;
-  try { await db.doc(path).set(data); }
-  catch (e) {
-    if (e && e.code === 'unavailable') { setTimeout(() => { q.busy = false; flush(path); }, 600 + Math.random()*600); return; }
-    if (e && e.code === 'quota_exceeded') toast('Storage is full. Delete some old weeks or recipes.');
-    else toast('Could not save. Check your connection.');
-  }
-  q.busy = false;
-  if (q.again || q.data !== data) { q.again = false; if (q.data !== data) flush(path); }
+function flush(path){
+  const q = writeQ[path]; if (!q) return; q.timer = null;
+  // hand every write to the SDK in order; waiting for the server's ack here would block later edits while offline
+  const data = q.data;
+  db.doc(path).set(data).catch(e => {
+    // storage briefly unavailable: try again with whatever is newest, unless a later write already went out
+    if (e && e.code === 'unavailable') { setTimeout(() => { if (writeQ[path] && writeQ[path].data === data && !writeQ[path].timer) flush(path); }, 600 + Math.random()*600); return; }
+    toast(e && e.code === 'quota_exceeded' ? 'Storage is full. Delete some old weeks or recipes.' : 'Could not save. Check your connection.'); });
 }
 function removeDoc(path){
   if (S.mode === 'db') db.doc(path).delete().catch(()=>toast('Could not delete.'));
@@ -922,7 +926,7 @@ function removeDoc(path){
 }
 function loadLocal(){
   try {
-    const g = k => { const v = localStorage.getItem('sb.' + k); return v ? JSON.parse(v) : null; };
+    const g = k => { try { const v = localStorage.getItem('sb.' + k); return v ? JSON.parse(v) : null; } catch { return null; } };
     const st = g('app/settings'); if (st) { S.settings = {...structuredClone(DEFAULT_SETTINGS), ...st}; upgradeSettings(); }
     const fr = g('app/fridge'); if (fr) S.fridge = fr;
     const wm = g('app/walmart'); if (wm && wm.map) S.walmart = wm;
@@ -930,7 +934,8 @@ function loadLocal(){
       const k = localStorage.key(i); if (!k || !k.startsWith('sb.')) continue;
       const p = k.slice(3).split('/');
       if (p.length !== 2) continue;
-      const v = JSON.parse(localStorage.getItem(k));
+      let v = null; try { v = JSON.parse(localStorage.getItem(k)); } catch {}
+      if (!v) continue;
       if (p[0] === 'weeks') S.weeks[p[1]] = v;
       if (p[0] === 'overrides') S.overrides[p[1]] = v;
       if (p[0] === 'custom') S.custom[p[1]] = v;
@@ -956,7 +961,7 @@ async function initDb(){
 }
 function attachListeners(){
   const onErr = () => {};
-  db.doc('app/settings').onSnapshot(s => { if (s.exists) { const ws = S.settings.weekStart; S.settings = {...structuredClone(DEFAULT_SETTINGS), ...structuredClone(s.data())}; upgradeSettings(); if (ws !== S.settings.weekStart) S.drafts = {}; } scheduleRender(); }, onErr);
+  db.doc('app/settings').onSnapshot(s => { if (s.exists) { const sig = x => JSON.stringify([x.weekStart, x.pattern, x.busy]); const before = sig(S.settings); S.settings = {...structuredClone(DEFAULT_SETTINGS), ...structuredClone(s.data())}; upgradeSettings(); if (sig(S.settings) !== before) S.drafts = {}; } scheduleRender(); }, onErr);
   db.doc('app/walmart').onSnapshot(s => { S.walmart = s.exists ? structuredClone(s.data()) : {map:{}}; if (!S.walmart.map) S.walmart.map = {}; scheduleRender(); }, onErr);
   db.doc('app/fridge').onSnapshot(s => { S.fridge = s.exists ? structuredClone(s.data()) : {items:[]}; scheduleRender(); }, onErr);
   db.collection('overrides').onSnapshot(q => { S.overrides = Object.fromEntries(q.docs.map(x => [x.id, structuredClone(x.data())])); rebuildRecipes(); scheduleRender(); }, onErr);
@@ -1179,7 +1184,7 @@ function commitWeek(w){
 function writeWeek(prev, w){
   const path = 'weeks/' + w.start, q = writeQ[path] || {};
   const ref = S.mode === 'db' && db.doc(path);
-  if (!ref || !prev || q.timer || q.busy || !(ref.updateMany || ref.update)) return persist(path, w);
+  if (!ref || !prev || q.timer || !(ref.updateMany || ref.update)) return persist(path, w);
   const J = x => JSON.stringify(x ?? null), keys = (a, b) => new Set([...Object.keys(a || {}), ...Object.keys(b || {})]);
   const ops = [];
   for (const k of keys(prev, w)) {
@@ -1259,6 +1264,8 @@ function doUndo(){
   if (u.settings) { S.settings = u.settings; saveSettings(); }
   toastEl?.remove(); render(); toast('Undone');
 }
+function dropLeftoverLink(w, id){ const d = w.days[id]; if (!d || !d.from) return; const s = w.days[d.from];
+  if (s && s.scale === 2 && !Object.entries(w.days).some(([k, x]) => k !== id && x.from === d.from)) s.scale = 1; delete d.from; }
 function editWeek(fn){
   const start = curStart(); const w = structuredClone(getWeek(start));
   fn(w); commitWeek(w); render();
@@ -1296,7 +1303,9 @@ function render(){
   const y = window.scrollY;
   renderTabs();
   const app = $('#app');
+  const keep = {}; app.querySelectorAll('input[id],textarea[id]').forEach(el => { if (el.value && !['checkbox','radio','password'].includes(el.type)) keep[el.id] = el.value; });
   app.innerHTML = syncBanner() + ({plan:viewPlan, grocery:viewGrocery, recipes:viewRecipes, settings:viewSettings}[S.view] || viewPlan)();
+  for (const [id, v] of Object.entries(keep)) { const el = document.getElementById(id); if (el && !el.value) el.value = v; }
   if (focusId) { const el = document.getElementById(focusId); if (el) { el.focus({preventScroll:true}); if (sel && el.setSelectionRange) try { el.setSelectionRange(...sel); } catch {} } }
   window.scrollTo(0, y);
   if (S.modal) renderModal();
@@ -1572,7 +1581,7 @@ function groceryModel(){
   for (const [dk, day] of Object.entries(w.days)) {
     const cooks = day.rid && !NOCOOK.some(n=>n[0]===day.cat);
     if (from && dk < from) { if (cooks || day.side || day.sideText) skipped++; continue; }
-    const mine = (claims[dk] || []).map(n => [n, fridgeRegex(n)]).filter(([, re]) => re);
+    const mine = (claims[dk] || []).map(n => [n, fridgeRegex(n)]).filter(([, re]) => re); const claimed = new Set();
     const night = DOW[parseISO(dk).getDay()];
     for (const rid of [day.rid, day.side]) {
       const r = rid && S.byId[rid]; if (!r) continue;
@@ -1581,8 +1590,8 @@ function groceryModel(){
       let its = ingOf(r).map(it0 => grocerySwap(it0, r));
       if (rid === day.rid && isWhite(day, r)) its = whiteSwap(r, its);
       its.forEach(it => {
-        const hit = rid === day.rid && mine.find(([, re]) => re.test(' ' + it.name + ' '));
-        if (hit) { fromFridge.push({leftover: hit[0], name: it.name, recipe: r.n, day: dk}); return; }
+        const hit = rid === day.rid && mine.find(([n]) => !claimed.has(n) && fridgeUses(n, it.name));
+        if (hit) { claimed.add(hit[0]); fromFridge.push({leftover: hit[0], name: it.name, recipe: r.n, day: dk}); return; }
         add(sc !== 1 && it.qty != null ? {...it, qty: it.qty * sc} : it, r.n, night);
       });
     }
@@ -2625,10 +2634,13 @@ function renderModal(){
     title = 'Copy and send';
     body = `<p class="muted" style="margin:0">Select the text below, copy it, and paste it into a text message.</p><textarea class="copyfall" id="copy-ta" readonly>${esc(m.text)}</textarea>`;
   }
-  const prevModal = $('.modal'); const keepScroll = prevModal && S.modal._shown === m.type + (m.id||m.day||'') ? prevModal.scrollTop : 0;
+  const prevModal = $('.modal'); const keepM = {}; if (prevModal) prevModal.querySelectorAll('input[id],textarea[id]').forEach(el => { if (el.value && el.type !== 'checkbox') keepM[el.id] = el.value; });
+  const keepC = prevModal ? [...prevModal.querySelectorAll('.nf-c')].map(c => c.checked) : []; const keepScroll = prevModal && S.modal._shown === m.type + (m.id||m.day||'') ? prevModal.scrollTop : 0;
   const act = document.activeElement; const actId = act && prevModal && prevModal.contains(act) ? act.id : null; const actSel = actId && act.selectionStart != null ? [act.selectionStart, act.selectionEnd] : null;
   $('#modal-root').innerHTML = `<div class="scrim" data-scrim><div class="modal" role="dialog" aria-modal="true" aria-label="${esc(title)}"><div class="modal-h"><h2>${esc(title)}</h2><button class="btn icon ghost" data-act="close" aria-label="Close">${I.x}</button></div>${head}<div class="modal-b">${body}</div></div></div>`;
   document.body.style.overflow = 'hidden';
+  for (const [id, v] of Object.entries(keepM)) { const el = document.getElementById(id); if (el && !el.value) el.value = v; }
+  document.querySelectorAll('.nf-c').forEach((c, i) => { c.checked = !!keepC[i]; });
   const nm = $('.modal'); if (keepScroll) nm.scrollTop = keepScroll; m._shown = m.type + (m.id||m.day||'');
   if (actId && !m.focus) { const el = document.getElementById(actId); if (el) { el.focus({preventScroll:true}); if (actSel) try { el.setSelectionRange(...actSel); } catch {} } }
   if (m.type === 'copy') { const t = $('#copy-ta'); t.focus(); t.select(); }
@@ -2671,7 +2683,7 @@ document.addEventListener('click', async e => {
     case 'savepattern': { snapshot('Usual week saved', true); const w = getWeek(curStart()); const p = {}, b = {}; for (const [k,d] of Object.entries(w.days)) { p[parseISO(k).getDay()] = d.cat || ''; if (d.busy) b[parseISO(k).getDay()] = true; } S.settings.pattern = p; S.settings.busy = b; saveSettings(); toast('Saved as your usual week, with busy nights', true); return; }
     case 'reroll': { snapshot('Rerolled'); let ok = false; editWeek(w => { const d = w.days[day]; const n = pick(d.cat, w, day, Math.random, d.rid); if (n) { d.rid = n; d.locked = false; ok = true; } }); toast(ok ? `New dinner for ${DOWL[parseISO(day).getDay()]}` : 'No other recipes in this category', ok); return; }
     case 'lock': editWeek(w => { w.days[day].locked = !w.days[day].locked; }); return;
-    case 'clear': snapshot('Night cleared'); editWeek(w => { w.days[day] = {cat:'', rid:null, locked:false, side:null, busy: !!w.days[day]?.busy}; }); toast('Night cleared', true); return;
+    case 'clear': snapshot('Night cleared'); editWeek(w => { dropLeftoverLink(w, day); w.days[day] = {cat:'', rid:null, locked:false, side:null, busy: !!w.days[day]?.busy}; }); toast('Night cleared', true); return;
     case 'pick': { const c = getWeek(curStart()).days[day]?.cat; return openModal({type:'pick', day, onlyCat: !!c && !['any','new','fav'].includes(c) && !NOCOOK.some(n => n[0] === c), focus:'pick-q'}); }
     case 'side': return openModal({type:'pick', day, side:true, focus:'pick-q'});
     case 'unside': editWeek(w => { w.days[day].side = null; w.days[day].sideText = null; }); return;
@@ -2705,7 +2717,7 @@ document.addEventListener('click', async e => {
     case 'kid': { const r = S.byId[t.dataset.id]; const v = +t.dataset.v; saveOverride(r.id, {kr: r.kr === v ? undefined : v}); render(); return; }
     case 'busy': editWeek(w => { const d = w.days[day]; d.busy = !d.busy; const r = d.rid && S.byId[d.rid]; if (d.busy && r && !d.locked && !isBusyOk(r) && d.cat && !NOCOOK.some(n=>n[0]===d.cat)) { const n = pick(d.cat, w, day, Math.random, d.rid); if (n) { d.rid = n; toast('Swapped in a quicker meal'); } } }); return;
     case 'draftbusy': { const w = getWeek(curStart()); w.days[day].busy = !w.days[day].busy; return render(); }
-    case 'patbusy': { const dw = t.dataset.dow; S.settings.busy = {...(S.settings.busy||{}), [dw]: !S.settings.busy?.[dw]}; saveSettings(); return render(); }
+    case 'patbusy': { const dw = t.dataset.dow; S.settings.busy = {...(S.settings.busy||{}), [dw]: !S.settings.busy?.[dw]}; S.drafts = {}; saveSettings(); return render(); }
     case 'cook': { const m = {type:'cook', id:t.dataset.id, done:{}, scale: +t.dataset.scale || 1, white: t.dataset.white === '1'}; openModal(m); keepAwake(true).then(ok => { if (ok && S.modal === m) { m.awake = true; renderModal(); } }); return; }
     case 'timer': startTimer(+t.dataset.min, t.dataset.label); return;
     case 'timerx': { const i = timers.findIndex(x => x.id === t.dataset.id); if (i >= 0) timers.splice(i, 1); tickTimers(); return; }
@@ -2793,11 +2805,11 @@ document.addEventListener('change', e => {
   }
   if (t.dataset.store) { const stores = {...(S.walmart.stores || {})}; if (t.value === 'walmart') delete stores[t.dataset.store]; else stores[t.dataset.store] = t.value; S.walmart = {...S.walmart, stores}; saveWalmart(); render(); toast(t.value === 'sams' ? "Moved to Sam's Club. It'll stay there every week." : 'Moved to Walmart'); return; }
   if (t.dataset.draftcat) { const w = getWeek(curStart()); w.days[t.dataset.draftcat].cat = t.value; return; }
-  if (t.dataset.cat) { const id = t.dataset.cat; const v = t.value; editWeek(w => { const d = w.days[id]; d.cat = v; d.locked = false; d.rid = NOCOOK.some(n=>n[0]===v) || !v ? null : pick(v, w, id); }); return; }
+  if (t.dataset.cat) { const id = t.dataset.cat; const v = t.value; editWeek(w => { if (v !== 'LO') dropLeftoverLink(w, id); const d = w.days[id]; d.cat = v; d.locked = false; d.rid = NOCOOK.some(n=>n[0]===v) || !v ? null : pick(v, w, id); }); return; }
   if (t.dataset.check) { const k = t.dataset.check; editWeek(w => { w.checked ||= {}; if (t.checked) w.checked[k] = true; else delete w.checked[k]; }); return; }
   if (t.dataset.staple) { S.settings.staples[+t.dataset.staple].on = t.checked; saveSettings(); return render(); }
   if (t.dataset.pantry) { S.settings.pantry[+t.dataset.pantry].on = t.checked; saveSettings(); return render(); }
-  if (t.dataset.pattern) { S.settings.pattern = {...S.settings.pattern, [t.dataset.pattern]: t.value}; saveSettings(); return; }
+  if (t.dataset.pattern) { S.settings.pattern = {...S.settings.pattern, [t.dataset.pattern]: t.value}; S.drafts = {}; saveSettings(); return; }
   if (t.dataset.plan) { const rid = t.dataset.plan; const dayId = t.value; if (!dayId) return; editWeek(w => { const d = w.days[dayId]; d.rid = rid; d.locked = true; if (!d.cat || NOCOOK.some(n=>n[0]===d.cat)) d.cat = 'any'; }); toast(`Planned for ${fmtD(parseISO(dayId))}`); return; }
   if (t.id === 'ws') { S.settings.weekStart = +t.value; S.drafts = {}; migrateWeekStart(+t.value); saveSettings(); S.weekOffset = 0; toast(`Weeks now start on ${DOWL[+t.value]}. Your planned meals moved with them.`); return render(); }
   if (t.id === 'nr') { S.settings.noRepeat = +t.value; saveSettings(); return; }
@@ -2877,7 +2889,7 @@ if (/[?&]debug\b/.test(location.search)) window.__T = {S, parseIngredient, ingOf
 boot();
 // ---------- updates (GitHub Pages) ----------
 // Home-screen apps keep running an old copy, so check for a newer version when the app is opened or brought back.
-const APP_VERSION = '2026-11-12.6';
+const APP_VERSION = '2026-11-15.1';
 let updateShown = false;
 let lastCheck = 0;
 async function checkForUpdate(){
@@ -2899,7 +2911,8 @@ setTimeout(checkForUpdate, 4000);
 // Offline: keep the app and recipes on the phone (not inside claude.ai, which serves its own copy).
 if (!IN_CLAUDE && 'serviceWorker' in navigator && /^https?:/.test(location.protocol) && !/[?&]nosw\b/.test(location.search)) navigator.serviceWorker.register('sw.js').catch(() => {});
 addEventListener('online', setStatus); addEventListener('offline', setStatus);
-document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') checkForUpdate(); });
+let shownDay = iso(new Date());
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { checkForUpdate(); const d = iso(new Date()); if (d !== shownDay) { shownDay = d; render(); } } });
 })();
 </script>
 
