@@ -757,8 +757,9 @@ function proteinOf(r){
   if (r._p !== undefined) return r._p;
   const t = (r.n + ' ' + (r.i || []).slice(0, 12).join(' ')).toLowerCase();
   const n = r.n.toLowerCase();
-  const order = [['chicken', /chicken|rotisserie/], ['turkey', /turkey/], ['pork', /\bham steaks?\b/], ['beef', /beef|steak|brisket|chuck|meatball|burger|sirloin|ribeye|sloppy|bulgogi|cheesesteak|philly|roast\b/], ['pork', /pork|carnitas|ham\b|bacon|ribs\b|kielbasa|sausage|brat|chorizo|pepperoni|salami|prosciutto/], ['turkey', /turkey/]];
-  let p = (order.find(([, re]) => re.test(n)) || order.find(([, re]) => re.test(t)) || ['meatless'])[0];
+  const nameFirst = [['chicken', /chicken|rotisserie/], ['turkey', /turkey/], ['pork', /\bham steaks?\b/]]; // a turkey burger is turkey, a ham steak is pork; the name decides first
+  const order = [['chicken', /chicken|rotisserie/], ['beef', /beef|steak|brisket|chuck|meatball|burger|sirloin|ribeye|sloppy|bulgogi|cheesesteak|philly|roast\b/], ['pork', /pork|carnitas|ham\b|bacon|ribs\b|kielbasa|sausage|brat|chorizo|pepperoni|salami|prosciutto/], ['turkey', /turkey/]];
+  let p = (nameFirst.find(([, re]) => re.test(n)) || order.find(([, re]) => re.test(n)) || order.find(([, re]) => re.test(t)) || ['meatless'])[0];
   try { Object.defineProperty(r, '_p', {value: p, enumerable: false, configurable: true}); } catch {}
   return p;
 }
@@ -1492,7 +1493,7 @@ function pick(cat, w, dateISO, rand=Math.random, exclude=null){
   // Nutrition, soft: each rule only narrows the pool when something is left, and unknown nutrition always passes. Leftover matches and busy nights above still win.
   { const kcal = r => nuOf(r)?.kcal ?? null, prot = r => nuOf(r)?.protein ?? null;
     const cookedKcal = k => { const d = w.days[k]; return k !== dateISO && d.rid && !NOCOOK.some(n => n[0] === d.cat) && S.byId[d.rid] ? kcal(S.byId[d.rid]) : null; };
-    { const ok = pool.filter(r => prot(r) == null || prot(r) >= 28); if (ok.length >= 3) pool = ok; }                        // dinner at or above 28 g protein (30 g cost too much variety)
+    { const ok = pool.filter(r => prot(r) == null || prot(r) >= 28 || r.r >= 4); if (ok.length >= 3) pool = ok; }                        // dinner at or above 28 g protein (30 g cost too much variety); 4 and 5 star favorites always pass
     { const seen = keys.filter(k => cookedKcal(k) > 900).length; const ok = pool.filter(r => !(kcal(r) > 900)); if (seen >= 2 ? ok.length : ok.length >= 3) pool = ok; } // no third night over 900 kcal; a first or second one only if there are few lighter options
     { if ([keys[dayIdx - 1], keys[dayIdx + 1]].some(k => k && cookedKcal(k) > 800)) { const ok = pool.filter(r => !(kcal(r) > 800)); if (ok.length) pool = ok; } } // not two heavy nights in a row
   }
@@ -3334,7 +3335,7 @@ if (/[?&]debug\b/.test(location.search)) window.__T = {proteinOf, tileEmoji, nuO
 boot();
 // ---------- updates (GitHub Pages) ----------
 // Home-screen apps keep running an old copy, so check for a newer version when the app is opened or brought back.
-const APP_VERSION = '2026-11-15.20';
+const APP_VERSION = '2026-11-15.21';
 let updateShown = false;
 let lastCheck = 0;
 async function checkForUpdate(){
