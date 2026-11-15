@@ -901,7 +901,7 @@ function badges(r, opts={}){
   if (r.t) b.push(`<span class="chip">${I.clock}${fmtMin(r.t)}</span>`);
   if (isQuick(r)) b.push(`<span class="chip quick">${I.bolt}Quick</span>`);
   if (isFav(r)) b.push(`<span class="chip fav">${I.star}${r.r}</span>`);
-  { const nu = r.k === 'main' ? nuOf(r) : null; if (nu && nu.protein >= 12 && nu.protein < 150) b.push(nu.protein < 28 && r.pAdd ? `<span class="chip">${Math.round(nu.protein)} g protein · ${Math.round(nu.protein + r.pAdd)} with add-on</span>` : `<span class="chip ${nu.protein >= 28 ? 'protein' : ''}">${Math.round(nu.protein)} g protein</span>`); }
+  { const nu = r.k === 'main' ? nuOf(r) : null; if (nu && nu.protein >= 12 && nu.protein < 150) b.push(nu.protein < 28 && r.pAdd && (r.i || []).some(l => /^\s*optional\b/i.test(l)) ? `<span class="chip">${Math.round(nu.protein)} g protein · ${Math.round(nu.protein + r.pAdd)} with add-on</span>` : `<span class="chip ${nu.protein >= 28 ? 'protein' : ''}">${Math.round(nu.protein)} g protein</span>`); }
   if (r.nw && !r.r) b.push(`<span class="chip new">New</span>`);
   if (r.red && S.settings.redMode !== 'off') b.push(`<span class="chip red">Red sauce · swap</span>`);
   if (r.kr) b.push(kidChip(r));
@@ -1818,7 +1818,9 @@ const plural = (u, v) => v > 1 && /^(cup|can|jar|package|packet|bag|clove|slice|
 function qtyText(parts){
   let cups = 0, oz = 0, nv = 0, nw = 0; const other = {};
   const hasWt = parts.some(p => p.qty != null && WT[p.unit]);
+  const hasReq = parts.some(p => !p.opt);
   for (const p of parts) {
+    if (p.opt && hasReq) continue; // an optional extra doesn't add to the amount shown
     if (p.qty == null) continue; const u = p.unit || '';
     if (VOL[u]) { cups += p.qty * VOL[u]; nv++; }
     else if (WT[u]) { oz += p.qty * WT[u]; nw++; }
@@ -3339,7 +3341,7 @@ if (/[?&]debug\b/.test(location.search)) window.__T = {proteinNote, proteinOf, t
 boot();
 // ---------- updates (GitHub Pages) ----------
 // Home-screen apps keep running an old copy, so check for a newer version when the app is opened or brought back.
-const APP_VERSION = '2026-11-15.24';
+const APP_VERSION = '2026-11-15.25';
 let updateShown = false;
 let lastCheck = 0;
 async function checkForUpdate(){
