@@ -961,7 +961,7 @@ function persist(path, data){
     q.data = data; clearTimeout(q.timer);
     q.timer = setTimeout(() => flush(path), 350);
   } else {
-    try { localStorage.setItem('sb.' + path, JSON.stringify(data)); } catch { toast('This phone is out of storage space, so that change was not saved.'); }
+    try { localStorage.setItem('sb.' + path, JSON.stringify(data)); } catch { toast("This phone is out of storage space, so that change wasn't saved."); }
   }
 }
 function flush(path){
@@ -971,10 +971,10 @@ function flush(path){
   db.doc(path).set(data).catch(e => {
     // storage briefly unavailable: try again with whatever is newest, unless a later write already went out
     if (e && e.code === 'unavailable') { setTimeout(() => { if (writeQ[path] && writeQ[path].data === data && !writeQ[path].timer) flush(path); }, 600 + Math.random()*600); return; }
-    toast(e && e.code === 'quota_exceeded' ? 'Storage is full. Delete some old weeks or recipes.' : 'Could not save. Check your connection.'); });
+    toast(e && e.code === 'quota_exceeded' ? 'Storage is full. Delete some old weeks or recipes.' : "Couldn't save. Check your connection and try again."); });
 }
 function removeDoc(path){
-  if (S.mode === 'db') db.doc(path).delete().catch(()=>toast('Could not delete.'));
+  if (S.mode === 'db') db.doc(path).delete().catch(()=>toast("Couldn't delete. Try again."));
   else try { localStorage.removeItem('sb.' + path); } catch {}
 }
 function loadLocal(){
@@ -1082,10 +1082,10 @@ function fbMessage(e){
   if (/email-already-in-use/.test(c)) return 'That email already has an account. Tap Sign in instead.';
   if (/weak-password/.test(c)) return 'Use a password with at least 6 characters.';
   if (/invalid-email/.test(c)) return "That email address doesn't look right.";
-  if (/unauthorized-domain/.test(c)) return 'This website needs to be added to Authorized domains in the Firebase console.';
-  if (/operation-not-allowed/.test(c)) return 'This sign-in method is turned off in the Firebase console.';
+  if (/unauthorized-domain/.test(c)) return "Sign-in isn't set up for this web address yet. Ask whoever set up the board.";
+  if (/operation-not-allowed/.test(c)) return "That way of signing in isn't turned on yet. Try another way or ask whoever set up the board.";
   if (/network/.test(c)) return 'No connection. Try again when you have signal.';
-  return 'Sign-in failed. Try again.';
+  return "Couldn't sign in. Try again.";
 }
 async function connectFirebase(u){
   FB.state = 'checking'; FB.err = ''; render();
@@ -1180,14 +1180,14 @@ function syncPanel(){
   if (FB.state === 'off') return '';
   const u = FB.user;
   return `<div class="panel" id="sync-panel"><h3>Family sync</h3>
-    ${FB.state === 'on' ? `<p style="margin:0 0 10px;font-size:14px">Signed in as <b>${esc(u?.email || '')}</b>. Plans, lists, check-offs and recipe edits sync to every phone signed in to this board.</p><button class="btn" data-act="fbsignout">Sign out</button>`
+    ${FB.state === 'on' ? `<p style="margin:0 0 10px;font-size:14px">Signed in as <b>${esc(u?.email || '')}</b>. Plans, lists, check-offs and recipe edits show up on every phone signed in to this board.</p><button class="btn" data-act="fbsignout">Sign out</button>`
     : FB.state === 'loading' || FB.state === 'checking' ? `<p class="muted" style="margin:0;font-size:14px">Connecting…</p>`
     : FB.state === 'error' ? `<p style="margin:0;font-size:14px">${esc(FB.err)}</p>`
     : `<p style="margin:0 0 10px;font-size:14px">Sign in so you and your family share one plan and grocery list. Each person signs in with their own account.</p>
       ${FB.err ? `<p style="margin:0 0 10px;color:var(--tomato);font-size:14px">${esc(FB.err)}</p>` : ''}
       <button class="btn primary" data-act="fbgoogle">Sign in with Google</button>
       <div class="label" style="margin:14px 0 6px">Or use email and password</div>
-      <div style="display:flex;flex-direction:column;gap:8px"><input type="email" id="fb-email" placeholder="Email" autocomplete="username" aria-label="Email"><input type="password" id="fb-pass" placeholder="Password (6+ characters)" autocomplete="current-password" aria-label="Password">
+      <div style="display:flex;flex-direction:column;gap:8px"><input type="email" id="fb-email" placeholder="Email" autocomplete="username" aria-label="Email"><input type="password" id="fb-pass" placeholder="Password (at least 6 characters)" autocomplete="current-password" aria-label="Password">
       <div class="row"><button class="btn" data-act="fbemail">Sign in</button><button class="btn ghost" data-act="fbcreate">Create account</button></div></div>`}
   </div>`;
 }
@@ -1574,7 +1574,7 @@ function generateWeek(w, opts = {}){
   return {covered, missed: [...open]};
 }
 function overrideBox(){
-  return `<label class="mini override"><input type="checkbox" class="check" data-useup-override ${S.settings.useUpOverride ? 'checked' : ''}><span class="grow"><b>Leftovers can change a night's category</b><br><span class="muted">Checked: using up the fridge comes first, even if Grill night gets pasta. Unchecked: leftovers only go on nights where a recipe in that category uses them.</span></span></label>`;
+  return `<label class="mini override"><input type="checkbox" class="check" data-useup-override ${S.settings.useUpOverride ? 'checked' : ''}><span class="grow"><b>Leftovers can change a night's category</b><br><span class="muted">Checked: using up the fridge comes first, even if Grill night ends up with pasta. Unchecked: leftovers go only on nights whose category has a recipe that uses them.</span></span></label>`;
 }
 function useUpToast(res, undo){
   const n = (S.fridge.items || []).length; if (!n) return;
@@ -1600,7 +1600,7 @@ function viewSetup(start, w, label, dates){
         ${(() => { const q = recentFresh(); return q.length ? `<div class="label" style="margin:14px 0 6px">Left from last week's meals? Tap to add</div><div class="chips">${q.map(k => `<button class="chipbtn" data-act="quickfridge" data-name="${esc(k)}">+ ${esc(k)}</button>`).join('')}</div>` : ''; })()}</section>
       <section class="panel"><div class="label">Step 2</div><h3>What kind of night is each day?</h3>
         <p class="muted" style="margin:0 0 10px;font-size:14px">Filled in from your usual week. Change any of them for this week.</p>
-        <div class="pattern">${dates.map(d => { const id = iso(d); return `<span>${DOW[d.getDay()]} ${d.getDate()}</span><select data-draftcat="${id}" aria-label="Category for ${DOWL[d.getDay()]}">${catOptions(w.days[id]?.cat || '')}</select><button class="chipbtn busy-t" data-act="draftbusy" data-day="${id}" aria-pressed="${!!w.days[id]?.busy}" title="Busy nights get quick or slow cooker meals">Busy</button>`; }).join('')}</div>
+        <div class="pattern">${dates.map(d => { const id = iso(d); return `<span>${DOW[d.getDay()]} ${d.getDate()}</span><select data-draftcat="${id}" aria-label="Category for ${DOWL[d.getDay()]}">${catOptions(w.days[id]?.cat || '')}</select><button class="chipbtn busy-t" data-act="draftbusy" data-day="${id}" aria-pressed="${!!w.days[id]?.busy}" title="Busy nights get a quick or slow cooker meal">Busy</button>`; }).join('')}</div>
         <p class="muted" style="margin:10px 0 0;font-size:13px"><b>Busy</b> nights get a quick or slow cooker meal.</p></section>
       <section class="panel setup-go"><div class="label">Step 3</div>
         <button class="btn primary" data-act="generate" style="width:100%;justify-content:center;padding:13px">${I.wand}Make my plan${fr.length ? ` (using up ${fr.length} item${fr.length>1?'s':''} first)` : ''}</button>
@@ -1631,7 +1631,7 @@ function useUpPanel(){
     <div class="useup-b">
       ${overrideBox()}
       <div class="addrow" style="margin:0"><input type="text" id="fridge-in" placeholder="Add a leftover, e.g. sour cream" aria-label="Add a leftover ingredient" value="${esc(S.fridgeDraft)}"><button class="btn" data-act="addfridge">${I.plus}Add</button></div>
-      ${fr.length ? `<div class="chips">${fr.map(f => { const night = Object.entries(useClaims).find(([, ns]) => ns.includes(f.name)); return `<span class="chip fridge chip-x ${night ? 'claimed' : ''}">${esc(f.name)}${night ? ` · ${DOW[parseISO(night[0]).getDay()]}` : ''}<button class="btn ghost sm icon" data-act="usedfridge" data-id="${f.id}" aria-label="Used up ${esc(f.name)}">${I.x}</button></span>`; }).join('')}</div>${Object.keys(useClaims).length ? `<p class="muted" style="margin:0;font-size:12.5px">The day shows which night uses it up. Other recipes with the same ingredient get it from the grocery list.</p>` : ''}` : ''}
+      ${fr.length ? `<div class="chips">${fr.map(f => { const night = Object.entries(useClaims).find(([, ns]) => ns.includes(f.name)); return `<span class="chip fridge chip-x ${night ? 'claimed' : ''}">${esc(f.name)}${night ? ` · ${DOW[parseISO(night[0]).getDay()]}` : ''}<button class="btn ghost sm icon" data-act="usedfridge" data-id="${f.id}" aria-label="Used up ${esc(f.name)}">${I.x}</button></span>`; }).join('')}</div>${Object.keys(useClaims).length ? `<p class="muted" style="margin:0;font-size:12.5px">The night that uses it up is marked. Other recipes that need it still add it to the grocery list.</p>` : ''}` : ''}
       ${fr.length && aiMode() ? `<button class="btn ai-all" data-act="aiopen" data-all="1">${I.wand}Ask Claude for one meal that uses ${fr.length === 2 ? 'both' : fr.length > 1 ? `all ${fr.length}` : 'it'}</button>` : ''}
       ${sugg.length ? `<div class="label">Recipes that use them</div><div class="sugg">${sugg.map(({r,m}) => `<div class="srow">${thumbHTML(r)}<div class="grow"><button class="meal-name" data-open="${r.id}">${esc(r.n)}</button><div class="meal-meta"><span class="chip fridge">${esc(m.join(', '))}</span>${r.t?`<span class="chip">${fmtMin(r.t)}</span>`:''}</div></div><select data-plan="${r.id}" aria-label="Plan ${esc(r.n)}"><option value="">Plan…</option>${dayOpts}</select></div>`).join('')}</div>` : ''}
     </div></details>
@@ -1667,7 +1667,7 @@ function tonightCard(w){
 function viewPlan(){
   const start = curStart(); const dates = weekDates(start); const w = getWeek(start);
   // A week that looks unplanned may only be unplanned in this phone's cache: planning it now would replace the plan the other phone already saved.
-  if (S.mode === 'db' && navigator.onLine !== false && !S.weeksFresh && isDraft(start)) return '<div class="empty">Checking the shared plan…<div class="muted" style="margin-top:6px;font-size:14px">A new week can be started once this phone has synced.</div></div>';
+  if (S.mode === 'db' && navigator.onLine !== false && !S.weeksFresh && isDraft(start)) return '<div class="empty">Checking the shared plan…<div class="muted" style="margin-top:6px;font-size:14px">You can start a new week once the shared plan has loaded.</div></div>';
   if (isDraft(start)) return viewSetup(start, w, weekLabel(), dates);
   const today = iso(new Date());
   const openDays = Object.entries(w.days).some(([k, d]) => k >= today && d.cat && !d.rid && !NOCOOK.some(n => n[0] === d.cat));
@@ -2499,7 +2499,7 @@ function viewGrocery(){
     const n = g.opt ? 1 : packsFor(g.parts, wmPick('i:' + g.core, g.name, g.parts), g.name);
     const sub = (n > 1 ? `<span class="chip buyn">Buy ${n}</span> ` : '') + (g.opt ? `<span class="chip">Optional</span> ` : '') + (g.swap ? `<span class="chip quick">White-sauce swap</span> ` : '') + esc([...g.uses].join(', '));
     return row(g.k, cap(g.name), g.qty, sub, '', 'i:' + g.core, g.parts, g.opt ? 'opt' : ''); }))).join('');
-  const extrasHTML = section('Added this week', m.extras.map(e => row('extra|'+e.id, e.name, '', '', `<button class="btn ghost sm icon" data-act="rmextra" data-id="${e.id}" aria-label="Remove">${I.x}</button>`, 'x:' + e.name.toLowerCase())));
+  const extrasHTML = section('Added this week', m.extras.map(e => row('extra|'+e.id, e.name, '', '', `<button class="btn ghost sm icon" data-act="rmextra" data-id="${e.id}" aria-label="Remove from list">${I.x}</button>`, 'x:' + e.name.toLowerCase())));
   const pantryList = [...m.pantryHits.entries()].sort((a,b)=>a[0].localeCompare(b[0]));
   const planned = Object.entries(w.days).filter(([k, d]) => d.rid && !NOCOOK.some(n=>n[0]===d.cat) && (!m.from || k >= m.from)).length;
   const wm = walmartModel(m); const n = wm.mapped.length;
@@ -2509,8 +2509,8 @@ function viewGrocery(){
     <div class="row"><button class="btn" data-act="copylist" ${m.total?'':'disabled'}>${I.share}Send list</button></div></div>
     ${(() => { const ents = groceryEntries(m).filter(e => !e.checked); const nS = ents.filter(e => e.store === 'sams').length, nW = ents.length - nS;
       // In the store the list comes first: one compact row for ordering, and a sticky bar with progress and the store filter.
-      return `${edit ? `<div class="wm-bar editing"><div class="grow"><b>Linking Walmart products</b><div class="muted" style="font-size:13px">Each item shows the product that goes in the cart. Tap the button next to an item to change it, or <b>+ Walmart</b> to link one that has no default. You only do this once per item.</div></div><button class="btn primary" data-act="wmedit">Done</button></div>`
-        : `<div class="order-row">${n ? `<a class="btn primary" href="${esc(wm.url)}" target="_blank" rel="noopener" data-wmcart aria-label="Add ${n} products to Walmart cart">${I.cart}Walmart cart · ${n}</a>` : `<button class="btn primary" data-act="wmedit">${I.cart}Set up Walmart pickup</button>`}${nS ? `<button class="btn" data-act="sendsams" aria-label="Send Sam's Club list, ${nS} items">${I.share}Sam's list · ${nS}</button>` : ''}${n ? `<button class="btn ghost" data-act="wmedit">Check products</button>` : ''}</div>`}
+      return `${edit ? `<div class="wm-bar editing"><div class="grow"><b>Pick Walmart products</b><div class="muted" style="font-size:13px">Tap a product to change it, or <b>+ Walmart</b> to pick one. Each pick is saved for every week.</div></div><button class="btn primary" data-act="wmedit">Done</button></div>`
+        : `<div class="order-row">${n ? `<a class="btn primary" href="${esc(wm.url)}" target="_blank" rel="noopener" data-wmcart aria-label="Add ${n} product${n === 1 ? '' : 's'} to Walmart cart">${I.cart}Walmart cart · ${n}</a>` : `<button class="btn primary" data-act="wmedit">${I.cart}Set up Walmart pickup</button>`}${nS ? `<button class="btn" data-act="sendsams" aria-label="Send Sam's Club list, ${nS} item${nS === 1 ? '' : 's'}">${I.share}Sam's list · ${nS}</button>` : ''}${n ? `<button class="btn ghost" data-act="wmedit">Check products</button>` : ''}</div>`}
         ${midweek ? `<div class="chips" role="group" aria-label="Which nights"><button class="chipbtn" data-act="listscope" data-v="rest" aria-pressed="${!w.listAll}">From today</button><button class="chipbtn" data-act="listscope" data-v="all" aria-pressed="${!!w.listAll}">Whole week</button>${!w.listAll && m.skipped ? `<span class="muted" style="font-size:13px;align-self:center">${m.skipped} earlier night${m.skipped > 1 ? 's' : ''} left off</span>` : ''}</div>` : ''}
       <div class="g-sticky">
         ${nS ? `<div class="chips" role="group" aria-label="Show items for">${[['all','All',ents.length],['walmart','Walmart',nW],['sams',"Sam's Club",nS]].map(([v,l,c]) => `<button class="chipbtn" data-act="storeview" data-v="${v}" aria-pressed="${view === v}">${l} <span class="muted">${c}</span></button>`).join('')}</div>` : ''}
@@ -2519,10 +2519,10 @@ function viewGrocery(){
     ${!m.total ? `<div class="empty">Nothing on the list yet. Plan some meals or add weekly staples in Settings.</div>` : ''}
     ${staplesHTML}${aisles}${extrasHTML}
     <div class="addrow"><input type="text" id="extra-in" placeholder="Paper towels, snacks…" aria-label="Add grocery item"><button class="btn" data-act="addextra">${I.plus}Add</button></div>
-    ${!edit && (n || wm.missing.length) ? `<details class="wm-check" style="margin-top:18px" ${S.wmSent ? 'open' : ''}><summary><b>${S.wmSent ? 'Did everything make it into the cart?' : 'What gets sent to Walmart'}</b> <span class="muted">${n} product${n === 1 ? '' : 's'} going in the cart${wm.missing.length ? ` · ${wm.missing.length} item${wm.missing.length === 1 ? '' : 's'} not linked` : ''}</span></summary>
-      <p class="muted" style="margin:0 0 8px;font-size:13px">Walmart quietly skips anything it can't add for your store, with no warning. Compare this list to your cart and tap <b>Open</b> on anything that's missing to add it by hand. Optional items and Sam's Club items are never sent.</p>
+    ${!edit && (n || wm.missing.length) ? `<details class="wm-check" style="margin-top:18px" ${S.wmSent ? 'open' : ''}><summary><b>${S.wmSent ? 'Did everything make it into the cart?' : 'What goes in your Walmart cart'}</b> <span class="muted">${n} product${n === 1 ? '' : 's'} in your cart${wm.missing.length ? ` · ${wm.missing.length} with no product picked` : ''}</span></summary>
+      <p class="muted" style="margin:0 0 8px;font-size:13px">Walmart can skip items it doesn't have at your store, without telling you. Check your cart against this list, and tap <b>Open</b> to add anything missing. Optional and Sam's Club items aren't sent.</p>
       ${n ? `<ul class="items">${wm.mapped.map(x => `<li><div class="it-b"><div class="it-name"><span class="it-qty">${x.n} ×</span> ${esc(x.p.label || ('Item #' + x.p.id))}</div><div class="it-for">for ${esc(x.name)}</div></div><a class="btn sm it-x" href="https://www.walmart.com/ip/${esc(x.p.id)}" target="_blank" rel="noopener">Open</a></li>`).join('')}</ul>` : ''}
-      ${wm.missing.length ? `<p style="margin:10px 0 4px;font-size:13.5px"><b>Not sent</b> <span class="muted">(no Walmart product linked)</span></p><ul class="items">${wm.missing.map(x => `<li><div class="it-b"><div class="it-name">${esc(x.name)}</div></div><a class="btn sm it-x" href="${esc(wmSearch(x.name))}" target="_blank" rel="noopener">Search</a></li>`).join('')}</ul>` : ''}
+      ${wm.missing.length ? `<p style="margin:10px 0 4px;font-size:13.5px"><b>Not sent</b> <span class="muted">(no Walmart product picked)</span></p><ul class="items">${wm.missing.map(x => `<li><div class="it-b"><div class="it-name">${esc(x.name)}</div></div><a class="btn sm it-x" href="${esc(wmSearch(x.name))}" target="_blank" rel="noopener">Search</a></li>`).join('')}</ul>` : ''}
     </details>` : ''}
     ${done.length ? `<details class="aisle donebox" style="margin-top:18px"><summary><h3>Checked off <span class="muted">${done.length}</span></h3><button class="btn ghost sm" data-act="uncheck">Uncheck all</button></summary><ul class="items">${done.join('')}</ul></details>` : ''}
     ${m.fromFridge.length ? `<details class="aisle donebox"><summary><h3>Using from the fridge <span class="muted">${m.fromFridge.length}</span></h3></summary>
@@ -2606,7 +2606,7 @@ function viewSettings(){
       ${[['swap','Suggest red-sauce recipes and make them white (the list buys the white version)'],['avoid','Never suggest red-sauce recipes'],['off','Don\'t flag red sauce']].map(([k,l])=>`<label class="mini" style="margin:4px 0"><input type="radio" name="red" value="${k}" ${st.redMode===k?'checked':''}> ${l}</label>`).join('')}
       <label class="label" for="fam" style="display:block;margin:14px 0 6px">We cook for</label>
       <select id="fam">${[[0,'As each recipe is written'],[2,'2 people'],[3,'3 people'],[4,'4 people'],[5,'5 people'],[6,'6 people'],[7,'7 people'],[8,'8 people']].map(([v,l]) => `<option value="${v}" ${+st.family===v?'selected':''}>${l}</option>`).join('')}</select>
-      <p class="muted" style="margin:6px 0 0;font-size:13px">Recipes that serve fewer people are scaled up on the plan and grocery list, and party-size ones are halved. Leftover-friendly sizes stay as written.</p>
+      <p class="muted" style="margin:6px 0 0;font-size:13px">Recipes for fewer people are scaled up on the plan and grocery list, and party-size recipes are halved. Sizes that make leftovers stay as written.</p>
       <label class="label" for="mc" style="display:block;margin:14px 0 6px">Chicken nights a week, at most</label>
       <select id="mc">${[2,3,4,5,7].map(n => `<option value="${n}" ${(+st.maxChicken||3)===n?'selected':''}>${n === 7 ? 'No limit' : n}</option>`).join('')}</select>
       <p class="muted" style="margin:6px 0 0;font-size:13px">The planner also avoids the same main protein, or two soups, on back-to-back nights.</p>
@@ -2632,17 +2632,17 @@ function viewSettings(){
       ${S.sample ? `<p style="margin:0;font-size:14px">Ready. New recipes use your Claude account, and Claude asks permission the first time.</p>`
         : IN_CLAUDE ? `<p style="margin:0;font-size:14px">Sign in to claude.ai to create recipes with Claude.</p>`
         : getKey() ? `<p style="margin:0 0 10px;font-size:14px">Ready. Your Anthropic API key is saved on this device only (ends in …${esc(getKey().slice(-4))}).</p><button class="btn" data-act="rmkey">${I.trash}Remove key</button>`
-        : `<p style="margin:0 0 8px;font-size:14px">Paste an Anthropic API key to create recipes on this site. Get one at console.anthropic.com under <b>API Keys</b>. Each recipe costs about 5 cents.</p>
+        : `<p style="margin:0 0 8px;font-size:14px">To make recipes with Claude here, paste a key from your Anthropic account (console.anthropic.com, under <b>API Keys</b>). Each recipe costs about 5 cents.</p>
            <div class="addrow" style="margin:0"><input type="password" id="ai-key" placeholder="sk-ant-…" autocomplete="off" aria-label="Anthropic API key"><button class="btn primary" data-act="savekey">Save</button></div>
-           <p class="muted" style="margin:8px 0 0;font-size:12.5px">The key stays in this browser and is sent only to Anthropic. Anyone using this device and browser could use it.</p>`}
+           <p class="muted" style="margin:8px 0 0;font-size:12.5px">The key stays in this browser and is sent only to Anthropic. Anyone who uses this browser can use it.</p>`}
     </div>
     ${syncPanel()}
     <div class="panel"><h3>Move or back up your data</h3>
-      <p style="margin:0 0 10px;font-size:14px">Copies your settings, weeks, leftovers, Walmart links and recipe edits as one block of text. Send it to yourself, then paste it into the other version of the board.</p>
+      <p style="margin:0 0 10px;font-size:14px">Copies your settings, plans, leftovers, Walmart products and recipe edits as one block of text. Text it to yourself, then paste it into the board on your other phone or browser.</p>
       <button class="btn" data-act="exportdata">${I.share}Copy my data</button>
       <textarea id="import-in" placeholder="Paste copied data here" aria-label="Paste copied data" style="margin-top:12px;min-height:80px;width:100%"></textarea>
       <div class="row" style="margin-top:8px"><button class="btn" data-act="importdata">Load pasted data</button></div>
-      <p class="muted" style="margin:8px 0 0;font-size:12.5px">Loading replaces the settings, Walmart links and leftovers here and adds the weeks and recipe edits.</p>
+      <p class="muted" style="margin:8px 0 0;font-size:12.5px">Loading replaces your settings, Walmart products and leftovers here. Plans and recipe edits are added.</p>
     </div>
     <div class="panel"><h3>About this board</h3>
       <p style="margin:0 0 8px;font-size:14px">${FB.state==='on'?'Plans, lists and recipe edits sync to every phone signed in under Family sync.':S.mode==='db'?'Plans, lists and recipe edits save to this page and sync anywhere you open it. If you share the page with your partner as an editor, you both see the same plan.':FB.state!=='off'?'Saving on this phone only until you sign in under Family sync above.':IN_CLAUDE?'Saving in this browser only. Open the page while signed in to claude.ai to sync across devices.':'Saving in this browser only.'}</p>
@@ -2871,7 +2871,7 @@ function renderModal(){
     // Reading comes first (photo, ingredients, steps); changing the recipe's details is folded under "Details".
     body = `${r.img && S.thumbs[r.id] ? `<img class="hero" src="${S.thumbs[r.id]}" alt="">` : `<div class="hero tile">${tileHTML(r)}</div>`}
       <div class="row" style="justify-content:space-between"><div class="stars" role="group" aria-label="Rating">${[1,2,3,4,5].map(n=>`<button class="star ${n<=(r.r||0)?'on':''}" data-rate="${n}" aria-label="${n} star${n>1?'s':''}">${I.star}</button>`).join('')}</div>
-        <div class="row"><button class="btn primary" data-act="cook" data-id="${r.id}" data-scale="${m.scale}" data-white="${m.white ? 1 : 0}">Cook</button><select id="plan-day" style="width:auto" aria-label="Plan for a day"><option value="">Plan for…</option>${dates.map(d=>`<option value="${iso(d)}">${fmtD(d)}</option>`).join('')}</select>${m.forDay?`<button class="btn primary" data-act="useforday">Use for ${esc(fmtD(parseISO(m.forDay)))}</button>`:''}</div></div>
+        <div class="row"><button class="btn primary" data-act="cook" data-id="${r.id}" data-scale="${m.scale}" data-white="${m.white ? 1 : 0}">Cook</button><select id="plan-day" style="width:auto" aria-label="Night to plan this recipe"><option value="">Plan for…</option>${dates.map(d=>`<option value="${iso(d)}">${fmtD(d)}</option>`).join('')}</select>${m.forDay?`<button class="btn primary" data-act="useforday">Use for ${esc(fmtD(parseISO(m.forDay)))}</button>`:''}</div></div>
       ${r.de ? `<p style="margin:0;font-size:15.5px">${esc(r.de)}</p>`:''}
       <div class="meal-meta">${r.t ? `<span class="chip">${I.clock}${fmtMin(r.t)} total</span>` : ''}${r.h ? `<span class="chip">${fmtMin(r.h)} hands-on</span>` : ''}${r.s ? `<span class="chip">${esc(servesText(scaleServes(r.s, m.scale)))}</span>` : ''}${isQuick(r) ? `<span class="chip quick">${I.bolt}Quick</span>` : ''}${reminder(r) ? `<span class="chip warn">${esc(reminder(r))}</span>` : ''}${r.kr ? kidChip(r) : ''}</div>
       ${r.red && S.settings.redMode !== 'off' ? `<div class="tip" style="margin:0"><b>White-sauce swap:</b> ${esc(SWAP[r.red]||SWAP.other)}</div>`:''}
@@ -2909,7 +2909,7 @@ function renderModal(){
         ${entree && aiMode() ? `<button class="btn wrap" data-act="aiopen" data-day="${esc(m.day)}" data-side="1">${I.wand}Ask Claude for a side that goes with ${esc(entree.n)}</button>` : ''}
         <div class="label" style="margin-top:4px">Or pick a side recipe</div></div>` : aiMode() ? `<div style="padding:0 16px 12px"><button class="btn" style="width:100%;justify-content:center" data-act="aiopen" data-day="${esc(m.day)}">${I.wand}Create a new recipe with Claude</button></div>` : '';
     head = sideHead + `<div class="searchbox" style="padding:0 16px 12px">${I.search.replace('<svg','<svg style="left:27px"')}<input type="search" id="pick-q" placeholder="Search recipes or ingredients" value="${esc(m.q||'')}" aria-label="Search"></div>
-      ${!m.side && day.cat && !NOCOOK.some(n=>n[0]===day.cat) ? `<div class="row" style="padding:0 16px 10px"><button class="chipbtn" data-act="onlycat" aria-pressed="${!!m.onlyCat}">Only ${esc(CATNAME[day.cat])}</button><span class="muted">${list.length} recipes</span></div>`:''}`;
+      ${!m.side && day.cat && !NOCOOK.some(n=>n[0]===day.cat) ? `<div class="row" style="padding:0 16px 10px"><button class="chipbtn" data-act="onlycat" aria-pressed="${!!m.onlyCat}">Only ${esc(CATNAME[day.cat])}</button><span class="muted">${list.length} recipe${list.length === 1 ? "" : "s"}</span></div>`:''}`;
     body = `<div class="picklist">${list.slice(0, 80).map(r => `<button class="pick" data-choose="${r.id}">${thumbHTML(r)}<div class="grow"><div style="font-weight:700">${esc(r.n)}</div><div class="meal-meta">${badges(r,{fridge:true})}</div></div></button>`).join('') || '<div class="empty">No matches.</div>'}</div>`;
   } else if (m.type === 'new') {
     title = 'Add a recipe';
@@ -2966,7 +2966,7 @@ function renderModal(){
         <div><label class="label" for="ai-mood">${m.side ? 'Anything specific? (optional)' : 'What are you in the mood for?'}</label><textarea id="ai-mood" style="margin-top:6px;min-height:80px" placeholder="${m.side ? 'Something with green beans' : 'Something cozy with chicken and potatoes'}">${esc(m.mood)}</textarea></div>
         <div class="chips">
           ${canFit ? `<button class="chipbtn" data-act="aitoggle" data-k="fit" aria-pressed="${!!m.fit}">Fits ${esc(CATNAME[day.cat])}</button>` : ''}
-          ${fr.length && !m.side ? `<button class="chipbtn" data-act="aitoggle" data-k="allLeftovers" aria-pressed="${!!m.allLeftovers}">Use ALL ${fr.length} leftovers in one meal</button>` : ''}
+          ${fr.length && !m.side ? `<button class="chipbtn" data-act="aitoggle" data-k="allLeftovers" aria-pressed="${!!m.allLeftovers}">Use all ${fr.length} leftovers in one meal</button>` : ''}
           ${fr.length && !m.allLeftovers ? `<button class="chipbtn" data-act="aitoggle" data-k="useFridge" aria-pressed="${!!m.useFridge}">Use up ${esc(fr.slice(0,3).map(f => f.name).join(', '))}${fr.length > 3 ? '…' : ''}</button>` : ''}
           <button class="chipbtn" data-act="aitoggle" data-k="quick" aria-pressed="${!!m.quick}">Quick (30 min or less)</button>
         </div>
@@ -3128,7 +3128,7 @@ document.addEventListener('click', async e => {
     case 'cookstep': { const m = S.modal; m.done[t.dataset.n] = !m.done[t.dataset.n]; return renderModal(); }
     case 'rateday': { const r = S.byId[t.dataset.id]; const n = +t.dataset.n; const cur = getWeek(curStart()).days[day]?.rate; const v = cur === n ? 0 : n;
       editWeek(w => { if (v) w.days[day].rate = v; else delete w.days[day].rate; }); if (v) saveOverride(r.id, {r: v}); render(); toast(v ? `Rated ${n} star${n>1?'s':''}` : 'Rating cleared'); return; }
-    case 'white': editWeek(w => { w.days[day].white = t.dataset.v === '1'; }); toast(t.dataset.v === '1' ? 'Making it white. The list buys the white version.' : 'Keeping the red sauce. The list buys it.'); return;
+    case 'white': editWeek(w => { w.days[day].white = t.dataset.v === '1'; }); toast(t.dataset.v === '1' ? 'Making it white. The grocery list has the swap.' : 'Keeping the red sauce. The grocery list has it.'); return;
     case 'listscope': editWeek(w => { if (t.dataset.v === 'all') w.listAll = true; else delete w.listAll; }); return;
     case 'storeview': S.storeView = t.dataset.v === 'all' ? null : t.dataset.v; return render();
     case 'sendsams': return shareText(groceryText('sams'), "Sam's Club list", "Sam's Club list");
@@ -3178,8 +3178,8 @@ document.addEventListener('click', async e => {
     }
     case 'importdata': {
       let d; try { d = JSON.parse(($('#import-in')?.value || '').trim()); } catch { d = null; }
-      if (!d || d.supperBoard !== 1) { toast("That isn't copied Supper Board data."); return; }
-      if (!confirm('Replace the settings, Walmart links and leftovers here with the pasted data?')) return;
+      if (!d || d.supperBoard !== 1) { toast("That doesn't look like data copied from Supper Board."); return; }
+      if (!confirm('Replace your settings, Walmart products and leftovers with the pasted data?')) return;
       if (d.settings) { S.settings = {...structuredClone(DEFAULT_SETTINGS), ...d.settings}; upgradeSettings(); saveSettings(); }
       if (d.fridge) { S.fridge = d.fridge; persist('app/fridge', S.fridge); }
       if (d.walmart && d.walmart.map) { S.walmart = d.walmart; saveWalmart(); }
@@ -3215,7 +3215,7 @@ document.addEventListener('change', e => {
   if (t.dataset.pantry) { S.settings.pantry[+t.dataset.pantry].on = t.checked; saveSettings(); return render(); }
   if (t.dataset.pattern) { S.settings.pattern = {...S.settings.pattern, [t.dataset.pattern]: t.value}; S.drafts = {}; saveSettings(); return; }
   if (t.dataset.plan) { const rid = t.dataset.plan; const dayId = t.value; if (!dayId) return; editWeek(w => { const d = w.days[dayId]; d.rid = rid; d.locked = true; if (!d.cat || NOCOOK.some(n=>n[0]===d.cat)) d.cat = 'any'; }); toast(`Planned for ${fmtD(parseISO(dayId))}`); return; }
-  if (t.id === 'ws') { S.settings.weekStart = +t.value; S.drafts = {}; migrateWeekStart(+t.value); saveSettings(); S.weekOffset = 0; toast(`Weeks now start on ${DOWL[+t.value]}. Your planned meals moved with them.`); return render(); }
+  if (t.id === 'ws') { S.settings.weekStart = +t.value; S.drafts = {}; migrateWeekStart(+t.value); saveSettings(); S.weekOffset = 0; toast(`Weeks now start on ${DOWL[+t.value]}. Your planned meals moved to match.`); return render(); }
   if (t.id === 'nr') { S.settings.noRepeat = +t.value; saveSettings(); return; }
   if (t.id === 'fam') { S.settings.family = +t.value; saveSettings(); toast(+t.value ? `Recipes are sized for ${t.value}` : 'Recipes stay as written'); return render(); }
   if (t.id === 'mc') { S.settings.maxChicken = +t.value; saveSettings(); return; }
@@ -3293,7 +3293,7 @@ if (/[?&]debug\b/.test(location.search)) window.__T = {nuOf, S, asLeanBeef, pars
 boot();
 // ---------- updates (GitHub Pages) ----------
 // Home-screen apps keep running an old copy, so check for a newer version when the app is opened or brought back.
-const APP_VERSION = '2026-11-15.12';
+const APP_VERSION = '2026-11-15.13';
 let updateShown = false;
 let lastCheck = 0;
 async function checkForUpdate(){
