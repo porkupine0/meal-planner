@@ -1207,8 +1207,12 @@ function persistDiff(path, next){
     const b = next[k], a = prev[k] ?? (DIFF_LISTS.includes(k) && Array.isArray(b) ? [] : undefined); if (J(a) === J(b)) continue;
     if ((DIFF_MAPS[path] || []).includes(k) && isMap(a) && isMap(b)) { for (const s of new Set([...Object.keys(a), ...Object.keys(b)])) if (J(a[s]) !== J(b[s])) ops.push([[k, s], b[s]]); }
     else if (DIFF_LISTS.includes(k) && Array.isArray(a) && Array.isArray(b)) {
-      const add = b.filter(x => !a.some(y => J(y) === J(x))), rem = a.filter(x => !b.some(y => J(y) === J(x)));
-      if (add.length) ops.push([[k], {__union: add}]); if (rem.length) rems.push([[k], {__remove: rem}]);
+      const nm = x => x && typeof x === 'object' && x.name != null ? String(x.name) : J(x);
+      const same = a.length === b.length && a.every((x, i) => nm(x) === nm(b[i]));
+      // an item switched on or off keeps its place in the list, so send the list as it is; only real additions and removals merge
+      if (same) ops.push([[k], b]);
+      else { const add = b.filter(x => !a.some(y => J(y) === J(x))), rem = a.filter(x => !b.some(y => J(y) === J(x)));
+        if (add.length) ops.push([[k], {__union: add}]); if (rem.length) rems.push([[k], {__remove: rem}]); }
     } else ops.push([[k], b]);
   }
   baseDoc[path] = structuredClone(next);
@@ -1533,6 +1537,7 @@ function render(){
   const app = $('#app');
   const keep = {}; app.querySelectorAll('input[id],textarea[id]').forEach(el => { if (el.value && !['checkbox','radio','password'].includes(el.type)) keep[el.id] = el.value; });
   app.innerHTML = syncBanner() + ({plan:viewPlan, grocery:viewGrocery, recipes:viewRecipes, settings:viewSettings}[S.view] || viewPlan)();
+  if (S.dropTyped) { S.dropTyped = false; for (const id of Object.keys(keep)) delete keep[id]; } // after Clear, don't put the old text back
   for (const [id, v] of Object.entries(keep)) { const el = document.getElementById(id); if (el && !el.value) el.value = v; }
   if (focusId) { const el = document.getElementById(focusId); if (el) { el.focus({preventScroll:true}); if (sel && el.setSelectionRange) try { el.setSelectionRange(...sel); } catch {} } }
   window.scrollTo(0, y);
@@ -3097,7 +3102,7 @@ document.addEventListener('click', async e => {
       rebuildRecipes(); closeModal(); render(); toast('Recipe deleted'); } else { t.dataset.sure = 1; t.innerHTML = I.trash + 'Tap again to delete'; } return; }
     case 'newrecipe': return openModal({type:'new', focus:'nf-n'});
     case 'more': S.rf.limit += 60; return render();
-    case 'clearsearch': S.rf = {...S.rf, q:'', tag:'', fav:false, quick:false, kid:false, limit:60}; return render();
+    case 'clearsearch': S.rf = {...S.rf, q:'', tag:'', fav:false, quick:false, kid:false, limit:60}; S.dropTyped = true; return render();
     // grocery
     case 'copylist': return shareText(groceryText(), 'Grocery list', 'List');
     case 'sharemenu': return shareText(menuText(), "This week's dinners", 'Menu');
@@ -3293,7 +3298,7 @@ if (/[?&]debug\b/.test(location.search)) window.__T = {nuOf, S, asLeanBeef, pars
 boot();
 // ---------- updates (GitHub Pages) ----------
 // Home-screen apps keep running an old copy, so check for a newer version when the app is opened or brought back.
-const APP_VERSION = '2026-11-15.13';
+const APP_VERSION = '2026-11-15.14';
 let updateShown = false;
 let lastCheck = 0;
 async function checkForUpdate(){

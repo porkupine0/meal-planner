@@ -16,7 +16,12 @@
 const fs = require('fs');
 const path = require('path');
 const DIR = __dirname;
-const J = f => JSON.parse(fs.readFileSync(path.join(DIR, f), 'utf8'));
+const J = f => {
+  const p = path.join(DIR, f);
+  // catalog.json is built from the app's recipes.json when it isn't next to this file
+  if (f === 'catalog.json' && !fs.existsSync(p)) return JSON.parse(fs.readFileSync(path.join(DIR, '..', 'recipes.json'), 'utf8')).map(r => ({id: r.id, n: r.n, k: r.k, c: r.c || [], s: r.s, i: r.i, nu: r.nu || '', ai: r.src === 'Added by Claude'}));
+  return JSON.parse(fs.readFileSync(p, 'utf8'));
+};
 
 /* ============================== (a) NU PARSER ============================== */
 // Returns {kcal, protein, carb, fat, servings}; every field independently null when unknown.
