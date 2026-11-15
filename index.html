@@ -1314,7 +1314,7 @@ function pick(cat, w, dateISO, rand=Math.random, exclude=null){
   const want = uncoveredLeftovers(w, dateISO);
   if (want.length && cookIdx >= 0 && cookIdx < 4) {
     let hit = pool.filter(r => fridgeMatches(r).some(n => want.includes(n)));
-    if (!hit.length && S.settings.useUpOverride) hit = S.recipes.filter(r => plannable(r) && !used.has(r.id) && fridgeMatches(r).some(n => want.includes(n)));
+    if (!hit.length && S.settings.useUpOverride) hit = S.recipes.filter(r => plannable(r) && !used.has(r.id) && !recent.has(r.id) && fridgeMatches(r).some(n => want.includes(n)));
     if (hit.length) pool = hit;
   }
   const fresh = pool.filter(r => !recent.has(r.id));
@@ -2235,7 +2235,7 @@ const wmPick = (key, name, parts) => { const p = (S.walmart.map || {})[key]; if 
   return wmDefault(name, (parts || []).some(x => x.unit === 'can'), (parts || []).some(x => x.unit === 'slice')); };
 // Where each grocery item is bought, remembered per item (same keys as Walmart products).
 const STORES = [['walmart','Walmart'],['sams',"Sam's Club"]];
-const storeOf = key => (S.walmart.stores || {})[key] || (/rotisserie/.test(key) ? 'sams' : 'walmart');
+const storeOf = key => (S.walmart.stores || {})[key] || (key === 'i:lean beef' && (S.walmart.stores || {})['i:beef']) || (/rotisserie/.test(key) ? 'sams' : 'walmart');
 const cap = t => String(t || '').replace(/^\s*\w/, c => c.toUpperCase());
 function groceryEntries(m){
   const ch = m.w.checked || {};
