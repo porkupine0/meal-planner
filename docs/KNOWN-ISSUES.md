@@ -1,7 +1,7 @@
 # Known issues and follow-ups (from the team reviews)
 
 Not fixed yet, from the bug sweep:
-- A second phone can overwrite the shared settings if that document was never created.
+- Changing the week start day on one phone while the other phone is checking off items can lose some of those check-offs (rare; changing it re-dates the week).
 - Offline cold start: the Firebase SDK is not cached, so a first open with no signal runs in local mode.
 - The service worker never refreshes index.html on a slow connection, so the update banner can loop.
 - Rerolling a night keeps the old "Keep the red sauce" choice.

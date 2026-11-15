@@ -967,12 +967,12 @@ async function initDb(){
 }
 function attachListeners(){
   const onErr = () => {};
-  db.doc('app/settings').onSnapshot(s => { if (s.exists) { const sig = x => JSON.stringify([x.weekStart, x.pattern, x.busy]); const before = sig(S.settings); S.settings = {...structuredClone(DEFAULT_SETTINGS), ...structuredClone(s.data())}; upgradeSettings(); if (sig(S.settings) !== before) S.drafts = {}; } scheduleRender(); }, onErr);
-  db.doc('app/walmart').onSnapshot(s => { S.walmart = s.exists ? structuredClone(s.data()) : {map:{}}; if (!S.walmart.map) S.walmart.map = {}; scheduleRender(); }, onErr);
-  db.doc('app/fridge').onSnapshot(s => { S.fridge = s.exists ? structuredClone(s.data()) : {items:[]}; scheduleRender(); }, onErr);
-  db.collection('overrides').onSnapshot(q => { S.overrides = Object.fromEntries(q.docs.map(x => [x.id, structuredClone(x.data())])); rebuildRecipes(); scheduleRender(); }, onErr);
-  db.collection('custom').onSnapshot(q => { S.custom = Object.fromEntries(q.docs.map(x => [x.id, structuredClone(x.data())])); rebuildRecipes(); scheduleRender(); }, onErr);
-  db.collection('weeks').orderBy('start','desc').limit(60).onSnapshot(q => { S.weeks = Object.fromEntries(q.docs.map(x => [x.id, structuredClone(x.data())])); for (const id of Object.keys(S.drafts)) if (S.weeks[id]) delete S.drafts[id]; S.weeksLoaded = true; scheduleRender(); }, onErr);
+  db.doc('app/settings').onSnapshot(s => { baseDoc['app/settings'] = s.exists ? structuredClone(s.data()) : null; if (s.exists) { const sig = x => JSON.stringify([x.weekStart, x.pattern, x.busy]); const before = sig(S.settings); S.settings = {...structuredClone(DEFAULT_SETTINGS), ...structuredClone(s.data())}; upgradeSettings(); if (sig(S.settings) !== before) S.drafts = {}; } scheduleRender(); }, onErr);
+  db.doc('app/walmart').onSnapshot(s => { baseDoc['app/walmart'] = s.exists ? structuredClone(s.data()) : null; S.walmart = s.exists ? structuredClone(s.data()) : {map:{}}; if (!S.walmart.map) S.walmart.map = {}; scheduleRender(); }, onErr);
+  db.doc('app/fridge').onSnapshot(s => { baseDoc['app/fridge'] = s.exists ? structuredClone(s.data()) : null; S.fridge = s.exists ? structuredClone(s.data()) : {items:[]}; scheduleRender(); }, onErr);
+  db.collection('overrides').onSnapshot(q => { for (const k of Object.keys(baseDoc)) if (k.startsWith('overrides/')) delete baseDoc[k]; for (const x of q.docs) baseDoc['overrides/' + x.id] = structuredClone(x.data()); collLoaded.overrides = true; S.overrides = Object.fromEntries(q.docs.map(x => [x.id, structuredClone(x.data())])); rebuildRecipes(); scheduleRender(); }, onErr);
+  db.collection('custom').onSnapshot(q => { for (const k of Object.keys(baseDoc)) if (k.startsWith('custom/')) delete baseDoc[k]; for (const x of q.docs) baseDoc['custom/' + x.id] = structuredClone(x.data()); collLoaded.custom = true; S.custom = Object.fromEntries(q.docs.map(x => [x.id, structuredClone(x.data())])); rebuildRecipes(); scheduleRender(); }, onErr);
+  db.collection('weeks').orderBy('start','desc').limit(60).onSnapshot(q => { S.weeks = Object.fromEntries(q.docs.map(x => [x.id, structuredClone(x.data())])); for (const id of Object.keys(S.drafts)) if (S.weeks[id]) delete S.drafts[id]; if (!q.fromCache) S.weeksFresh = true; S.weeksLoaded = true; scheduleRender(); }, onErr);
 }
 // ---------- family sync (Firebase) for the GitHub Pages site ----------
 const FB_CONFIG = {
@@ -992,14 +992,18 @@ function fbAdapter(fs, fdb){
   const query = ref => ({
     orderBy: (f, d) => query(fs.query(ref, fs.orderBy(f, d))),
     limit: n => query(fs.query(ref, fs.limit(n))),
-    onSnapshot: (cb, err) => fs.onSnapshot(ref, q => cb({docs: q.docs.map(snap)}), err),
+    onSnapshot: (cb, err) => fs.onSnapshot(ref, {includeMetadataChanges: true}, q => cb({docs: q.docs.map(snap), fromCache: q.metadata.fromCache}), err),
   });
+  // values may be {__union:[..]} / {__remove:[..]} (array add / remove that merge with the other phone's edits), or undefined (delete the field)
+  const conv = v => v === undefined ? fs.deleteField() : v && v.__union ? fs.arrayUnion(...v.__union) : v && v.__remove ? fs.arrayRemove(...v.__remove) : v;
   return {
     doc: path => { const r = fs.doc(fdb, path); return {
       set: data => fs.setDoc(r, data), delete: () => fs.deleteDoc(r),
       // one field only, so two phones checking off items at the same time don't overwrite each other
-      update: (field, value) => fs.updateDoc(r, new fs.FieldPath(...field), value === undefined ? fs.deleteField() : value),
-      updateMany: pairs => fs.updateDoc(r, ...pairs.flatMap(([f, v]) => [new fs.FieldPath(...f), v === undefined ? fs.deleteField() : v])),
+      update: (field, value) => fs.updateDoc(r, new fs.FieldPath(...field), conv(value)), arrayOps: true,
+      // like updateMany, but also creates the doc if it isn't there yet, and merges instead of replacing it
+      mergeMany: pairs => { const o = {}; for (const [f, v] of pairs) { let t = o; for (const k of f.slice(0, -1)) t = t[k] ||= {}; t[f[f.length - 1]] = conv(v); } return fs.setDoc(r, o, {merge: true}); },
+      updateMany: pairs => fs.updateDoc(r, ...pairs.flatMap(([f, v]) => [new fs.FieldPath(...f), conv(v)])),
       onSnapshot: (cb, err) => fs.onSnapshot(r, x => cb(snap(x)), err) }; },
     collection: name => query(fs.collection(fdb, name)),
   };
@@ -1051,16 +1055,34 @@ async function connectFirebase(u){
   if (first && localHasData()) {
     // First phone to sign in: copy what's already on this phone into the shared board.
     try {
-      const b = fs.writeBatch(fdb); const put = (path, data) => b.set(fs.doc(fdb, path), data);
+      // Only copy what the shared board doesn't have yet. The settings doc can be missing even though another phone already planned weeks.
+      const b = fs.writeBatch(fdb), todo = [];
+      const put = (path, data) => todo.push(fs.getDoc(fs.doc(fdb, path)).then(x => { if (!x.exists()) b.set(fs.doc(fdb, path), data); }));
       put('app/settings', S.settings); put('app/fridge', S.fridge); put('app/walmart', S.walmart);
       for (const [id, o] of Object.entries(S.overrides)) put('overrides/' + id, o);
       for (const [id, r] of Object.entries(S.custom)) put('custom/' + id, r);
       for (const [id, w] of Object.entries(S.weeks)) if (w && w.start) put('weeks/' + id, w);
-      await b.commit(); toast("This phone's plan is now shared");
+      await Promise.all(todo); await b.commit(); toast("This phone's plan is now shared");
     } catch { toast("Couldn't copy this phone's plan. Use Settings → Move or back up your data."); }
   }
   // A second phone joins the shared board; anything planned only on this phone isn't merged in, so say so once.
   if (!first && localHasData()) { let told = false; try { told = localStorage.getItem('sb.joined') === '1'; localStorage.setItem('sb.joined', '1'); } catch {} if (!told) setTimeout(() => toast("You're on the shared board now. Plans made only on this phone before signing in aren't copied over."), 800); }
+  // Items checked off (and extras added) on this phone while it was signed out join the shared week instead of being dropped. One time only: the marker is deleted afterwards.
+  if (!first) { try {
+    const base = JSON.parse(localStorage.getItem('sb.base/checked') || 'null');
+    if (base) {
+      for (const [id, w] of Object.entries(S.weeks)) {
+        if (!w || !w.start || !base[id]) continue;
+        const ref = fs.doc(fdb, 'weeks/' + id), snap = await fs.getDoc(ref); if (!snap.exists()) continue;
+        const r = snap.data(), ops = [];
+        for (const k of Object.keys(w.checked || {})) if (w.checked[k] && !base[id].c.includes(k) && !(r.checked || {})[k]) ops.push(new fs.FieldPath('checked', k), true);
+        const add = (w.extras || []).filter(x => !base[id].e.includes(x.id) && !(r.extras || []).some(y => y.id === x.id));
+        if (add.length && Array.isArray(r.extras ?? [])) ops.push(new fs.FieldPath('extras'), fs.arrayUnion(...add));
+        if (ops.length) await fs.updateDoc(ref, ...ops);
+      }
+      localStorage.removeItem('sb.base/checked');
+    }
+  } catch {} }
   db = fbAdapter(fs, fdb); S.mode = 'db'; FB.state = 'on'; setStatus(); attachListeners(); render();
 }
 function saveLocalCopy(){
@@ -1068,6 +1090,8 @@ function saveLocalCopy(){
     for (let i = localStorage.length - 1; i >= 0; i--) { const k = localStorage.key(i) || ''; if (/^sb\.(weeks|overrides|custom)\//.test(k)) localStorage.removeItem(k); }
     const put = (k, v) => localStorage.setItem('sb.' + k, JSON.stringify(v));
     put('app/settings', S.settings); put('app/fridge', S.fridge); put('app/walmart', S.walmart);
+    // marker for the next sign-in: what was already checked / added when this copy was taken (deleted once merged)
+    put('base/checked', Object.fromEntries(Object.entries(S.weeks).map(([id, w]) => [id, {c: Object.keys(w.checked || {}), e: (w.extras || []).map(x => x.id)}])));
     for (const [id, w] of Object.entries(S.weeks)) put('weeks/' + id, w);
     for (const [id, o] of Object.entries(S.overrides)) put('overrides/' + id, o);
     for (const [id, r] of Object.entries(S.custom)) put('custom/' + id, r);
@@ -1118,7 +1142,32 @@ function syncPanel(){
       <div class="row"><button class="btn" data-act="fbemail">Sign in</button><button class="btn ghost" data-act="fbcreate">Create account</button></div></div>`}
   </div>`;
 }
-const saveSettings = () => persist('app/settings', S.settings);
+// Field-level writes for the shared docs (settings, fridge, Walmart choices, recipe edits): send only what changed,
+// so two phones changing different things don't overwrite each other with a whole-doc copy.
+const baseDoc = {}, collLoaded = {}; // path -> the doc as last seen on the shared board (null = not there yet)
+const DIFF_MAPS = {'app/settings': ['pattern', 'busy'], 'app/walmart': ['stores', 'map']}, DIFF_LISTS = ['pantry', 'staples', 'items'];
+function persistDiff(path, next){
+  let seen = baseDoc[path]; // undefined: not loaded yet, null: not on the board yet
+  if (seen === undefined && collLoaded[path.split('/')[0]]) seen = null; // its collection has loaded and this doc isn't in it
+  const ref = S.mode === 'db' && db.doc(path);
+  if (!ref || !ref.arrayOps || seen === undefined || (writeQ[path] && writeQ[path].timer)) { if (S.mode === 'db') baseDoc[path] = structuredClone(next); return persist(path, next); }
+  const prev = seen || {};
+  const J = x => JSON.stringify(x ?? null, (k, v) => v && typeof v === 'object' && !Array.isArray(v) ? Object.fromEntries(Object.keys(v).sort().map(q => [q, v[q]])) : v);
+  const isMap = x => x && typeof x === 'object' && !Array.isArray(x), ops = [], rems = [];
+  for (const k of new Set([...Object.keys(prev), ...Object.keys(next)])) {
+    const b = next[k], a = prev[k] ?? (DIFF_LISTS.includes(k) && Array.isArray(b) ? [] : undefined); if (J(a) === J(b)) continue;
+    if ((DIFF_MAPS[path] || []).includes(k) && isMap(a) && isMap(b)) { for (const s of new Set([...Object.keys(a), ...Object.keys(b)])) if (J(a[s]) !== J(b[s])) ops.push([[k, s], b[s]]); }
+    else if (DIFF_LISTS.includes(k) && Array.isArray(a) && Array.isArray(b)) {
+      const add = b.filter(x => !a.some(y => J(y) === J(x))), rem = a.filter(x => !b.some(y => J(y) === J(x)));
+      if (add.length) ops.push([[k], {__union: add}]); if (rem.length) rems.push([[k], {__remove: rem}]);
+    } else ops.push([[k], b]);
+  }
+  baseDoc[path] = structuredClone(next);
+  const fail = () => persist(path, next);
+  // a doc that isn't on the board yet is created by merging, so two phones creating it at once keep each other's fields
+  if (ops.length) (seen ? ref.updateMany(ops) : ref.mergeMany(ops)).catch(fail); if (rems.length) ref.updateMany(rems).catch(fail);
+}
+const saveSettings = () => persistDiff('app/settings', S.settings);
 // Changing the first day of the week regroups the saved nights into the new weeks, so nothing planned disappears.
 function migrateWeekStart(ws){
   const startOf = d => addDays(d, -((d.getDay() - ws + 7) % 7));
@@ -1161,14 +1210,14 @@ function applyTheme(t){
   const dark = t === 'dark' || (t === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
   document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#111613' : '#2D6A4C');
 }
-const saveFridge = () => persist('app/fridge', S.fridge);
-const saveWalmart = () => persist('app/walmart', S.walmart);
+const saveFridge = () => persistDiff('app/fridge', S.fridge);
+const saveWalmart = () => persistDiff('app/walmart', S.walmart);
 function saveOverride(id, patch){
   const o = {...(S.overrides[id] || {}), ...patch};
   for (const k in o) if (o[k] === undefined || o[k] === null) delete o[k];
   S.overrides[id] = o; rebuildRecipes();
-  if (S.custom[id]) { S.custom[id] = {...S.custom[id], ...patch}; persist('custom/' + id, S.custom[id]); delete S.overrides[id]; rebuildRecipes(); return; }
-  persist('overrides/' + id, o);
+  if (S.custom[id]) { S.custom[id] = {...S.custom[id], ...patch}; persistDiff('custom/' + id, S.custom[id]); delete S.overrides[id]; rebuildRecipes(); return; }
+  persistDiff('overrides/' + id, o);
 }
 
 // ---------- weeks & planner ----------
@@ -1187,19 +1236,47 @@ function commitWeek(w){
 }
 // With family sync, only the parts of the week that changed are sent (one night, one check-off, the staples list…),
 // so two phones editing at the same time don't erase each other's changes.
+// First save of a week: merge it in instead of replacing the document, and leave empty night fields out, so a plan the other phone saved
+// a moment earlier isn't wiped by a blank week (and vice versa). Nights both phones filled in still end up with one of the two meals.
+function createWeek(ref, path, w){
+  const ops = [];
+  for (const [k, v] of Object.entries(w)) {
+    if (k === 'days') { for (const [d, day] of Object.entries(v)) { const keep = Object.entries(day).filter(([, x]) => x !== null && x !== false && x !== '' && x !== undefined); if (keep.length) keep.forEach(([f, x]) => ops.push([['days', d, f], x])); else ops.push([['days', d], {}]); } }
+    else if (!(Array.isArray(v) ? v.length : v && typeof v === 'object' ? Object.keys(v).length : v !== undefined)) continue;
+    else ops.push([[k], v]);
+  }
+  ref.mergeMany(ops).catch(() => persist(path, w));
+}
 function writeWeek(prev, w){
   const path = 'weeks/' + w.start, q = writeQ[path] || {};
   const ref = S.mode === 'db' && db.doc(path);
+  if (ref && !prev && !q.timer && ref.mergeMany) return createWeek(ref, path, w);
   if (!ref || !prev || q.timer || !(ref.updateMany || ref.update)) return persist(path, w);
   const J = x => JSON.stringify(x ?? null), keys = (a, b) => new Set([...Object.keys(a || {}), ...Object.keys(b || {})]);
-  const ops = [];
+  const ops = [], rems = [], LIST = ['extras', 'staplesOff', 'need'];
   for (const k of keys(prev, w)) {
-    if (k === 'days' || k === 'checked') { for (const sub of keys(prev[k], w[k])) if (J(prev[k]?.[sub]) !== J(w[k]?.[sub])) ops.push([[k, sub], w[k]?.[sub]]); }
+    if (k === 'days') {
+      for (const sub of keys(prev.days, w.days)) {
+        const a = prev.days?.[sub], b = w.days?.[sub]; if (J(a) === J(b)) continue;
+        // one field of one night, so a lock on one phone and a reroll of the same night on the other both survive
+        if (a && b && ref.arrayOps) { for (const f of keys(a, b)) if (J(a[f]) !== J(b[f])) ops.push([['days', sub, f], b[f]]); }
+        else ops.push([['days', sub], b]);
+      }
+    }
+    else if (k === 'checked') { for (const sub of keys(prev[k], w[k])) if (J(prev[k]?.[sub]) !== J(w[k]?.[sub])) ops.push([[k, sub], w[k]?.[sub]]); }
+    else if (LIST.includes(k) && ref.arrayOps && Array.isArray(prev[k] ?? []) && Array.isArray(w[k] ?? [])) {
+      // lists are sent as "add these / remove these", so two phones adding different extras both keep theirs
+      const a = prev[k] || [], b = w[k] || [];
+      const add = b.filter(x => !a.some(y => J(y) === J(x))), rem = a.filter(x => !b.some(y => J(y) === J(x)));
+      if (add.length) ops.push([[k], {__union: add}]); if (rem.length) rems.push([[k], {__remove: rem}]);
+    }
     else if (J(prev[k]) !== J(w[k])) ops.push([[k], w[k]]);
   }
-  if (!ops.length) return;
-  const done = ref.updateMany ? ref.updateMany(ops) : Promise.all(ops.map(([f, v]) => ref.update(f, v)));
-  done.catch(() => persist(path, w));
+  if (!ops.length && !rems.length) return;
+  // not-found means the other phone cleared or re-dated this week on purpose: don't bring the old plan back
+  const fail = e => { if (!(e && e.code === 'not-found')) persist(path, w); };
+  if (ops.length) (ref.updateMany ? ref.updateMany(ops) : Promise.all(ops.map(([f, v]) => ref.update(f, v)))).catch(fail);
+  if (rems.length) ref.updateMany(rems).catch(fail);
 }
 function buildDraft(start){
   const w = {start: iso(start), days:{}, checked:{}, extras:[], staplesOff:[], need:[]};
@@ -1273,6 +1350,7 @@ function doUndo(){
 function dropLeftoverLink(w, id){ const d = w.days[id]; if (!d || !d.from) return; const s = w.days[d.from];
   if (s && s.scale === 2 && !Object.entries(w.days).some(([k, x]) => k !== id && x.from === d.from)) s.scale = 1; delete d.from; }
 function editWeek(fn){
+  if (S.mode === 'db' && navigator.onLine !== false && !S.weeksFresh && isDraft(curStart())) { toast('Still checking the shared plan. Try again in a moment.'); return; }
   const start = curStart(); const w = structuredClone(getWeek(start));
   fn(w); commitWeek(w); render();
 }
@@ -1444,6 +1522,8 @@ function tonightCard(w){
 }
 function viewPlan(){
   const start = curStart(); const dates = weekDates(start); const w = getWeek(start);
+  // A week that looks unplanned may only be unplanned in this phone's cache: planning it now would replace the plan the other phone already saved.
+  if (S.mode === 'db' && navigator.onLine !== false && !S.weeksFresh && isDraft(start)) return '<div class="empty">Checking the shared plan…<div class="muted" style="margin-top:6px;font-size:14px">A new week can be started once this phone has synced.</div></div>';
   if (isDraft(start)) return viewSetup(start, w, weekLabel(), dates);
   const today = iso(new Date());
   const openDays = Object.entries(w.days).some(([k, d]) => k >= today && d.cat && !d.rid && !NOCOOK.some(n => n[0] === d.cat));
@@ -2861,7 +2941,12 @@ document.addEventListener('click', async e => {
     case 'onlycat': S.modal.onlyCat = !S.modal.onlyCat; return renderModal();
     case 'useforday': { const m = S.modal; editWeek(w => { const d = w.days[m.forDay]; d.rid = m.id; d.locked = true; if (!d.cat || NOCOOK.some(n=>n[0]===d.cat)) d.cat='any'; }); closeModal(); return; }
     case 'hide': { const r = S.byId[S.modal.id]; saveOverride(r.id, {hide: r.hide ? undefined : true}); render(); return; }
-    case 'delrecipe': { const id = S.modal.id; if (t.dataset.sure) { delete S.custom[id]; removeDoc('custom/' + id); rebuildRecipes(); closeModal(); render(); toast('Recipe deleted'); } else { t.dataset.sure = 1; t.innerHTML = I.trash + 'Tap again to delete'; } return; }
+    case 'delrecipe': { const id = S.modal.id; if (t.dataset.sure) { delete S.custom[id]; removeDoc('custom/' + id);
+      // take it off any night or side it was planned for, so those nights don't stay filled with a recipe that no longer exists
+      for (const [wid, w] of Object.entries(S.weeks)) { const nw = structuredClone(w); let hit = false;
+        for (const d of Object.values(nw.days || {})) { if (d.rid === id) { d.rid = null; d.locked = false; hit = true; } if (d.side === id) { d.side = null; hit = true; } }
+        if (hit) { S.weeks[wid] = nw; writeWeek(w, nw); } }
+      rebuildRecipes(); closeModal(); render(); toast('Recipe deleted'); } else { t.dataset.sure = 1; t.innerHTML = I.trash + 'Tap again to delete'; } return; }
     case 'newrecipe': return openModal({type:'new', focus:'nf-n'});
     case 'more': S.rf.limit += 60; return render();
     case 'clearsearch': S.rf = {...S.rf, q:'', tag:'', fav:false, quick:false, kid:false, limit:60}; return render();
@@ -3060,7 +3145,7 @@ if (/[?&]debug\b/.test(location.search)) window.__T = {S, parseIngredient, ingOf
 boot();
 // ---------- updates (GitHub Pages) ----------
 // Home-screen apps keep running an old copy, so check for a newer version when the app is opened or brought back.
-const APP_VERSION = '2026-11-15.6';
+const APP_VERSION = '2026-11-15.7';
 let updateShown = false;
 let lastCheck = 0;
 async function checkForUpdate(){
