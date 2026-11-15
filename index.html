@@ -114,6 +114,7 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,va
 .chip{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:2px 8px;border-radius:99px;background:var(--surface-2);color:var(--muted);white-space:nowrap}
 .chip svg{width:12px;height:12px}
 .chip.quick{background:var(--accent-soft);color:var(--accent)}
+.chip.protein{background:var(--accent);color:var(--accent-ink)}
 .chip.fav{background:var(--sun-soft);color:var(--sun)}
 .chip.red{background:var(--tomato-soft);color:var(--tomato)}
 .chip.fridge{background:var(--sky-soft);color:var(--sky)}
@@ -897,7 +898,7 @@ function badges(r, opts={}){
   if (r.t) b.push(`<span class="chip">${I.clock}${fmtMin(r.t)}</span>`);
   if (isQuick(r)) b.push(`<span class="chip quick">${I.bolt}Quick</span>`);
   if (isFav(r)) b.push(`<span class="chip fav">${I.star}${r.r}</span>`);
-  { const nu = nuOf(r); if (nu && nu.protein >= 28 && nu.protein < 150) b.push(`<span class="chip quick">${Math.round(nu.protein)} g protein</span>`); }
+  { const nu = r.k === 'main' ? nuOf(r) : null; if (nu && nu.protein > 0 && nu.protein < 150) b.push(`<span class="chip ${nu.protein >= 28 ? 'protein' : ''}">${Math.round(nu.protein)} g protein</span>`); }
   if (r.nw && !r.r) b.push(`<span class="chip new">New</span>`);
   if (r.red && S.settings.redMode !== 'off') b.push(`<span class="chip red">Red sauce · swap</span>`);
   if (r.kr) b.push(kidChip(r));
@@ -1453,6 +1454,19 @@ const NIGHT_FIT = {
   SC: r => reminder(r) === 'Start in the morning',                          // slow cooker night is a real all-day cook, not an Instant Pot 30-minute dinner
   P: r => ingOf(r).some(i => PASTA_ING.test(i.name)),                        // pasta night has pasta in it
 };
+// The recipes planned on the nights next to this one (cooking nights only, not leftovers or eating out), by night.
+function nearCooked(w, dateISO){
+  const keys = Object.keys(w.days).sort(), i = keys.indexOf(dateISO);
+  return [keys[i - 1], keys[i + 1]].filter(k => k && w.days[k] && w.days[k].rid && !NOCOOK.some(n => n[0] === w.days[k].cat) && S.byId[w.days[k].rid])
+    .map(k => ({day: k, r: S.byId[w.days[k].rid]}));
+}
+// For the picker: "Beef again: Tue and Wed too". Quiet, and the pick is always allowed. Nothing for meatless or unknown.
+function proteinNote(r, ctx){
+  const p = proteinOf(r); if (!p || p === 'meatless') return '';
+  const adj = ctx.near.filter(x => proteinOf(x.r) === p).map(x => DOW[parseISO(x.day).getDay()]);
+  if (adj.length) return `${cap(p)} again: ${adj.join(' and ')} too`;
+  return (ctx.counts[p] || 0) >= 3 ? `${cap(p)} ${ctx.counts[p]} times this week` : '';
+}
 function pick(cat, w, dateISO, rand=Math.random, exclude=null){
   if (!cat || NOCOOK.some(n=>n[0]===cat)) return null;
   const used = new Set(Object.entries(w.days).filter(([k,d]) => k !== dateISO && d.rid).map(([,d]) => d.rid));
@@ -1484,7 +1498,7 @@ function pick(cat, w, dateISO, rand=Math.random, exclude=null){
   }
   if (!pool.length) return null;
   // Variety: not the same main protein (or two soups) on back-to-back nights, and only so many chicken nights a week.
-  const near = [keys[dayIdx-1], keys[dayIdx+1]].map(k => k && w.days[k]).filter(d => d && d.rid && !NOCOOK.some(n => n[0] === d.cat)).map(d => S.byId[d.rid]).filter(Boolean);
+  const near = nearCooked(w, dateISO).map(x => x.r);
   const chicken = keys.filter(k => k !== dateISO && w.days[k].rid && !NOCOOK.some(n => n[0] === w.days[k].cat) && S.byId[w.days[k].rid] && proteinOf(S.byId[w.days[k].rid]) === 'chicken').length;
   const weights = pool.map(r => {
     let wt = r.r >= 5 ? 4 : r.r >= 4 ? 2.6 : r.r >= 3 ? 1.3 : 1;
@@ -2936,7 +2950,8 @@ function renderModal(){
         <div class="label" style="margin-top:4px">Or pick a side recipe</div></div>` : aiMode() ? `<div style="padding:0 16px 12px"><button class="btn" style="width:100%;justify-content:center" data-act="aiopen" data-day="${esc(m.day)}">${I.wand}Create a new recipe with Claude</button></div>` : '';
     head = sideHead + `<div class="searchbox" style="padding:0 16px 12px">${I.search.replace('<svg','<svg style="left:27px"')}<input type="search" id="pick-q" placeholder="Search recipes or ingredients" value="${esc(m.q||'')}" aria-label="Search"></div>
       ${!m.side && day.cat && !NOCOOK.some(n=>n[0]===day.cat) ? `<div class="row" style="padding:0 16px 10px"><button class="chipbtn" data-act="onlycat" aria-pressed="${!!m.onlyCat}">Only ${esc(CATNAME[day.cat])}</button><span class="muted">${list.length} recipe${list.length === 1 ? "" : "s"}</span></div>`:''}`;
-    body = `<div class="picklist">${list.slice(0, 80).map(r => `<button class="pick" data-choose="${r.id}">${thumbHTML(r)}<div class="grow"><div style="font-weight:700">${esc(r.n)}</div><div class="meal-meta">${badges(r,{fridge:true})}</div></div></button>`).join('') || '<div class="empty">No matches.</div>'}</div>`;
+    const pctx = (() => { if (m.side) return null; const counts = {}; for (const [k, d] of Object.entries(w.days)) { const rr = k !== m.day && d.rid && !NOCOOK.some(n => n[0] === d.cat) && S.byId[d.rid]; if (rr) { const pp = proteinOf(rr); counts[pp] = (counts[pp] || 0) + 1; } } return {near: nearCooked(w, m.day), counts}; })();
+    body = `<div class="picklist">${list.slice(0, 80).map(r => { const pn = pctx ? proteinNote(r, pctx) : ''; return `<button class="pick" data-choose="${r.id}">${thumbHTML(r)}<div class="grow"><div style="font-weight:700">${esc(r.n)}</div><div class="meal-meta">${badges(r,{fridge:true})}</div>${pn ? `<div class="muted" style="font-size:12.5px;margin-top:2px">${esc(pn)}</div>` : ''}</div></button>`; }).join('') || '<div class="empty">No matches.</div>'}</div>`;
   } else if (m.type === 'new') {
     title = 'Add a recipe';
     body = `<form id="newform" class="modal-b" style="padding:0">
@@ -3319,7 +3334,7 @@ if (/[?&]debug\b/.test(location.search)) window.__T = {tileEmoji, nuOf, S, asLea
 boot();
 // ---------- updates (GitHub Pages) ----------
 // Home-screen apps keep running an old copy, so check for a newer version when the app is opened or brought back.
-const APP_VERSION = '2026-11-15.18';
+const APP_VERSION = '2026-11-15.19';
 let updateShown = false;
 let lastCheck = 0;
 async function checkForUpdate(){

@@ -1,4 +1,4 @@
-> Status: Next-version items 1 (use-up expiry), 2 (staple quantities, milk and bread only) and 3 (protein badge) are built. Items 4-6 are not.
+> Status: Next-version items 1 (use-up expiry), 2 (staple quantities, milk and bread only), 3 (protein badge, with a plain chip under 28 g), 4 (taco, slow-cooker and pasta nights) and 6 (same-protein note in the picker) are built. Item 5 (white-sauce note on cook steps) is not.
 
 # Supper Board roadmap (steps 10+)
 
