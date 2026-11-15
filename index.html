@@ -2465,7 +2465,9 @@ function cupOz(name){
 }
 function packNeed(parts, need = {oz:0, pkg:0, count:0, cups:0, loose:0}, name = ''){
   const co = cupOz(name);
+  const hasRequired = parts.some(x => !x.opt);
   for (const it of parts) {
+    if (it.opt && hasRequired) continue; // an optional extra of something the recipe already needs doesn't add to the cart
     if (it.qty == null) { need.loose++; continue; }
     const u = it.unit || '', q = it.qty;
     if (it.eachOz && PKG_UNITS.test(u)) { need.oz += q * it.eachOz; need.sized = true; continue; }
