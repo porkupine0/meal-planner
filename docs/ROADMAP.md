@@ -1,3 +1,5 @@
+> Status: Next-version items 1 (use-up expiry), 2 (staple quantities, milk and bread only) and 3 (protein badge) are built. Items 4-6 are not.
+
 # Supper Board roadmap (steps 10+)
 
 Data rule for everything below: new saved fields are additive and optional; code treats missing as "old behavior". Old phones ignore them. Where a new map goes in settings, add it to DIFF_MAPS (index.html:1197) so two phones writing different keys don't clobber each other.

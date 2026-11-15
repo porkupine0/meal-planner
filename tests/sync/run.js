@@ -1,4 +1,4 @@
-const H = require('./h'); const { SC, PROFILES, WID } = require('./scen'); const { SP } = require('./scen2'); const fs = require('fs');
+const H = require('./h'); const { SC, PROFILES, WID } = require('./scen'); const { SP } = require('./scen2'); const fs = require('fs'); fs.mkdirSync('results', {recursive: true});
 const [name, N = 20] = process.argv.slice(2); const sleep = H.sleep;
 const strip = s => JSON.stringify(s);
 async function diverged(R, phones) {
