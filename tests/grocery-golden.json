@@ -11308,6 +11308,21 @@
  "Optional but elite: ¼ tsp Marmite or 1 tsp very finely grated Parmesan": [],
  "Optional but excellent: ¼ tsp ground allspice or five-spice": [],
  "Optional garnish: chopped fresh parsley or chives": [],
+ "Optional: 1 1/2 cups cottage cheese": [
+  "cottage cheese | 1.5 cup | Dairy & Refrigerated | Great Value Small Curd Cottage Cheese 4%, 24 oz"
+ ],
+ "Optional: 1 1/2 cups plain Greek yogurt": [
+  "plain greek yogurt | 1.5 cup | Dairy & Refrigerated | Great Value Plain Nonfat Greek Yogurt, 32 oz"
+ ],
+ "Optional: 1 1/2 lb diced cooked ham": [
+  "ham | 1.5 lb | Meat & Deli | Great Value Boneless Smoked Ham Steaks, 2 pk, 14 oz"
+ ],
+ "Optional: 1 1/2 lb ground turkey": [
+  "ground turkey | 1.5 lb | Meat & Deli | Shady Brook Farms 93/7 Ground Turkey, 1 lb tray"
+ ],
+ "Optional: 1 1/2 lb thinly sliced deli ham": [
+  "deli ham | 1.5 lb | Meat & Deli | Great Value Thin Sliced Honey Ham, 16 oz"
+ ],
  "Optional: 1 apple, grated": [
   "apple | 1 | Produce | Fresh Gala Apple, each"
  ],
@@ -11317,11 +11332,17 @@
  "Optional: 1 can (7 oz) chipotle peppers in adobo sauce": [
   "chipotle peppers in adobo sauce | 1 can | Sauces & Condiments | La Costeña Chipotle Peppers in Adobo, 7 oz"
  ],
+ "Optional: 1 can black beans": [
+  "black beans | 1 can | Pantry & Canned | Great Value Black Beans, 15 oz can"
+ ],
  "Optional: 1 container (48 oz) vanilla ice cream, for serving": [
   "vanilla ice cream | 1 container | Spices & Baking | Great Value Vanilla Ice Cream, 1 gal"
  ],
  "Optional: 1 cup cherry tomatoes, halved": [
   "cherry tomatoes | 1 cup | Produce | Fresh Grape Tomatoes, 10 oz"
+ ],
+ "Optional: 1 cup cottage cheese": [
+  "cottage cheese | 1 cup | Dairy & Refrigerated | Great Value Small Curd Cottage Cheese 4%, 24 oz"
  ],
  "Optional: 1 cup fresh berries, for serving": [
   "berries | 1 cup | Produce | Great Value Frozen Whole Berry Medley, 16 oz"
@@ -11335,6 +11356,9 @@
  "Optional: 1 large egg": [
   "egg | 1 | Dairy & Refrigerated | Great Value Large White Eggs, 12 ct"
  ],
+ "Optional: 1 lb Italian sausage": [
+  "italian sausage | 1 lb | Meat & Deli | Marketside Mild Ground Italian Sausage, 1 lb"
+ ],
  "Optional: 1 lb breakfast sausage": [
   "breakfast sausage | 1 lb | Meat & Deli | Great Value Original Sausage Roll, 16 oz"
  ],
@@ -11347,11 +11371,17 @@
  "Optional: 1 lb ground pork": [
   "ground pork | 1 lb | Meat & Deli | Smithfield All Natural Fresh Ground Pork, 1.5 lb"
  ],
+ "Optional: 1 lb lean ground beef": [
+  "lean ground beef | 1 lb | Meat & Deli | 93% Lean Ground Beef, 1 lb roll"
+ ],
  "Optional: 1 lb mild Italian sausage": [
   "italian sausage | 1 lb | Meat & Deli | Marketside Mild Ground Italian Sausage, 1 lb"
  ],
  "Optional: 1 lb sirloin steak, thinly sliced": [
   "sirloin steak | 1 lb | Meat & Deli | Choice Angus Top Sirloin Steak, about 1.25 lb tray"
+ ],
+ "Optional: 1 lb sliced deli turkey": [
+  "deli turkey | 1 lb | Meat & Deli | Great Value Oven Roasted Turkey Breast Lunchmeat, 16 oz"
  ],
  "Optional: 1 package (12 oz) fully cooked chicken sausage, sliced": [
   "chicken sausage | 1 package | Meat & Deli | Aidells Chicken & Apple Smoked Chicken Sausage, 12 oz"
@@ -11407,6 +11437,9 @@
  "Optional: 1/2 cup vanilla protein powder": [
   "vanilla protein powder | 0.5 cup | Spices & Baking | "
  ],
+ "Optional: 1/2 lb thinly sliced sirloin steak": [
+  "sirloin steak | 0.5 lb | Meat & Deli | Choice Angus Top Sirloin Steak, about 1.25 lb tray"
+ ],
  "Optional: 1/2 tsp celery seed": [
   "celery seed | 0.5 tsp | Produce | Great Value Celery Seed, 1.9 oz"
  ],
@@ -11452,11 +11485,20 @@
  "Optional: 1/4 tsp red pepper flakes": [
   "red pepper flakes | 0.25 tsp | Spices & Baking | Great Value Crushed Red Pepper, 1.75 oz"
  ],
+ "Optional: 10 oz sliced deli corned beef": [
+  "deli corned beef | 10 oz | Meat & Deli | "
+ ],
  "Optional: 12 oz sliced deli turkey": [
   "deli turkey | 12 oz | Meat & Deli | Great Value Oven Roasted Turkey Breast Lunchmeat, 16 oz"
  ],
+ "Optional: 12 slices cooked bacon": [
+  "bacon | 12 slice | Meat & Deli | Great Value Hickory Smoked Bacon, 16 oz"
+ ],
  "Optional: 14 oz kielbasa, sliced": [
   "kielbasa | 14 oz | Meat & Deli | Hillshire Farm Polska Kielbasa, 14 oz"
+ ],
+ "Optional: 16 slices cooked bacon": [
+  "bacon | 16 slice | Meat & Deli | Great Value Hickory Smoked Bacon, 16 oz"
  ],
  "Optional: 1–2 tbsp chopped green chiles for depth": [
   "green chiles | 2 tbsp | Pantry & Canned | Great Value Diced Green Chiles, 4 oz"
@@ -11470,14 +11512,26 @@
  "Optional: 2 cups diced ham": [
   "ham | 2 cup | Meat & Deli | Great Value Boneless Smoked Ham Steaks, 2 pk, 14 oz"
  ],
+ "Optional: 2 cups diced rotisserie chicken": [
+  "rotisserie chicken | 2 cup | Meat & Deli | Freshness Guaranteed Rotisserie Chicken (chilled)"
+ ],
  "Optional: 2 cups mini marshmallows": [
   "mini marshmallows | 2 cup | Snacks & Nuts | Jet-Puffed Mini Marshmallows, 1 lb"
+ ],
+ "Optional: 2 cups shredded cheddar cheese": [
+  "cheddar cheese | 2 cup | Dairy & Refrigerated | Great Value Finely Shredded Sharp Cheddar, 8 oz"
+ ],
+ "Optional: 2 cups shredded mozzarella cheese": [
+  "mozzarella cheese | 2 cup | Dairy & Refrigerated | Great Value Shredded Mozzarella, 16 oz"
  ],
  "Optional: 2 cups shredded rotisserie chicken": [
   "rotisserie chicken | 2 cup | Meat & Deli | Freshness Guaranteed Rotisserie Chicken (chilled)"
  ],
  "Optional: 2 large eggs": [
   "eggs | 2 | Dairy & Refrigerated | Great Value Large White Eggs, 12 ct"
+ ],
+ "Optional: 2 lb sliced deli turkey": [
+  "deli turkey | 2 lb | Meat & Deli | Great Value Oven Roasted Turkey Breast Lunchmeat, 16 oz"
  ],
  "Optional: 2 tbsp capers, drained": [
   "capers | 2 tbsp | Pantry & Canned | Great Value Capers, 3.5 oz"
@@ -11503,14 +11557,29 @@
  "Optional: 3 cups shredded rotisserie chicken": [
   "rotisserie chicken | 3 cup | Meat & Deli | Freshness Guaranteed Rotisserie Chicken (chilled)"
  ],
+ "Optional: 3/4 lb shredded cooked pork": [
+  "pork | 0.75 lb | Meat & Deli | Smithfield All Natural Fresh Ground Pork, 1.5 lb"
+ ],
  "Optional: 4 large eggs": [
   "eggs | 4 | Dairy & Refrigerated | Great Value Large White Eggs, 12 ct"
+ ],
+ "Optional: 6 large eggs": [
+  "eggs | 6 | Dairy & Refrigerated | Great Value Large White Eggs, 12 ct"
+ ],
+ "Optional: 6 oz grilled chicken strips": [
+  "grilled chicken strips | 6 oz | Meat & Deli | Great Value Fully Cooked Breaded Chicken Strips, 25 oz"
  ],
  "Optional: 6 pita breads": [
   "pita breads | 6 | Bakery | Stonefire Original Naan, 2 ct (for naan, flatbread and pita)"
  ],
  "Optional: 6 slices bacon, cooked and crumbled": [
   "bacon | 6 slice | Meat & Deli | Great Value Hickory Smoked Bacon, 16 oz"
+ ],
+ "Optional: 8 large eggs": [
+  "eggs | 8 | Dairy & Refrigerated | Great Value Large White Eggs, 12 ct"
+ ],
+ "Optional: 8 oz diced cooked ham": [
+  "ham | 8 oz | Meat & Deli | Great Value Boneless Smoked Ham Steaks, 2 pk, 14 oz"
  ],
  "Optional: 8 oz sliced deli ham": [
   "deli ham | 8 oz | Meat & Deli | Great Value Thin Sliced Honey Ham, 16 oz"
