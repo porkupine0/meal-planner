@@ -1340,7 +1340,7 @@ function recentIds(startISO){
   const ids = new Set(); const st = parseISO(startISO);
   for (const [id, w] of Object.entries(S.weeks)) {
     if (id === startISO) continue;
-    const diff = (st - parseISO(id)) / 864e5;
+    const diff = Math.round((st - parseISO(id)) / 864e5);
     if (diff > 0 && diff <= 7 * (S.settings.noRepeat || 0)) Object.values(w.days || {}).forEach(d => d.rid && ids.add(d.rid));
   }
   return ids;
@@ -1550,7 +1550,7 @@ function generateWeek(w, opts = {}){
   // Nights already eaten keep their meal, and a reroll keeps tonight too (you may be cooking it already).
   const free = (opts.unlockedOnly ? cookDays.filter(k => !w.days[k].locked) : cookDays).filter(k => opts.keepToday ? k > today : k >= today);
   const prev = {};
-  for (const k of free) { prev[k] = w.days[k].rid; w.days[k].rid = null; w.days[k].useUp = null; }
+  for (const k of free) { prev[k] = w.days[k].rid; w.days[k].rid = null; w.days[k].useUp = null; delete w.days[k].white; }
   const recent = recentIds(w.start);
   const used = new Set(Object.values(w.days).map(d => d.rid).filter(Boolean));
   let open = new Set(uncoveredLeftovers(w).map(n => n.toLowerCase()));
@@ -2039,7 +2039,7 @@ const WM_DEFAULTS = [
   [/strawberr/i, "44391605", "Fresh Strawberries, 1 lb"],
   [/cranberr(?!.*(sauce|juice))/i, "46460961", "Great Value Sweetened Dried Cranberries, 24 oz"],
   [/orange juice/i, "403284742", "Great Value 100% Orange Juice, No Pulp, 52 fl oz"],
-  [/\boranges?\b(?!.*(juice|marmalade|chicken|sauce|bell|pepper))/i, "162577028", "Fresh Navel Orange, each"],
+  [/(?<!mandarin )\boranges?\b(?!.*(juice|marmalade|chicken|sauce|bell|pepper))/i, "162577028", "Fresh Navel Orange, each"],
   [/tomato paste/i, "10415519", "Great Value Tomato Paste, 6 oz"],
   [/pork chops?|pork loin chops?|breakfast chops?/i, "20627151", "Pork Center Cut Loin Chops, Boneless, Family Pack"],
   [/pork tenderloin/i, "41112933", "Smithfield All Natural Pork Tenderloin, 2 ct"],
@@ -2828,8 +2828,9 @@ function scaleChips(m){
   return `<span class="scales" role="group" aria-label="Batch size">${list.map(([v,l]) => `<button class="chipbtn" data-act="mscale" data-f="${v}" aria-pressed="${f === v}">${l}</button>`).join('')}</span>`;
 }
 // ---------- cook-mode timers ----------
-const TIMER_RE = /\b(\d+(?:\.\d+)?)(?:\s*(?:-|–|to)\s*(\d+(?:\.\d+)?))?\s*(minutes?|mins?|hours?|hrs?)\b/gi;
-const timerMins = t => { const v = +(t[2] || t[1]); const m = /^h/i.test(t[3]) ? v * 60 : v; return m >= 1 && m <= 720 ? Math.round(m) : 0; };
+const TMN = '(\\d+\\s+\\d+\\/\\d+|\\d+\\/\\d+|\\d+(?:\\.\\d+)?\\s*[½⅓⅔¼¾]|\\d+(?:\\.\\d+)?)';
+const TIMER_RE = new RegExp('\\b' + TMN + '(?:\\s*(?:-|–|to)\\s*' + TMN + ')?\\s*(minutes?|mins?|hours?|hrs?)\\b', 'gi');
+const timerMins = t => { const v = parseQty(t[2] || t[1])[0]; const m = /^h/i.test(t[3]) ? v * 60 : v; return m >= 1 && m <= 720 ? Math.round(m) : 0; };
 const timers = [];
 let timerTick = null;
 function timersHTML(){
@@ -3078,7 +3079,7 @@ document.addEventListener('click', async e => {
     case 'fill': editWeek(w => { const today = iso(new Date()); for (const k of Object.keys(w.days).sort()) { const d = w.days[k]; if (k >= today && d.cat && !d.rid && !NOCOOK.some(n=>n[0]===d.cat)) d.rid = pick(d.cat, w, k); } }); toast('Open days filled'); return;
     case 'rerollall': { let res; snapshot('Rerolled'); editWeek(w => { res = generateWeek(w, {unlockedOnly: true, keepToday: true}); }); const locked = Object.values(getWeek(curStart()).days).filter(d => d.locked).length; if ((S.fridge.items||[]).length) useUpToast(res, true); else toast(locked ? `Rerolled. ${locked} locked night${locked>1?'s':''} kept.` : 'Rerolled the nights from tomorrow on', true); return; }
     case 'savepattern': { snapshot('Usual week saved', true); const w = getWeek(curStart()); const p = {}, b = {}; for (const [k,d] of Object.entries(w.days)) { p[parseISO(k).getDay()] = d.cat || ''; if (d.busy) b[parseISO(k).getDay()] = true; } S.settings.pattern = p; S.settings.busy = b; saveSettings(); toast('Saved as your usual week, with busy nights', true); return; }
-    case 'reroll': { snapshot('Rerolled'); let ok = false; editWeek(w => { const d = w.days[day]; const n = pick(d.cat, w, day, Math.random, d.rid); if (n) { d.rid = n; d.locked = false; ok = true; } }); toast(ok ? `New dinner for ${DOWL[parseISO(day).getDay()]}` : 'No other recipes in this category', ok); return; }
+    case 'reroll': { snapshot('Rerolled'); let ok = false; editWeek(w => { const d = w.days[day]; const n = pick(d.cat, w, day, Math.random, d.rid); if (n) { d.rid = n; d.locked = false; delete d.white; ok = true; } }); toast(ok ? `New dinner for ${DOWL[parseISO(day).getDay()]}` : 'No other recipes in this category', ok); return; }
     case 'lock': editWeek(w => { w.days[day].locked = !w.days[day].locked; }); return;
     case 'clear': snapshot('Night cleared'); editWeek(w => { dropLeftoverLink(w, day); w.days[day] = {cat:'', rid:null, locked:false, side:null, busy: !!w.days[day]?.busy}; }); toast('Night cleared', true); return;
     case 'pick': { const c = getWeek(curStart()).days[day]?.cat; return openModal({type:'pick', day, onlyCat: !!c && !['any','new','fav'].includes(c) && !NOCOOK.some(n => n[0] === c), focus:'pick-q'}); }
@@ -3121,7 +3122,7 @@ document.addEventListener('click', async e => {
     case 'busy': editWeek(w => { const d = w.days[day]; d.busy = !d.busy; const r = d.rid && S.byId[d.rid]; if (d.busy && r && !d.locked && !isBusyOk(r) && d.cat && !NOCOOK.some(n=>n[0]===d.cat)) { const n = pick(d.cat, w, day, Math.random, d.rid); if (n) { d.rid = n; toast('Swapped in a quicker meal'); } } }); return;
     case 'draftbusy': { const w = getWeek(curStart()); w.days[day].busy = !w.days[day].busy; return render(); }
     case 'patbusy': { const dw = t.dataset.dow; S.settings.busy = {...(S.settings.busy||{}), [dw]: !S.settings.busy?.[dw]}; S.drafts = {}; saveSettings(); return render(); }
-    case 'cook': { const m = {type:'cook', id:t.dataset.id, done:{}, scale: +t.dataset.scale || 1, white: t.dataset.white === '1'}; openModal(m); keepAwake(true).then(ok => { if (ok && S.modal === m) { m.awake = true; renderModal(); } }); return; }
+    case 'cook': { const m = {type:'cook', id:t.dataset.id, done:{}, scale: +t.dataset.scale || 1, white: t.dataset.white === '1'}; openModal(m); keepAwake(true).then(ok => { if (ok && S.modal === m) { m.awake = true; renderModal(); } else if (ok) keepAwake(false); }); return; }
     case 'timer': startTimer(+t.dataset.min, t.dataset.label); return;
     case 'timerx': { const i = timers.findIndex(x => x.id === t.dataset.id); if (i >= 0) timers.splice(i, 1); tickTimers(); return; }
     case 'cookstep': { const m = S.modal; m.done[t.dataset.n] = !m.done[t.dataset.n]; return renderModal(); }
@@ -3292,7 +3293,7 @@ if (/[?&]debug\b/.test(location.search)) window.__T = {nuOf, S, asLeanBeef, pars
 boot();
 // ---------- updates (GitHub Pages) ----------
 // Home-screen apps keep running an old copy, so check for a newer version when the app is opened or brought back.
-const APP_VERSION = '2026-11-15.11';
+const APP_VERSION = '2026-11-15.12';
 let updateShown = false;
 let lastCheck = 0;
 async function checkForUpdate(){
