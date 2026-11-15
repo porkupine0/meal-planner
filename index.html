@@ -756,7 +756,7 @@ const plannable = r => r.k === 'main' && !r.hide && (r.pp || !(parseServes(r.s) 
 function proteinOf(r){
   if (r._p !== undefined) return r._p;
   // Broth, stock, gravy, cream-of-chicken soup and "you could use beef" suggestions don't make a dish chicken or beef.
-  const ing = (r.i || []).slice(0, 12).join(' ').toLowerCase().replace(/\b(chicken|beef|turkey|pork|vegetable|bone)\s+(broth|stock|bouillon|base|gravy)\b/g, ' ').replace(/cream of (chicken|celery|mushroom)\b[^,]*/g, ' ').replace(/\b(you could|could use|or use|such as|instead)\b[^.,]*/g, ' ').replace(/\b(broth|stock|bouillon|gravy)\b/g, ' ');
+  const ing = (r.i || []).filter(l => !/^\s*optional\b/i.test(l)).slice(0, 12).join(' ').toLowerCase().replace(/\b(chicken|beef|turkey|pork|vegetable|bone)\s+(broth|stock|boui?ll?i?on|base|gravy)\b/g, ' ').replace(/cream of (chicken|celery|mushroom)\b[^,]*/g, ' ').replace(/\b(you could|could use|or use|such as|instead)\b[^.,]*/g, ' ').replace(/\b(broth|stock|boui?ll?i?on|gravy)\b/g, ' ');
   const t = (r.n + ' ' + ing).toLowerCase();
   const n = r.n.toLowerCase();
   const nameFirst = [['chicken', /chicken|rotisserie/], ['turkey', /turkey/], ['pork', /\bham steaks?\b/]]; // a turkey burger is turkey, a ham steak is pork; the name decides first
@@ -3337,7 +3337,7 @@ if (/[?&]debug\b/.test(location.search)) window.__T = {proteinNote, proteinOf, t
 boot();
 // ---------- updates (GitHub Pages) ----------
 // Home-screen apps keep running an old copy, so check for a newer version when the app is opened or brought back.
-const APP_VERSION = '2026-11-15.22';
+const APP_VERSION = '2026-11-15.23';
 let updateShown = false;
 let lastCheck = 0;
 async function checkForUpdate(){

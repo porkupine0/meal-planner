@@ -18,3 +18,6 @@ Other open items:
 - Offline cold start (first open with no signal runs in local mode) and the update banner looping on a slow connection are not fixed.
 - Walmart: the existing ~890 product matches were not audited one by one, and about 77 junk ingredient names from badly written recipe lines were not cleaned up.
 - Not built from the product roadmap: the white-sauce note on cook steps (docs/ROADMAP.md item 5).
+
+- The "Beef again" style note and the planner's protein variety rule use a best guess of each recipe's main protein, read from its name and first 12 ingredient lines (broth, stock, gravy and optional add-on lines are ignored). A few can still be off (for example Cincinnati Chili reads as meatless). The sturdier fix, if it bothers you, is to show the note only when the recipe name carries the protein word.
+- Under 12 g protein is hidden on the chip but still counts as low in the planner's 28 g preference.
