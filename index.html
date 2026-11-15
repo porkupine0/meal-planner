@@ -755,7 +755,9 @@ const plannable = r => r.k === 'main' && !r.hide && (r.pp || !(parseServes(r.s) 
 // Main protein, so the planner can avoid chicken four nights running.
 function proteinOf(r){
   if (r._p !== undefined) return r._p;
-  const t = (r.n + ' ' + (r.i || []).slice(0, 12).join(' ')).toLowerCase();
+  // Broth, stock, gravy, cream-of-chicken soup and "you could use beef" suggestions don't make a dish chicken or beef.
+  const ing = (r.i || []).slice(0, 12).join(' ').toLowerCase().replace(/\b(chicken|beef|turkey|pork|vegetable|bone)\s+(broth|stock|bouillon|base|gravy)\b/g, ' ').replace(/cream of (chicken|celery|mushroom)\b[^,]*/g, ' ').replace(/\b(you could|could use|or use|such as|instead)\b[^.,]*/g, ' ').replace(/\b(broth|stock|bouillon|gravy)\b/g, ' ');
+  const t = (r.n + ' ' + ing).toLowerCase();
   const n = r.n.toLowerCase();
   const nameFirst = [['chicken', /chicken|rotisserie/], ['turkey', /turkey/], ['pork', /\bham steaks?\b/]]; // a turkey burger is turkey, a ham steak is pork; the name decides first
   const order = [['chicken', /chicken|rotisserie/], ['beef', /beef|steak|brisket|chuck|meatball|burger|sirloin|ribeye|sloppy|bulgogi|cheesesteak|philly|roast\b/], ['pork', /pork|carnitas|ham\b|bacon|ribs\b|kielbasa|sausage|brat|chorizo|pepperoni|salami|prosciutto/], ['turkey', /turkey/]];
@@ -3331,11 +3333,11 @@ async function boot(){
   else if (FB_CONFIG.apiKey) startFirebase();
 }
 // For automated checks only: ?debug exposes the internals.
-if (/[?&]debug\b/.test(location.search)) window.__T = {proteinOf, tileEmoji, nuOf, S, asLeanBeef, parseIngredient, ingOf, cleanName, whiteSwap, swapsList, fitsDay, reminder, groceryModel, groceryEntries, walmartModel, wmDefault, wmPick, packsFor, editWeek, getWeek, curStart, pick, generateWeek, render, scaleLine, aisleOf};
+if (/[?&]debug\b/.test(location.search)) window.__T = {proteinNote, proteinOf, tileEmoji, nuOf, S, asLeanBeef, parseIngredient, ingOf, cleanName, whiteSwap, swapsList, fitsDay, reminder, groceryModel, groceryEntries, walmartModel, wmDefault, wmPick, packsFor, editWeek, getWeek, curStart, pick, generateWeek, render, scaleLine, aisleOf};
 boot();
 // ---------- updates (GitHub Pages) ----------
 // Home-screen apps keep running an old copy, so check for a newer version when the app is opened or brought back.
-const APP_VERSION = '2026-11-15.21';
+const APP_VERSION = '2026-11-15.22';
 let updateShown = false;
 let lastCheck = 0;
 async function checkForUpdate(){

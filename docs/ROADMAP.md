@@ -1,4 +1,4 @@
-> Status: Next-version items 1 (use-up expiry), 2 (staple quantities, milk and bread only), 3 (protein badge, with a plain chip under 28 g), 4 (taco, slow-cooker and pasta nights) and 6 (same-protein note in the picker) are built. Item 5 (white-sauce note on cook steps) is not.
+> Status: Next-version items 1 (use-up expiry), 2 (staple quantities, milk and bread only), 3 (protein badge on day cards and in the picker: green at 28 g or more, plain from 12 to 27 g, nothing under 12 g or unknown; not on the Recipes grid), 4 (taco, slow-cooker and pasta nights) and 6 (same-protein note in the picker) are built. Item 5 (white-sauce note on cook steps) is not.
 
 # Supper Board roadmap (steps 10+)
 
