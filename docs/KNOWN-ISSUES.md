@@ -25,3 +25,10 @@ Other open items:
 - Protein numbers copied from recipe sites are sometimes wrong. The estimator (tools/nutrition.js) puts these favorites well above the site number, so they got no add-on: 5 Minute Buffalo Chicken Wraps (site 20 g, estimate 42), Bacon Cheeseburger Ground Beef Pasta Skillet (26 vs 44), Chicken Sausage and Peppers Macaroni Casserole (19 vs 30), Croque Madame Sandwich (15 vs 47), Pesto Rice with Chicken, Tomatoes and Spinach (22 vs 47), Sailor Sandwiches (20 vs 39). In most of these the site also lists far fewer calories, so it is probably counting a smaller serving. Eight favorites under 12 g (for example Antipasto Sliders, Roasted Tomato Basil Soup) and six with no number were left alone.
 - BBQ Chicken Sliders has no add-on: a serving is one slider.
 - Add-ons exist for catalog favorites rated 4 or 5 stars only; recipes you rate later don't get one automatically.
+
+Breakfast and lunch (added Nov 17):
+- Typed meals ("pancakes") put nothing on the grocery list, unlike typed sides; they show under "Meals without a recipe" as a reminder. "Leftovers" and "... out" don't appear there.
+- A recipe used at breakfast or lunch is not scaled to the household size the way dinners are; use its batch size picker. Cook mode opened from a breakfast or lunch row shows 1x amounts.
+- Red-sauce recipes picked for breakfast or lunch get no white-sauce swap.
+- Rows appear once the week is planned, not on the "not planned yet" setup screen.
+- An old version of the app (before this update) removes that day's breakfast and lunch if you press Clear on that night.

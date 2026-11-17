@@ -157,7 +157,9 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,va
 .meal-line .ml-t{color:var(--ink);font-size:14px;padding:0 4px}
 .meal-line .btn{font-size:13px;white-space:normal;text-align:left}
 .meal-line .btn[data-open]{flex:0 1 auto;min-width:0}
-.meal-line .scale-sel{margin-left:auto}
+.meal-line .ml-name{flex:1 0 100%;display:flex;align-items:center;gap:6px}
+.meal-line .scale-sel{margin-left:auto;min-height:36px;padding-top:2px;padding-bottom:2px;font-size:13px;width:auto}
+.meal-line .btn.sm,.meal-line .btn.icon{min-height:36px}
 .side-line button{font-size:13px}
 .tip{margin:0 12px 10px;font-size:13px;background:var(--tomato-soft);border-radius:9px;padding:8px 10px;color:var(--ink)}
 .tip b{color:var(--tomato)}
@@ -970,7 +972,7 @@ function mealLines(id, day, past){
     const v = day[k], r = v && v.r && S.byId[v.r];
     const rm = past ? '' : `<button class="btn ghost sm icon" data-act="unmeal" data-day="${id}" data-slot="${k}" aria-label="Remove ${label.toLowerCase()}">${I.x}</button>`;
     if (r) { const sel = past ? '' : `<select class="scale-sel" data-mscale="${id}|${k}" aria-label="${label} batch size">${SCALES.map(([x,l]) => `<option value="${x}" ${(v.s||1) === x ? 'selected' : ''}>${l === '1×' ? 'Regular batch' : l + ' batch'}</option>`).join('')}</select>`;
-      return `<div class="meal-line"><span class="ml-k">${label}</span><button class="btn ghost sm" data-open="${r.id}">${esc(r.n)}</button>${rm}${sel}</div>`; }
+      return `<div class="meal-line"><span class="ml-k">${label}</span>${sel}<div class="ml-name"><button class="btn ghost sm" data-open="${r.id}">${esc(r.n)}</button>${rm}</div></div>`; }
     if (v && v.t) return `<div class="meal-line"><span class="ml-k">${label}</span><b class="ml-t">${esc(v.t)}</b>${rm}</div>`;
     if (past) return '';
     return `<div class="meal-line"><span class="ml-k">${label}</span><button class="btn ghost sm" data-act="meal" data-day="${id}" data-slot="${k}">${I.plus}Add ${label.toLowerCase()}</button></div>`;
@@ -1903,7 +1905,7 @@ function groceryModel(){
     if (from && dk < from) continue;
     for (const sl of daySlots(day)) {
       const night = DOW[parseISO(dk).getDay()] + ' ' + sl.label.toLowerCase();
-      if (!sl.r) { noRecipe.push({day: dk, label: sl.label, text: sl.t}); continue; }
+      if (!sl.r) { if (!/^(leftovers?|eat(ing)? out|take-?out|[\w ]+ out|nothing)$/i.test(sl.t.trim())) noRecipe.push({day: dk, label: sl.label, text: sl.t}); continue; }
       ingOf(sl.r).map(it0 => grocerySwap(it0, sl.r)).forEach(it => add(sl.s !== 1 && it.qty != null ? {...it, qty: it.qty * sl.s} : it, sl.r.n, night));
     }
   }
@@ -2624,7 +2626,7 @@ function viewGrocery(){
 }
 function menuText(){
   const start = curStart(); const w = getWeek(start); const dates = weekDates(start);
-  const lines = [`Dinners ${MON[dates[0].getMonth()]} ${dates[0].getDate()}–${MON[dates[6].getMonth()]} ${dates[6].getDate()}`];
+  const lines = [`${MEALS.some(([k]) => mealOn(k)) ? 'Meals' : 'Dinners'} ${MON[dates[0].getMonth()]} ${dates[0].getDate()}–${MON[dates[6].getMonth()]} ${dates[6].getDate()}`];
   for (const d of dates) { const day = w.days[iso(d)] || {}; const r = day.rid && S.byId[day.rid]; const side = day.side && S.byId[day.side];
     const nc = NOCOOK.find(n => n[0] === day.cat);
     const extra = daySlots(day).map(x => `${x.label}: ${x.r ? x.r.n : x.t}`);
@@ -3350,6 +3352,7 @@ document.addEventListener('toggle', e => {
 document.addEventListener('click', e => { const open = document.querySelector('details.more[open]'); if (open && !open.contains(e.target)) open.open = false; if (open && e.target.closest('.menu button') && !(e.target.closest('[data-act="replan"]') && !e.target.closest('[data-act="replan"]').dataset.sure)) open.open = false; }, true);
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape' && S.modal) closeModal();
+  if (e.key === 'Enter' && e.target.id === 'meal-text') { e.preventDefault(); document.querySelector('[data-act="mealtext"]:not([data-text])')?.click(); return; }
   if (e.key === 'Enter' && e.target.id === 're-ask') { e.preventDefault(); document.querySelector('[data-act="adjust"]')?.click(); return; }
   if (e.key === 'Enter' && e.target.matches('#extra-in,#staple-in,#pantry-in,#fridge-in')) { e.preventDefault(); const map = {'extra-in':'addextra','staple-in':'addstaple','pantry-in':'addpantry','fridge-in':'addfridge'}; document.querySelector(`[data-act="${map[e.target.id]}"]`)?.click(); }
 });
@@ -3400,7 +3403,7 @@ if (/[?&]debug\b/.test(location.search)) window.__T = {menuText, daySlots, prote
 boot();
 // ---------- updates (GitHub Pages) ----------
 // Home-screen apps keep running an old copy, so check for a newer version when the app is opened or brought back.
-const APP_VERSION = '2026-11-17.1';
+const APP_VERSION = '2026-11-17.2';
 let updateShown = false;
 let lastCheck = 0;
 async function checkForUpdate(){
