@@ -35,6 +35,10 @@ A weekly family meal planner. It runs entirely in the browser: open `index.html`
 - `icons/` and `manifest.webmanifest`: app logo and home-screen icon
 - `sw.js`: offline support (keeps a copy of the app and recipes on the phone)
 
+## Breakfast and lunch
+
+Settings → Other meals has two switches, **Plan breakfast too** and **Plan lunch too**, both off by default. When on, every day on the Plan gets breakfast and lunch rows above dinner. Tap **Add breakfast** (or lunch) to type what you're having ("pancakes"), tap a quick choice, or pick a recipe from the box. A recipe adds its ingredients to the grocery list (with a batch size for a bigger crowd); typed meals have no ingredients, so they appear under "Meals without a recipe" on the Groceries tab and in the sent list as a reminder. Breakfast and lunch are never planned automatically, and turning a switch off only hides them: what you entered is kept. The switches are shared by both phones. Clearing a night keeps its breakfast and lunch.
+
 ## Saving
 
 - **Family sync (GitHub Pages):** sign in under Settings → Family sync and the plan, grocery list, check-offs, ratings and settings are shared through Firebase, so everyone in the house sees the same board live. Changes made offline are kept and sent when the phone reconnects.
