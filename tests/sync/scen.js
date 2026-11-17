@@ -84,7 +84,7 @@ SC['reroll-vs-lock'] = async ({ A, B, R }) => {
   const w = week(R); const lost = []; if (w.days[d1].rid === w0.days[d1].rid) lost.push('reroll ' + d1); if (!w.days[d2].locked) lost.push('lock ' + d2); return { lost };
 };
 SC['meal-vs-reroll'] = async ({ A, B, R }) => {
-  await go(A, 'plan'); await go(B, 'plan'); const w0 = clone(week(R)); const d = shuffle(Object.keys(w0.days).filter(d => w0.days[d].rid && !w0.days[d].locked && d > '2026-11-13'))[0];
+  await go(A, 'plan'); await go(B, 'plan'); const w0 = clone(week(R)); const today = new Date().toISOString().slice(0, 10); const d = shuffle(Object.keys(w0.days).filter(d => w0.days[d].rid && !w0.days[d].locked && d >= today))[0];
   await A.ev(() => { __T.S.settings.mealB = true; __T.render(); });
   await par(async () => { await click(A, `[data-act="meal"][data-slot="b"][data-day="${d}"]`); await A.ev(() => { document.querySelector('#meal-text').value = 'Pancakes'; document.querySelector('[data-act="mealtext"]:not([data-text])').click(); }); }, () => click(B, `[data-act="reroll"][data-day="${d}"]`), 300); await H.quiesce(R);
   const w = week(R); const lost = []; if (!(w.days[d].b && w.days[d].b.t === 'Pancakes')) lost.push('breakfast ' + d); if (w.days[d].rid === w0.days[d].rid) lost.push('reroll ' + d); return { lost };
