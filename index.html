@@ -158,8 +158,9 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,va
 .meal-line .btn{font-size:13px;white-space:normal;text-align:left}
 .meal-line .btn[data-open]{flex:0 1 auto;min-width:0}
 .meal-line .ml-name{flex:1 0 100%;display:flex;align-items:center;gap:6px}
-.meal-line .scale-sel{margin-left:auto;min-height:36px;padding-top:2px;padding-bottom:2px;font-size:13px;width:auto}
-.meal-line .btn.sm,.meal-line .btn.icon{min-height:36px}
+.meal-line .scale-sel{margin:-4px 0 -4px auto;min-height:44px;font-size:13px;width:auto}
+.meal-line .btn.sm,.meal-line .btn.icon{min-height:44px;margin:-4px 0}
+.meal-line .btn.icon{min-width:44px}
 .side-line button{font-size:13px}
 .tip{margin:0 12px 10px;font-size:13px;background:var(--tomato-soft);border-radius:9px;padding:8px 10px;color:var(--ink)}
 .tip b{color:var(--tomato)}
@@ -1900,12 +1901,13 @@ function groceryModel(){
       });
     }
   }
-  const noRecipe = [];
+  const noRecipe = []; let slotMeals = 0;
   for (const [dk, day] of Object.entries(w.days)) {
     if (from && dk < from) continue;
     for (const sl of daySlots(day)) {
       const night = DOW[parseISO(dk).getDay()] + ' ' + sl.label.toLowerCase();
       if (!sl.r) { if (!/^(leftovers?|eat(ing)? out|take-?out|[\w ]+ out|nothing)$/i.test(sl.t.trim())) noRecipe.push({day: dk, label: sl.label, text: sl.t}); continue; }
+      slotMeals++;
       ingOf(sl.r).map(it0 => grocerySwap(it0, sl.r)).forEach(it => add(sl.s !== 1 && it.qty != null ? {...it, qty: it.qty * sl.s} : it, sl.r.n, night));
     }
   }
@@ -1932,7 +1934,7 @@ function groceryModel(){
   const extras = w.extras || [];
   const all = [...Object.values(groups).map(g=>g.k), ...staples.map(s=>'staple|'+s.name), ...extras.map(e=>'extra|'+e.id)];
   const remaining = all.filter(k => !(w.checked||{})[k]).length;
-  return {fromFridge, w, groups, pantryHits, staples, extras, remaining, total: all.length, from, skipped, noRecipe};
+  return {fromFridge, w, groups, pantryHits, staples, extras, remaining, total: all.length, from, skipped, noRecipe, slotMeals};
 }
 const singularize = k => k.split(' ').map((x, i, a) => i === a.length - 1 ? singular(x) : x).join(' ');
 const WM_CART = 'https://affil.walmart.com/cart/addToCart?items=';
@@ -2592,7 +2594,7 @@ function viewGrocery(){
   const wm = walmartModel(m); const n = wm.mapped.length;
   const left = m.remaining;
   const t = new Date(); const midweek = groceryFrom({...w, listAll: false});
-  return `<div class="g-wrap"><div class="section-h"><div><div class="label">${m.from ? `${esc(fmtD(parseISO(m.from)))} – ${MON[dates[6].getMonth()]} ${dates[6].getDate()}` : `${MON[dates[0].getMonth()]} ${dates[0].getDate()} – ${MON[dates[6].getMonth()]} ${dates[6].getDate()}`} · ${planned} meal${planned === 1 ? '' : 's'}</div><h1>Grocery list</h1></div>
+  return `<div class="g-wrap"><div class="section-h"><div><div class="label">${m.from ? `${esc(fmtD(parseISO(m.from)))} – ${MON[dates[6].getMonth()]} ${dates[6].getDate()}` : `${MON[dates[0].getMonth()]} ${dates[0].getDate()} – ${MON[dates[6].getMonth()]} ${dates[6].getDate()}`} · ${planned + (m.slotMeals || 0)} meal${planned + (m.slotMeals || 0) === 1 ? '' : 's'}</div><h1>Grocery list</h1></div>
     <div class="row"><button class="btn" data-act="copylist" ${m.total?'':'disabled'}>${I.share}Send list</button></div></div>
     ${(() => { const ents = groceryEntries(m).filter(e => !e.checked); const nS = ents.filter(e => e.store === 'sams').length, nW = ents.length - nS;
       // In the store the list comes first: one compact row for ordering, and a sticky bar with progress and the store filter.
@@ -3403,7 +3405,7 @@ if (/[?&]debug\b/.test(location.search)) window.__T = {menuText, daySlots, prote
 boot();
 // ---------- updates (GitHub Pages) ----------
 // Home-screen apps keep running an old copy, so check for a newer version when the app is opened or brought back.
-const APP_VERSION = '2026-11-17.2';
+const APP_VERSION = '2026-11-17.3';
 let updateShown = false;
 let lastCheck = 0;
 async function checkForUpdate(){
